@@ -1,2 +1,4 @@
-package com.wak.igo.dtd.response;public class ResponseDto {
+package com.wak.igo.dtd.response;
+
+public class ResponseDto {
 }
