@@ -19,11 +19,8 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_member;
 
-//    @Column(nullable = false)
-//    private String memberid;
-
     @Column(nullable = false)
-    private Long memberid;
+    private String memberid;
 
     @Column(nullable = false)
     @JsonIgnore

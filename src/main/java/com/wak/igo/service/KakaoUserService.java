@@ -10,6 +10,7 @@ import com.wak.igo.jwt.TokenProvider;
 import com.wak.igo.repository.MemberRepository;
 import com.wak.igo.request.TokenDto;
 import com.wak.igo.request.KakaoUserInfo;
+import com.wak.igo.response.ResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
@@ -33,6 +34,14 @@ public class KakaoUserService {
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
     private final TokenProvider tokenProvider;
+
+    public ResponseDto<?> kakaologout(UserDetailsImpl userDetails){
+        if (null == userDetails.getMember()) {
+            return ResponseDto.fail("MEMBER_NOT_FOUND",
+                    "사용자를 찾을 수 없습니다.");
+        }
+        return tokenProvider.deleteRefreshToken(userDetails.getMember());
+    }
 
     public KakaoUserInfo kakaologin(String code, HttpServletResponse response) throws JsonProcessingException {
         // 1. "인가 코드"로 전체 response 요청
@@ -103,7 +112,7 @@ public class KakaoUserService {
         String responseBody = response.getBody();
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(responseBody);
-        Long id = jsonNode.get("id").asLong();
+        String id = jsonNode.get("id").asText();
         String nickname = jsonNode.get("properties").get("nickname").asText();
         log.info("카카오 사용자 정보: " + id + ", " + nickname);
         return new KakaoUserInfo(id, nickname);
@@ -111,7 +120,8 @@ public class KakaoUserService {
 
     private Member registerKakaoUserIfNeeded(KakaoUserInfo kakaoUserInfo) {
         // DB 에 중복된 Kakao Id 가 있는지 확인
-        Long kakaoId = kakaoUserInfo.getId();
+        String kakaoId = kakaoUserInfo.getId();
+//        String kakaoId = kakaoUserInfo.getMemberId();
         Member kakaoUser = memberRepository.findByMemberid(kakaoId)
                 .orElse(null);
         if (kakaoUser == null) {
@@ -126,7 +136,7 @@ public class KakaoUserService {
             kakaoUser = Member.builder()
                     .nickname(nickname)
                     .password(encodedPassword)
-                    .memberid(kakaoId) //네이버도 id가 Long인지 알아보기
+                    .memberid(kakaoId)
                     .build();
             memberRepository.save(kakaoUser);
             log.info(nickname + "회원가입이 완료되었습니다.");
@@ -148,4 +158,3 @@ public class KakaoUserService {
         response.addHeader("Access-Token-Expire-Time", token.getAccessTokenExpiresIn().toString());
     }
 }
-// https://kauth.kakao.com/oauth/authorize?client_id=fdb42734830cbb186c8221bf3acdd6c6&redirect_uri=http://localhost:8080/kakao/callback&response_type=code
