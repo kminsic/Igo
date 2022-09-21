@@ -5,7 +5,7 @@ import javax.persistence.*;
 //카테고리 총합
 
 @Entity
-public class Category{
+public class Tag extends Timestamped{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id_category", nullable = false)
@@ -40,6 +40,24 @@ public class Category{
 
     @Column
     private String family;
+
+    @Column
+    private String active;
+
+    @Column
+    private String relaxed;
+
+    @Column
+    private String luxury;
+
+    @Column
+    private String sensitive;
+
+    @Column
+    private String effective;
+
+    @Column
+    private String Eating;
 
 
     //가격 분류
