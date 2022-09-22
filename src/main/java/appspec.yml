@@ -4,7 +4,7 @@ version: 0.0
 os: linux
 files:
   - source: /
-    destination: /home/ubuntu/playground-logging/
+    destination: /home/ubuntu/mygitaction/
     overwrite: yes
 file_exists_behavior : OVERWRITE
 
