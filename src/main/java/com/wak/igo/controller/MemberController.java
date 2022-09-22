@@ -15,13 +15,13 @@ import javax.servlet.http.HttpServletResponse;
 public class MemberController {
     private final KakaoUserService kakaoUserService;
 
-    @RequestMapping(value = "/kakao/callback", method = RequestMethod.GET)
+    @RequestMapping(value = "/kakao/callback1", method = RequestMethod.GET)
     public void kakaologin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
         kakaoUserService.kakaologin(code, response);
     }
 
-    @RequestMapping(value = "/kakao/logout", method = RequestMethod.GET)
-    public void kakaologout(UserDetailsImpl userDetails){
-        kakaoUserService.kakaologout(userDetails);
-    }
+//    @RequestMapping(value = "/kakao/logout", method = RequestMethod.GET)
+//    public void kakaologout(UserDetailsImpl userDetails){
+//        kakaoUserService.kakaologout(userDetails);
+//    }
 }

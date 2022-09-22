@@ -48,12 +48,10 @@ public class Post extends Timestamped{
     @Column
     private int viewcount;
 
-    @JoinColumn(name = "id_place", nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Category category;
-
     @Column
     private int report;
 
+    @Column
+    private String tag;
 
 }

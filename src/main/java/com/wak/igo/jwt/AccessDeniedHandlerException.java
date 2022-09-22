@@ -2,7 +2,6 @@ package com.wak.igo.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wak.igo.response.ResponseDto;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
