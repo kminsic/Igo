@@ -1,4 +1,4 @@
-package com.wak.igo.controller;
-
-public class MyPostController {
-}
+//package com.wak.igo.controller;
+//
+//public class MyPostController {
+//}

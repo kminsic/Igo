@@ -6,7 +6,7 @@ public class Mypost extends Timestamped{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_mypost;
+    private Long id;
 
     @JoinColumn(name = "id_member", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
