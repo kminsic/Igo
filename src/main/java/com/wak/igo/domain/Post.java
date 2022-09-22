@@ -51,7 +51,6 @@ public class Post extends Timestamped {
     private int report;
 
     @Column
-<<<<<<< HEAD
     private int heart;
 
     @Column (nullable = false)
@@ -99,8 +98,6 @@ public class Post extends Timestamped {
 //    }
 
 
-=======
-    private String tag;
->>>>>>> 2b349465c063830008cff61d690f09b746f1c08b
+
 
 }
