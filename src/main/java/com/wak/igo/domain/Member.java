@@ -35,9 +35,24 @@ public class Member {
 
 
 
+<<<<<<< HEAD
 //    @JoinColumn(name = "id_category", nullable = false)
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    private Tag tag;
+=======
+    @Column(nullable = false)
+    @JsonIgnore
+    private String password;
+
+    @Column
+    private String nickname;
+
+    @Column
+    private String profileimage;
+
+    @Column
+    private String tag;
+>>>>>>> 2b349465c063830008cff61d690f09b746f1c08b
 
 
 }
