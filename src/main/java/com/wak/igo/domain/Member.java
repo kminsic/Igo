@@ -14,27 +14,30 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Entity
 public class Member {
+//
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    private Long id;
+//
+//
+//    @Column(nullable = false)
+////    @JsonIgnore
+//    private String password;
+//
+//    @Column
+//    private String nickname;
+//
+//    @Column
+//    private String profileimage;
+//
+//    @Column
+//    private String tag;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_member;
 
-    @Column(nullable = false)
-    private String memberid;
 
-    @Column(nullable = false)
-    @JsonIgnore
-    private String password;
-
-    @Column
-    private String nickname;
-
-    @Column
-    private String profileimage;
-
-    @JoinColumn(name = "id_category", nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Category category;
+//    @JoinColumn(name = "id_category", nullable = false)
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    private Tag tag;
 
 
 }
