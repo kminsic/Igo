@@ -14,13 +14,13 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Entity
 public class Member {
-
+//
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_member;
-
-    @Column(nullable = false)
-    private String memberid;
+    private Long id;
+//
+@Column(nullable = false)
+private String memberid;
 
     @Column(nullable = false)
     @JsonIgnore
@@ -32,9 +32,7 @@ public class Member {
     @Column
     private String profileimage;
 
-    @JoinColumn(name = "id_category", nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Category category;
-
+    @Column
+    private String tag;
 
 }

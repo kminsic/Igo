@@ -7,26 +7,24 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-
-@Builder
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
-public class Comment {
+public class RefreshToken extends Timestamped {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false)
     private Long id;
 
-    @Column(nullable = false)
-    private String content;
-
-    @JoinColumn(name = "id_post", nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Post post;
-
     @JoinColumn(name = "id_member", nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     private Member member;
 
+    @Column(nullable = false)
+    private String keyValue;
+
+    public void updateValue(String token) {
+        this.keyValue = token;
+    }
 }
