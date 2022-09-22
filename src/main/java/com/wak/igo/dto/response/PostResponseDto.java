@@ -17,11 +17,11 @@ public class PostResponseDto {
     private String title;
     private String content;
     private String address;
-    private String time;
+    private int time;
     private int heart;
     private int amount;
     private int viewcount;
-    private int image;
+    private String imgurl;
     private String tag;
 //    private List<CategoryResponseDto> categoryResponseDtoList;
     private LocalDateTime createdAt;

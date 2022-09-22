@@ -1,6 +1,6 @@
 plugins {
-    id 'org.springframework.boot' version '2.7.2'
-    id 'io.spring.dependency-management' version '1.0.12.RELEASE'
+    id 'org.springframework.boot' version '2.7.3'
+    id 'io.spring.dependency-management' version '1.0.13.RELEASE'
     id 'java'
 }
 
@@ -27,19 +27,21 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
-<<<<<<< HEAD
+
     //mysql
     runtimeOnly 'mysql:mysql-connector-java'
 
     //h2
     implementation 'com.h2database:h2'
     //s3
-//    implementation platform('com.amazonaws:aws-java-sdk-bom:1.12.290')
-//    implementation 'com.amazonaws:aws-java-sdk-s3'
+    implementation platform('com.amazonaws:aws-java-sdk-bom:1.12.300')
+    implementation 'com.amazonaws:aws-java-sdk-s3'
+    // Tika (이미지 파일만 업로드 할 수 있게 확장자 구별)
+    implementation group: 'org.apache.tika', name: 'tika-core', version: '1.24.1'
 
-    //     validation
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
-=======
+    //카카오
+    implementation group: 'org.springframework.security', name: 'spring-security-oauth2-client', version: '5.6.3'
+
 
     //     JWT
     compileOnly group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
@@ -49,7 +51,7 @@ dependencies {
     //     validation 머지할때 삭제하기
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'com.h2database:h2'
->>>>>>> 2b349465c063830008cff61d690f09b746f1c08b
+
 }
 
 tasks.named('test') {

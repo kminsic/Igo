@@ -31,18 +31,18 @@ public class Post extends Timestamped {
     private String content;
 
     @Column(nullable = false)
-    private String image;
+    private String imgurl;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
 //
-//    @JoinColumn(name = "member_id", nullable = false)
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    private Member member;
-
+    @JoinColumn(name = "member_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Member member;
 
     @Column(nullable = false)
     private String address;
+
 
     @Column
     private int viewcount;
@@ -51,7 +51,6 @@ public class Post extends Timestamped {
     private int report;
 
     @Column
-<<<<<<< HEAD
     private int heart;
 
     @Column (nullable = false)
@@ -63,44 +62,38 @@ public class Post extends Timestamped {
     @Column(nullable = false)
     private String tag;
 
-//    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<Tag> Tags;
 
-//    @CreationTimestamp
+    public void add_viewcount() {
+        this.viewcount++;
+
+    }
+    public Post(PostRequestDto postRequestDto) {
+        this.title = postRequestDto.getTitle();
+        this.imgurl = postRequestDto.getImgurl();
+        this.content = postRequestDto.getContent();
+        this.address = postRequestDto.getAddress();
+        this.tag = postRequestDto.getTag();
+        this.time = postRequestDto.getTime();
+        this.amount = postRequestDto.getAmount();
+    }
+
+    public void update(PostRequestDto postRequestDto) {
+        this.title = postRequestDto.getTitle();
+        this.imgurl = postRequestDto.getImgurl();
+        this.content = postRequestDto.getContent();
+        this.address = postRequestDto.getAddress();
+        this.tag = postRequestDto.getTag();
+        this.time = postRequestDto.getTime();
+        this.amount = postRequestDto.getAmount();
+    }
+
+
+//        @CreationTimestamp
 //    @Column
 //    private LocalDateTime createdAt = LocalDateTime.now();
 //
 ////    @UpdateTimestamp
 //    @Column
 //    private LocalDateTime updatedAt = LocalDateTime.now();
-    public void add_viewcount() {
-
-        this.viewcount++;
-
-    }
-//    public Post(PostRequestDto postRequestDto) {
-//        this.title = postRequestDto.getTitle();
-//        this.image = postRequestDto.getImage();
-//        this.content = postRequestDto.getContent();
-//        this.address = postRequestDto.getAddress();
-//        this.tag = postRequestDto.getTag();
-//        this.time = postRequestDto.getTime();
-//        this.amount = postRequestDto.getAmount();
-//    }
-//
-//    public void update(PostRequestDto postRequestDto) {
-//        this.title = postRequestDto.getTitle();
-//        this.image = postRequestDto.getImage();
-//        this.content = postRequestDto.getContent();
-//        this.address = postRequestDto.getAddress();
-//        this.tag = postRequestDto.getTag();
-//        this.time = postRequestDto.getTime();
-//        this.amount = postRequestDto.getAmount();
-//    }
-
-
-=======
-    private String tag;
->>>>>>> 2b349465c063830008cff61d690f09b746f1c08b
 
 }

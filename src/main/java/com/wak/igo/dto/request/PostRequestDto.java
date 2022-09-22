@@ -14,7 +14,7 @@ public class PostRequestDto {
     private Long id_post;
     private String title;
     private String content;
-    private String image;
+    private String imgurl;
     private int time;
     private int amount;
     private String address;
