@@ -1,6 +1,6 @@
 # gradle-deploy.yml
 
-name: logging-system
+name: logging-system11
 
 on:
   push:
