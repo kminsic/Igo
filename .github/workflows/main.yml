@@ -53,8 +53,8 @@ jobs:
         
       - name: Deploy to AWS EC2 from S3
           
-        run: aws deploy create-deployment 
-          --deployment-config-name CodeDeployDefault.AllAtOnce 
+        run: aws deploy create-deployment
+          --deployment-config-name CodeDeployDefault.AllAtOnce
           --deployment-group-name develop
           --s3-location bucket=$S3_BUCKET_NAME,key=GITHUB.zip,bundleType=zip
           --application-name logging-systme-deploy
