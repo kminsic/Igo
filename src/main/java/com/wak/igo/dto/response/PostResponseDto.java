@@ -13,14 +13,15 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class PostResponseDto {
 
-    private Long id_post;
+    private Long id;
     private String title;
     private String content;
     private String address;
+    private String time;
     private int heart;
     private int amount;
     private int viewcount;
-    private String image;
+    private int image;
     private String tag;
 //    private List<CategoryResponseDto> categoryResponseDtoList;
     private LocalDateTime createdAt;
