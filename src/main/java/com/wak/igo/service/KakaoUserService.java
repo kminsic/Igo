@@ -9,8 +9,7 @@ import com.wak.igo.domain.UserDetailsImpl;
 import com.wak.igo.jwt.TokenProvider;
 import com.wak.igo.repository.MemberRepository;
 import com.wak.igo.request.TokenDto;
-import com.wak.igo.request.KakaoUserInfo;
-import com.wak.igo.response.ResponseDto;
+import com.wak.igo.request.MemberInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
@@ -35,20 +34,12 @@ public class KakaoUserService {
     private final MemberRepository memberRepository;
     private final TokenProvider tokenProvider;
 
-    public ResponseDto<?> kakaologout(UserDetailsImpl userDetails){
-        if (null == userDetails.getMember()) {
-            return ResponseDto.fail("MEMBER_NOT_FOUND",
-                    "사용자를 찾을 수 없습니다.");
-        }
-        return tokenProvider.deleteRefreshToken(userDetails.getMember());
-    }
-
-    public KakaoUserInfo kakaologin(String code, HttpServletResponse response) throws JsonProcessingException {
+    public MemberInfo kakaologin(String code, HttpServletResponse response) throws JsonProcessingException {
         // 1. "인가 코드"로 전체 response 요청
         String accessToken = getAccessToken(code);
 
         // 2. response에 access token으로 카카오 api 호출
-        KakaoUserInfo kakaoUserInfo = getkakaoUserInfo(accessToken);
+        MemberInfo kakaoUserInfo = getkakaoUserInfo(accessToken);
 
         // 3. 필요시에 회원가입
         Member kakaoUser = registerKakaoUserIfNeeded(kakaoUserInfo);
@@ -71,8 +62,10 @@ public class KakaoUserService {
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
         body.add("client_id", "fdb42734830cbb186c8221bf3acdd6c6");
+//        body.add("client_id", "3d365192ea8ab4f32c7f9c1d7c5688e1");
         body.add("client_secret", "FuvfQecT3uPmfM3wlzF5VxRJU7Iz654F");
-        body.add("redirect_uri", "http://localhost:8080/kakao/callback");
+        body.add("redirect_url", "http://localhost:8080/kakao/callback");
+//        body.add("redirect_uri", "http://localhost:3000/kakaoloading");
         body.add("code", code);
 
         // HTTP 요청 보내기
@@ -93,7 +86,7 @@ public class KakaoUserService {
         return jsonNode.get("access_token").asText();
     }
 
-    private KakaoUserInfo getkakaoUserInfo(String accessToken) throws JsonProcessingException {
+    private MemberInfo getkakaoUserInfo(String accessToken) throws JsonProcessingException {
         // HTTP Header 생성
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + accessToken);
@@ -115,10 +108,10 @@ public class KakaoUserService {
         String id = jsonNode.get("id").asText();
         String nickname = jsonNode.get("properties").get("nickname").asText();
         log.info("카카오 사용자 정보: " + id + ", " + nickname);
-        return new KakaoUserInfo(id, nickname);
+        return new MemberInfo(id, nickname);
     }
 
-    private Member registerKakaoUserIfNeeded(KakaoUserInfo kakaoUserInfo) {
+    private Member registerKakaoUserIfNeeded(MemberInfo kakaoUserInfo) {
         // DB 에 중복된 Kakao Id 가 있는지 확인
         String kakaoId = kakaoUserInfo.getId();
 //        String kakaoId = kakaoUserInfo.getMemberId();

@@ -25,7 +25,6 @@ public class UserDetailsImpl implements UserDetails {
         authorities.add(authority);
         return authorities;
     }
-
     @Override
     public String getPassword() {
         return member.getPassword();
@@ -35,7 +34,6 @@ public class UserDetailsImpl implements UserDetails {
     public String getUsername() {
         return member.getNickname();
     }
-
     @Override
     public boolean isAccountNonExpired() {
         return true;
