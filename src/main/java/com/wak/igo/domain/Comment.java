@@ -13,7 +13,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Comment {
+public class Comment extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_comment;
@@ -21,12 +21,12 @@ public class Comment {
     @Column(nullable = false)
     private String content;
 
-    @JoinColumn(name = "id_post", nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Post post;
-
-    @JoinColumn(name = "id_member", nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Member member;
+//    @JoinColumn(name = "id_post", nullable = false)
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    private Post post;
+//
+//    @JoinColumn(name = "id_member", nullable = false)
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    private Member member;
 
 }

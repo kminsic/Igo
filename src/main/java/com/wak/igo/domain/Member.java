@@ -32,9 +32,8 @@ public class Member {
     @Column
     private String profileimage;
 
-    @JoinColumn(name = "id_category", nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Category category;
+    @Column
+    private String tag;
 
 
 }

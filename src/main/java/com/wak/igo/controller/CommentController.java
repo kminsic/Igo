@@ -12,6 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 @RequiredArgsConstructor
 @RestController
-public class MyPostController {
+public class CommentController {
+    private final CommentService commentService;
 
+    @PostMapping("api/comment")
+    public ResponseDto<?> createComment(@RequestBody CommentRequestDto requestDto){
+        return commentService.createComment(requestDto);
+    }
 }
