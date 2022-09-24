@@ -64,6 +64,7 @@ public class SecurityConfiguration {
 
                 .and()
                 .authorizeRequests()
+                .antMatchers("/", "/**").permitAll()
                 .antMatchers("/kakao/**").permitAll()
                 .antMatchers("/naver/**").permitAll()
                 .anyRequest().authenticated()
@@ -78,6 +79,7 @@ public class SecurityConfiguration {
     public UrlBasedCorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
+        configuration.addAllowedOrigin("http://localhost:3000");
         configuration.addAllowedOriginPattern("*");
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
