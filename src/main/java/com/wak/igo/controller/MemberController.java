@@ -1,13 +1,13 @@
 package com.wak.igo.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.wak.igo.domain.UserDetailsImpl;
 import com.wak.igo.service.KakaoUserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @RequiredArgsConstructor
