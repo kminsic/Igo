@@ -33,7 +33,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class JwtFilter extends OncePerRequestFilter {
 
     public static String AUTHORIZATION_HEADER = "Authorization";
-    public static String BEARER_PREFIX = "Bearer ";
+    public static String BEARER_PREFIX = "BEARER";
 
     public static String AUTHORITIES_KEY = "auth";
 
@@ -47,7 +47,6 @@ public class JwtFilter extends OncePerRequestFilter {
 
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         Key key = Keys.hmacShaKeyFor(keyBytes);
-
         String jwt = resolveToken(request);
 
         if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {

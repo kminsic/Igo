@@ -8,8 +8,10 @@ import com.wak.igo.domain.Member;
 import com.wak.igo.domain.UserDetailsImpl;
 import com.wak.igo.jwt.TokenProvider;
 import com.wak.igo.repository.MemberRepository;
+import com.wak.igo.repository.RefreshTokenRepository;
 import com.wak.igo.request.TokenDto;
 import com.wak.igo.request.MemberInfo;
+import com.wak.igo.response.ResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
@@ -23,6 +25,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
@@ -34,7 +37,15 @@ public class KakaoUserService {
     private final MemberRepository memberRepository;
     private final TokenProvider tokenProvider;
 
-    public MemberInfo kakaologin(String code, HttpServletResponse response) throws JsonProcessingException {
+    public ResponseDto<?> logout(UserDetailsImpl userDetails){
+        if (null == userDetails.getAuthorities()) {
+            ResponseDto.fail("MEMBER_NOT_FOUND",
+                    "사용자를 찾을 수 없습니다.");
+        }
+        return tokenProvider.deleteRefreshToken(userDetails.getMember());
+    }
+
+    public ResponseDto<String> kakaologin(String code, HttpServletResponse response) throws JsonProcessingException {
         // 1. "인가 코드"로 전체 response 요청
         String accessToken = getAccessToken(code);
 
@@ -45,11 +56,11 @@ public class KakaoUserService {
         Member kakaoUser = registerKakaoUserIfNeeded(kakaoUserInfo);
 
         // 4. 강제 로그인 처리
-        forceLogin(kakaoUser);
+        Authentication authentication = forceLogin(kakaoUser);
 
         // 5. response Header에 JWT 토큰 추가
-        kakaoUsersAuthorizationInput(kakaoUser, response);
-        return kakaoUserInfo;
+        kakaoUsersAuthorizationInput(authentication, response);
+        return ResponseDto.success(kakaoUserInfo.getNickname());
 
     }
 
@@ -61,11 +72,11 @@ public class KakaoUserService {
         // HTTP Body 생성
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
-        body.add("client_id", "fdb42734830cbb186c8221bf3acdd6c6");
-//        body.add("client_id", "3d365192ea8ab4f32c7f9c1d7c5688e1");
+//        body.add("client_id", "fdb42734830cbb186c8221bf3acdd6c6");        // localhost client_id
+        body.add("client_id", "3d365192ea8ab4f32c7f9c1d7c5688e1");          // 프론트엔드 client_id
         body.add("client_secret", "FuvfQecT3uPmfM3wlzF5VxRJU7Iz654F");
-        body.add("redirect_url", "http://localhost:8080/kakao/callback");
-//        body.add("redirect_uri", "http://localhost:3000/kakaoloading");
+//        body.add("redirect_url", "http://localhost:8080/kakao/callback"); // localhost redirect_url
+        body.add("redirect_uri", "http://localhost:3000/kakaoloading");     // 프론트엔드 redirect_url
         body.add("code", code);
 
         // HTTP 요청 보내기
@@ -113,7 +124,7 @@ public class KakaoUserService {
 
     private Member registerKakaoUserIfNeeded(MemberInfo kakaoUserInfo) {
         // DB 에 중복된 Kakao Id 가 있는지 확인
-        String kakaoId = kakaoUserInfo.getId();
+        String kakaoId = kakaoUserInfo.getMemberid();
 //        String kakaoId = kakaoUserInfo.getMemberId();
         Member kakaoUser = memberRepository.findByMemberid(kakaoId)
                 .orElse(null);
@@ -137,15 +148,17 @@ public class KakaoUserService {
         return kakaoUser;
     }
 
-    private void forceLogin(Member kakaoUser) {
+    private Authentication forceLogin(Member kakaoUser) {
         UserDetails userDetails = new UserDetailsImpl(kakaoUser);
         Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
+        return authentication;
     }
 
-    private void kakaoUsersAuthorizationInput(Member kakaouser, HttpServletResponse response) {
+    private void kakaoUsersAuthorizationInput(Authentication authentication, HttpServletResponse response) {
         // response header에 token 추가
-        TokenDto token = tokenProvider.generateTokenDto(kakaouser);
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getAuthorities();
+        TokenDto token = tokenProvider.generateTokenDto(userDetails);
         response.addHeader("Authorization", "BEARER" + " " + token.getAccessToken());
         response.addHeader("RefreshToken", token.getRefreshToken());
         response.addHeader("Access-Token-Expire-Time", token.getAccessTokenExpiresIn().toString());
