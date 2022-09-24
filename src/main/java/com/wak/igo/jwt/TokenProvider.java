@@ -49,12 +49,12 @@ public class TokenProvider {
 
     public TokenDto generateTokenDto(UserDetailsImpl userDetails) {
         long now = (new Date().getTime());
-        // access token 생성
+        // access token 생성 (사용자 정보를 복호화)
         Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
         String accessToken = Jwts.builder()
-                .setSubject(userDetails.getMemberId())                           // payload "sub": "name"
+                .setSubject(userDetails.getMemberId())                       // payload "sub": "memberId"
                 .claim(AUTHORITIES_KEY, Authority.ROLE_MEMBER.toString())   // payload "auth" : "ROLE_USER
-                .setExpiration(accessTokenExpiresIn)                        // payload "exp" : 1234321 (예시)
+                .setExpiration(accessTokenExpiresIn)                        // payload "exp" :
                 .signWith(key, SignatureAlgorithm.HS256)                    // header "alg" : "HS512"
                 .compact();
         // refresh token 생성
@@ -69,7 +69,7 @@ public class TokenProvider {
                 .keyValue(refreshToken)
                 .build();
 
-        refreshTokenRepository.save(refreshTokenObject);
+        refreshTokenRepository.save(refreshTokenObject); // refreshToken 저장
 
         return TokenDto.builder()
                 .grantType(BEARER_PREFIX)
@@ -89,6 +89,7 @@ public class TokenProvider {
         return (UserDetailsImpl) authentication.getPrincipal();
     }
 
+    // 토큰 유효성 검증
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
@@ -117,7 +118,6 @@ public class TokenProvider {
         if (null == refreshToken) {
             return ResponseDto.fail("TOKEN_NOT_FOUND", "존재하지 않는 Token 입니다.");
         }
-
         refreshTokenRepository.delete(refreshToken);
         return ResponseDto.success("delete success");
     }
