@@ -1,4 +1,4 @@
 package com.wak.igo.repository;
 
-public class MyPostRepository {
+public interface MyPostRepository {
 }
