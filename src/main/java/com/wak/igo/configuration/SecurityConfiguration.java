@@ -19,8 +19,13 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.method.annotation.AuthenticationPrincipalArgumentResolver;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -64,8 +69,9 @@ public class SecurityConfiguration {
 
                 .and()
                 .authorizeRequests()
-                .antMatchers("/kakao/**").permitAll()
-                .antMatchers("/naver/**").permitAll()
+                .antMatchers("/kakao/callback").permitAll()
+                .antMatchers("/naver/callback").permitAll()
+                .antMatchers("/","/**").permitAll()
                 .anyRequest().authenticated()
 
                 .and()
