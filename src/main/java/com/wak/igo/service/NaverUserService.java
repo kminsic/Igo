@@ -9,6 +9,7 @@ import com.wak.igo.jwt.TokenProvider;
 import com.wak.igo.repository.MemberRepository;
 import com.wak.igo.request.MemberInfo;
 import com.wak.igo.request.TokenDto;
+import com.wak.igo.response.ResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
@@ -35,17 +36,17 @@ public class NaverUserService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
-    public MemberInfo naverlogin(String code, String state, HttpServletResponse response) throws JsonProcessingException {
+    public ResponseDto<String> naverlogin(String code, String state, HttpServletResponse response) throws JsonProcessingException {
         String accesstoken = getAccessToken(code, state);
 
         MemberInfo MemberInfo = getMemberInfo(accesstoken);
 
         Member naverUser = registerNaverUserIfNeeded(MemberInfo);
 
-        forceLogin(naverUser);
+        Authentication authentication = forceLogin(naverUser);
 
-        naverUsersAuthorizationInput(naverUser, response);
-        return MemberInfo;
+        naverUsersAuthorizationInput(authentication, response);
+        return ResponseDto.success(MemberInfo.getNickname());
     }
 
     private String getAccessToken(String code, String state) throws JsonProcessingException {
@@ -56,8 +57,10 @@ public class NaverUserService {
         // HTTP Body 생성
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
-        body.add("client_id", "DmLVvurxVnPCqlnSp0XZ");
-        body.add("client_secret", "9fbJI0kZub");
+//        body.add("client_id", "DmLVvurxVnPCqlnSp0XZ");      // localhost client_id
+        body.add("client_id", "1tmOBpKKBicBaUmPQpaF");        // 프론트엔드 client_id
+//        body.add("client_secret", "9fbJI0kZub");            // localhost client_secret
+        body.add("client_secret", "ybrSh2bxg2");              // 프론트엔드 client_secret
         body.add("code", code);
         body.add("state", state);
 
@@ -98,21 +101,21 @@ public class NaverUserService {
         String responseBody = response.getBody();
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(responseBody);
-        String id = jsonNode.get("response").get("id").asText();
+        String memberid = jsonNode.get("response").get("id").asText();
         String nickname = jsonNode.get("response").get("name").asText();
-        log.info("네이버 사용자 정보: " + id + ", " + nickname);
-        return new MemberInfo(id, nickname);
+        log.info("네이버 사용자 정보: " + memberid + ", " + nickname);
+        return new MemberInfo(memberid, nickname);
     }
 
     private Member registerNaverUserIfNeeded(MemberInfo MemberInfo) {
         // DB 에 중복된 Kakao Id 가 있는지 확인
-        String naverId = MemberInfo.getId();
+        String naverId = MemberInfo.getMemberid();
 //        String kakaoId = kakaoUserInfo.getMemberId();
         Member naverUser = memberRepository.findByMemberid(naverId)
                 .orElse(null);
         if (naverUser == null) {
             // 회원가입
-            // nickname: kakao nickname
+            // nickname: naver name
             String nickname = MemberInfo.getNickname();
 
             // password: random UUID
@@ -130,15 +133,17 @@ public class NaverUserService {
         return naverUser;
     }
 
-    private void forceLogin(Member naverUser) {
+    private Authentication forceLogin(Member naverUser) {
         UserDetails userDetails = new UserDetailsImpl(naverUser);
         Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
+        return authentication;
     }
 
-    private void naverUsersAuthorizationInput(Member naveruser, HttpServletResponse response) {
+    private void naverUsersAuthorizationInput(Authentication authentication, HttpServletResponse response) {
         // response header에 token 추가
-        TokenDto token = tokenProvider.generateTokenDto(naveruser);
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        TokenDto token = tokenProvider.generateTokenDto(userDetails);
         response.addHeader("Authorization", "BEARER" + " " + token.getAccessToken());
         response.addHeader("RefreshToken", token.getRefreshToken());
         response.addHeader("Access-Token-Expire-Time", token.getAccessTokenExpiresIn().toString());

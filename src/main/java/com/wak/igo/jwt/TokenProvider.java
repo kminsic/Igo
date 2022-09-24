@@ -47,25 +47,25 @@ public class TokenProvider {
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public TokenDto generateTokenDto(Member member) {
+    public TokenDto generateTokenDto(UserDetailsImpl userDetails) {
         long now = (new Date().getTime());
-
+        // access token 생성
         Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
         String accessToken = Jwts.builder()
-                .setSubject(member.getNickname())
-                .claim(AUTHORITIES_KEY, Authority.ROLE_MEMBER.toString())
-                .setExpiration(accessTokenExpiresIn)
-                .signWith(key, SignatureAlgorithm.HS256)
+                .setSubject(userDetails.getMemberId())                           // payload "sub": "name"
+                .claim(AUTHORITIES_KEY, Authority.ROLE_MEMBER.toString())   // payload "auth" : "ROLE_USER
+                .setExpiration(accessTokenExpiresIn)                        // payload "exp" : 1234321 (예시)
+                .signWith(key, SignatureAlgorithm.HS256)                    // header "alg" : "HS512"
                 .compact();
-
+        // refresh token 생성
         String refreshToken = Jwts.builder()
                 .setExpiration(new Date(now + REFRESH_TOKEN_EXPRIRE_TIME))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
 
         RefreshToken refreshTokenObject = RefreshToken.builder()
-                .id(member.getId())
-                .member(member)
+                .id(userDetails.getId_member())
+                .member(userDetails.getMember())
                 .keyValue(refreshToken)
                 .build();
 
@@ -80,13 +80,13 @@ public class TokenProvider {
 
     }
 
-    public Member getMemberFromAuthentication() {
+    public UserDetailsImpl getMemberFromAuthentication() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || AnonymousAuthenticationToken.class.
                 isAssignableFrom(authentication.getClass())) {
             return null;
         }
-        return ((UserDetailsImpl) authentication.getPrincipal()).getMember();
+        return (UserDetailsImpl) authentication.getPrincipal();
     }
 
     public boolean validateToken(String token) {
