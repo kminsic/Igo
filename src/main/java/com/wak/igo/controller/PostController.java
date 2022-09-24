@@ -11,29 +11,29 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
-@RequiredArgsConstructor
 @RestController
+@RequiredArgsConstructor
 public class PostController {
 
     private final PostService postService;
 
-    // 전체 목록 조회(메인 페이지)
-    @GetMapping("/api/post")
-    public ResponseDto<?> getAllPosts() {
-        return postService.getAllPosts();
-    }
-
-    //처음 추천 페이지 (Member ID)
-    @GetMapping("/api/recommend/{id}")
-    public ResponseDto<?> getRecommend(@PathVariable Long id) {
-        return postService.getRecommend(id);
-    }
-
-    // 게시글 상세 페이지(Post ID)
-    @GetMapping("/api/detail/{id}")
-    public ResponseDto<?> getDetail(@PathVariable Long id) {
-        return postService.getDetail(id);
-    }
+//    // 전체 목록 조회(메인 페이지)
+//    @GetMapping("/api/post")
+//    public ResponseDto<?> getAllPosts() {
+//        return postService.getAllPosts();
+//    }
+//
+//    //처음 추천 페이지 (Member ID)
+//    @GetMapping("/api/recommend/{id}")
+//    public ResponseDto<?> getRecommend(@PathVariable Long id) {
+//        return postService.getRecommend(id);
+//    }
+//
+//    // 게시글 상세 페이지(Post ID)
+//    @GetMapping("/api/detail/{id}")
+//    public ResponseDto<?> getDetail(@PathVariable Long id) {
+//        return postService.getDetail(id);
+//    }
 
 
     // 게시글 등록
@@ -59,11 +59,11 @@ public class PostController {
 //
 
     // 게시글 삭제
-    @DeleteMapping("/api/post/{id}")
-    public ResponseDto<?> deletePost(@PathVariable Long id) {
-//        postRepository.delete(id);
-        return postService.deletePost(id);
-    }
+//    @DeleteMapping("/api/post/{id}")
+//    public ResponseDto<?> deletePost(@PathVariable Long id) {
+////        postRepository.delete(id);
+//        return postService.deletePost(id);
+//    }
 
 }
 
