@@ -64,8 +64,8 @@ public class SecurityConfiguration {
 
                 .and()
                 .authorizeRequests()
-                .antMatchers("/kakao/**").permitAll()
-                .antMatchers("/naver/**").permitAll()
+//                .antMatchers("/kakao/**").permitAll()
+//                .antMatchers("/naver/**").permitAll()
                 .anyRequest().authenticated()
 
                 .and()

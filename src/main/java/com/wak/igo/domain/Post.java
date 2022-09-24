@@ -20,6 +20,10 @@ public class Post extends Timestamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JoinColumn(name = "memberid", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Member member;
+
     @Column(nullable = false) //
     private String title;
 
