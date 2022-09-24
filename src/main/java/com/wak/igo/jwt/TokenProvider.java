@@ -4,8 +4,8 @@ import com.wak.igo.domain.Member;
 import com.wak.igo.domain.RefreshToken;
 import com.wak.igo.domain.UserDetailsImpl;
 import com.wak.igo.repository.RefreshTokenRepository;
-import com.wak.igo.request.TokenDto;
-import com.wak.igo.response.ResponseDto;
+import com.wak.igo.dto.request.TokenDto;
+import com.wak.igo.dto.response.ResponseDto;
 import com.wak.igo.shared.Authority;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -64,7 +64,7 @@ public class TokenProvider {
                 .compact();
 
         RefreshToken refreshTokenObject = RefreshToken.builder()
-                .id(userDetails.getId_member())
+                .id(userDetails.getId())
                 .member(userDetails.getMember())
                 .keyValue(refreshToken)
                 .build();

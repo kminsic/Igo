@@ -1,15 +1,11 @@
 package com.wak.igo.domain;
 
-import com.wak.igo.dto.request.PostRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -67,33 +63,4 @@ public class Post extends Timestamped {
         this.viewcount++;
 
     }
-    public Post(PostRequestDto postRequestDto) {
-        this.title = postRequestDto.getTitle();
-        this.imgurl = postRequestDto.getImgurl();
-        this.content = postRequestDto.getContent();
-        this.address = postRequestDto.getAddress();
-        this.tag = postRequestDto.getTag();
-        this.time = postRequestDto.getTime();
-        this.amount = postRequestDto.getAmount();
-    }
-
-    public void update(PostRequestDto postRequestDto) {
-        this.title = postRequestDto.getTitle();
-        this.imgurl = postRequestDto.getImgurl();
-        this.content = postRequestDto.getContent();
-        this.address = postRequestDto.getAddress();
-        this.tag = postRequestDto.getTag();
-        this.time = postRequestDto.getTime();
-        this.amount = postRequestDto.getAmount();
-    }
-
-
-//        @CreationTimestamp
-//    @Column
-//    private LocalDateTime createdAt = LocalDateTime.now();
-//
-////    @UpdateTimestamp
-//    @Column
-//    private LocalDateTime updatedAt = LocalDateTime.now();
-
 }

@@ -7,9 +7,9 @@ import com.wak.igo.domain.Member;
 import com.wak.igo.domain.UserDetailsImpl;
 import com.wak.igo.jwt.TokenProvider;
 import com.wak.igo.repository.MemberRepository;
-import com.wak.igo.request.MemberInfo;
-import com.wak.igo.request.TokenDto;
-import com.wak.igo.response.ResponseDto;
+import com.wak.igo.dto.request.MemberInfo;
+import com.wak.igo.dto.request.TokenDto;
+import com.wak.igo.dto.response.ResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
@@ -57,10 +57,10 @@ public class NaverUserService {
         // HTTP Body 생성
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
-//        body.add("client_id", "DmLVvurxVnPCqlnSp0XZ");      // localhost client_id
-        body.add("client_id", "1tmOBpKKBicBaUmPQpaF");        // 프론트엔드 client_id
-//        body.add("client_secret", "9fbJI0kZub");            // localhost client_secret
-        body.add("client_secret", "ybrSh2bxg2");              // 프론트엔드 client_secret
+        body.add("client_id", "DmLVvurxVnPCqlnSp0XZ");      // localhost client_id
+//        body.add("client_id", "1tmOBpKKBicBaUmPQpaF");        // 프론트엔드 client_id
+        body.add("client_secret", "9fbJI0kZub");            // localhost client_secret
+//        body.add("client_secret", "ybrSh2bxg2");              // 프론트엔드 client_secret
         body.add("code", code);
         body.add("state", state);
 

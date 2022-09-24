@@ -2,7 +2,7 @@ package com.wak.igo.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.wak.igo.domain.UserDetailsImpl;
-import com.wak.igo.response.ResponseDto;
+import com.wak.igo.dto.response.ResponseDto;
 import com.wak.igo.service.KakaoUserService;
 import com.wak.igo.service.NaverUserService;
 import io.jsonwebtoken.io.IOException;
