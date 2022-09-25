@@ -12,5 +12,4 @@ import java.util.List;
 @AllArgsConstructor
 public class MyPageResponseDto {
     private List<PostResponseDto> postResponseDtoList;
-
 }
