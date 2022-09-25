@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,28 +27,34 @@ public class PostService {
 
     //전체 게시글 조회 (Tag X)
     @Transactional
-    public ResponseDto<?> getAllPosts() {
-        return ResponseDto.success(postRepository.findAllByPostByCreatedAtDesc());
+    public ResponseDto<?> getAllPosts(String type) {
+        if (type.equals("create")) {
+            return ResponseDto.success(postRepository.findAllByOrderByCreatedAtDesc());
+        } else if (type.equals("view")) {
+            return ResponseDto.success(postRepository.findAllByOrderByViewCountDesc());
+        } else if (type.equals("heart")) {
+            return ResponseDto.success(postRepository.findAllByOrderByHeartDesc());
+        } else
+            return ResponseDto.fail("잘못된 URL 입니다.", "잘못된 접근입니다");
     }
 
-
-    //상세 페이지 조회
+    //
+//
+//    //상세 페이지 조회
     @Transactional
     public ResponseDto<?> getDetail(Long id) {
 
         Post post = postRepository.findById(id).get();
-        post.add_viewcount();
+        post.add_viewCount();
         return ResponseDto.success(
                 PostResponseDto.builder()
-                        .title(post.getTitle())
+                        .heart(post.getHeart())
+                        .viewCount(post.getViewCount())
                         .imgurl(post.getImgurl())
-                        .content(post.getContent())
-                        .address(post.getAddress())
                         .amount(post.getAmount())
                         .time(post.getTime())
-                        .viewcount(post.getViewcount())
                         //신고하기 기능 구현 x
-//                .report(0)
+//                        .report(0)
                         .tag(post.getTag())
                         .createdAt(post.getCreatedAt())
                         .modifiedAt(post.getModifiedAt())
@@ -56,47 +63,46 @@ public class PostService {
 
     }
 
-        // 처음 추천 페이지
-        @Transactional
-        public ResponseDto<?> getRecommend (Long id){
+    // 처음 추천 페이지
+    @Transactional
+    public ResponseDto<?> getRecommend(Long id) {
 
-            Member member = memberRepository.findById(1L).get();
+        Member member = memberRepository.findById(1L).get();
 
-            String[] sarr = member.getTag().split("#");
-            List<Post> postList = new ArrayList<>();
-            for (String s : sarr) {
-                List<Post> byTagContaining = postRepository.findByTagContaining(s);
-                for (Post post : byTagContaining) {
-                    if (postList.contains(post)) {
-                        continue;
-                    } else
-                        postList.add(post);
-                }
+        String[] sarr = member.getTag().split("#");
+        List<Post> postList = new ArrayList<>();
+        for (String s : sarr) {
+            List<Post> byTagContaining = postRepository.findByTagContaining(s);
+            for (Post post : byTagContaining) {
+                if (postList.contains(post)) {
+                    continue;
+                } else
+                    postList.add(post);
             }
-            return ResponseDto.success(postList);
         }
+        return ResponseDto.success(postList);
+    }
 
 
     //게시글 생성
     @Transactional
-    public ResponseDto<?> createPost(PostRequestDto postRequestDto , MultipartFile multipartFile)throws IOException {
+    public ResponseDto<?> createPost(PostRequestDto postRequestDto) throws IOException {
         Post post = Post.builder()
-                .title(postRequestDto.getTitle())
                 .imgurl(postRequestDto.getImgurl())
                 .content(postRequestDto.getContent())
                 .address(postRequestDto.getAddress())
                 .amount(postRequestDto.getAmount())
                 .time(postRequestDto.getTime())
-                .viewcount(0)
+                .heart(0)
+                .viewCount(0)
                 //신고하기 기능 구현 x
 //                .report(0)
                 .tag(postRequestDto.getTag())
                 .build();
-
         postRepository.save(post);
 
         return ResponseDto.success("게시글 작성이 완료되었습니다.");
-    }
+    }//원하시면 추가
 //                PostResponseDto.builder()
 //                        .title(postRequestDto.getTitle())
 //                         .imgurl(postRequestDto.getImgurl())
@@ -113,26 +119,27 @@ public class PostService {
 //                        .build());
 
 
+    //    게시글 수정
+    @Transactional
+    public ResponseDto<?> updatePost(
+            Long id, PostRequestDto requestDto) throws IOException {
+        Post post = isPresentPost(id);
 
+        if (null == post) {
+            return ResponseDto.fail("NOT_FOUND", "게시글이 존재하지 않습니다.");
+        }
 
+        post.update(requestDto);
+        return ResponseDto.success("update success");
 
-    //게시글 수정
-//    @Transactional
-//    public ResponseDto<Post> updatePost(
-//            Long id, PostRequestDto requestDto, MultipartFile multipartFile) throws IOException {
-//        Post post = isPresentPost(id);
-//        if (null == post) {
-//            return ResponseDto.fail("NOT_FOUND", "게시글이 존재하지 않습니다.");}
-//    }
-//
-
-
+    }
 
 
     //게시글 삭제
     @Transactional
-    public ResponseDto<?> deletePost(Long id_post) {
-        Post post = isPresentPost(id_post);
+    public ResponseDto<?> deletePost(Long id) {
+        //이게 이미 Optional이란 소리인가? Post 부른순간?
+        Post post = isPresentPost(id);
         postRepository.delete(post);
         return ResponseDto.success("Success");
 
@@ -144,4 +151,13 @@ public class PostService {
         Optional<Post> optionalPost = postRepository.findById(id);
         return optionalPost.orElse(null);
     }
+
+
+    //신고기능 미구현
+//    @Transactional
+//    public ResponseDto<?> getReport(Long id) {
+//        if
+//
+//    }
+
 }

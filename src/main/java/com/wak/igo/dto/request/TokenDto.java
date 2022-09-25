@@ -1,4 +1,4 @@
-package com.wak.igo.request;
+package com.wak.igo.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
