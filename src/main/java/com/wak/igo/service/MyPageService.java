@@ -2,6 +2,7 @@ package com.wak.igo.service;
 
 import com.wak.igo.domain.Member;
 import com.wak.igo.domain.Post;
+import com.wak.igo.domain.UserDetailsImpl;
 import com.wak.igo.dto.response.MyPageResponseDto;
 import com.wak.igo.dto.response.PostResponseDto;
 import com.wak.igo.jwt.TokenProvider;
@@ -33,7 +34,7 @@ public class MyPageService {
                     "로그인이 필요합니다.");
         }
 
-        Member member = validateMember(request);
+        Member member = validateMember(request).getMember();
         if (null == member) {
             return ResponseDto.fail("INVALID_TOKEN", "Token이 유효하지 않습니다.");
         }
@@ -62,7 +63,7 @@ public class MyPageService {
         );
     }
     @Transactional
-    public Member validateMember(HttpServletRequest request) {
+    public UserDetailsImpl validateMember(HttpServletRequest request) {
         if (!tokenProvider.validateToken(request.getHeader("Refresh-Token"))) {
             return null;
         }

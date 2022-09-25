@@ -57,12 +57,7 @@ public class Post extends Timestamped {
     @Column(nullable = false)
     private String tag;
 
-    @OneToMany(
-            mappedBy = "user",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = FetchType.LAZY)
-    private List<Heart> hearts;
+
 
     public void add_viewcount() {
 

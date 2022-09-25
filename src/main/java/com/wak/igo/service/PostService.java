@@ -3,23 +3,20 @@ package com.wak.igo.service;
 import com.wak.igo.domain.Heart;
 import com.wak.igo.domain.Member;
 import com.wak.igo.domain.Post;
+import com.wak.igo.domain.UserDetailsImpl;
 import com.wak.igo.dto.request.PostRequestDto;
 import com.wak.igo.dto.response.PostResponseDto;
 import com.wak.igo.dto.response.ResponseDto;
 import com.wak.igo.jwt.TokenProvider;
 import com.wak.igo.repository.HeartRepository;
-import com.wak.igo.repository.MemberRepository;
 import com.wak.igo.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -140,7 +137,7 @@ public class PostService {
                     "로그인이 필요합니다.");
         }
 
-        Member member = validateMember(request);
+        Member member = validateMember(request).getMember();
         if (null == member) {
             return ResponseDto.fail("INVALID_TOKEN", "Token이 유효하지 않습니다.");
         }
@@ -170,7 +167,7 @@ public class PostService {
     }
 
     @Transactional
-    public Member validateMember(HttpServletRequest request) {
+    public UserDetailsImpl validateMember(HttpServletRequest request) {
         if (!tokenProvider.validateToken(request.getHeader("Refresh-Token"))) {
             return null;
         }

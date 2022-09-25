@@ -8,10 +8,11 @@ import com.wak.igo.service.NaverUserService;
 import io.jsonwebtoken.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 // https://kauth.kakao.com/oauth/authorize?client_id=3d365192ea8ab4f32c7f9c1d7c5688e1&redirect_uri=http://localhost:3000/kakaoloading&response_type=code
 // 카카오 로그인 url - https://kauth.kakao.com/oauth/authorize?client_id=fdb42734830cbb186c8221bf3acdd6c6&redirect_uri=http://localhost:8080/kakao/callback&response_type=code
@@ -24,6 +25,8 @@ public class LoginController {
 
     @RequestMapping(value = "/kakao/callback", method = RequestMethod.GET)
     public ResponseDto<String> kakaologin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
+        System.out.println(code);
+        System.out.println(response);
         return kakaoUserService.kakaologin(code, response);
     }
 

@@ -11,7 +11,7 @@ import java.io.IOException;
 
 @RequiredArgsConstructor
 @RestController
-public class postController {
+public class PostController {
 
     private final PostService postService;
 
