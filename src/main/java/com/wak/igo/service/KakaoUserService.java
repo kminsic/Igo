@@ -8,7 +8,6 @@ import com.wak.igo.domain.Member;
 import com.wak.igo.domain.UserDetailsImpl;
 import com.wak.igo.jwt.TokenProvider;
 import com.wak.igo.repository.MemberRepository;
-import com.wak.igo.repository.RefreshTokenRepository;
 import com.wak.igo.request.TokenDto;
 import com.wak.igo.request.MemberInfo;
 import com.wak.igo.response.ResponseDto;
@@ -25,7 +24,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import javax.servlet.http.HttpServletRequest;
+
 import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
