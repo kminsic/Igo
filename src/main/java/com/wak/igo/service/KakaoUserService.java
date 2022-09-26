@@ -47,7 +47,7 @@ public class KakaoUserService {
     public ResponseDto<String> kakaologin(String code, HttpServletResponse response) throws JsonProcessingException {
         // 1. "인가 코드"로 전체 response 요청
         String accessToken = getAccessToken(code);
-
+        System.out.println(code);
         // 2. response에 access token으로 카카오 api 호출
         MemberInfo kakaoUserInfo = getkakaoUserInfo(accessToken);
 
@@ -59,6 +59,7 @@ public class KakaoUserService {
 
         // 5. response Header에 JWT 토큰 추가
         kakaoUsersAuthorizationInput(authentication, response);
+        System.out.println(response);
         return ResponseDto.success(kakaoUserInfo.getNickname());
 
     }
@@ -71,7 +72,7 @@ public class KakaoUserService {
         // HTTP Body 생성
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
-        body.add("client_id", "fdb42734830cbb186c8221bf3acdd6c6");        // localhost client_id
+        body.add("client_id", "275993ddadd902bd6955868babe16b02");        // localhost client_id
 //        body.add("client_id", "3d365192ea8ab4f32c7f9c1d7c5688e1");          // 프론트엔드 client_id
         body.add("client_secret", "FuvfQecT3uPmfM3wlzF5VxRJU7Iz654F");
         body.add("redirect_url", "http://localhost:8080/kakao/callback"); // localhost redirect_url
@@ -157,6 +158,7 @@ public class KakaoUserService {
     private void kakaoUsersAuthorizationInput(Authentication authentication, HttpServletResponse response) {
         // response header에 token 추가
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getAuthorities();
+        System.out.println(response);
         TokenDto token = tokenProvider.generateTokenDto(userDetails);
         response.addHeader("Authorization", "BEARER" + " " + token.getAccessToken());
         response.addHeader("RefreshToken", token.getRefreshToken());

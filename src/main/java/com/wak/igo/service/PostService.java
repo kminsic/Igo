@@ -62,7 +62,7 @@ public class PostService {
 
     //게시글 생성
     @Transactional
-    public ResponseDto<?> createPost(PostRequestDto postRequestDto , MultipartFile multipartFile)throws IOException {
+    public ResponseDto<?> createPost(PostRequestDto postRequestDto)throws IOException {
         Post post = Post.builder()
                 .title(postRequestDto.getTitle())
 //                .image(postRequestDto.getImage())

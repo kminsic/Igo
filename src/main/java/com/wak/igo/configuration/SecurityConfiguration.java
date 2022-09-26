@@ -45,6 +45,7 @@ public class SecurityConfiguration {
     public WebSecurityCustomizer ignoringCustomizer(){
         return (web) -> web.ignoring()
                 .antMatchers("/h2-console/**");
+
     }
 
     @Bean
@@ -64,8 +65,10 @@ public class SecurityConfiguration {
 
                 .and()
                 .authorizeRequests()
-//                .antMatchers("/kakao/**").permitAll()
-//                .antMatchers("/naver/**").permitAll()
+                .antMatchers("/kakao/**").permitAll()
+                .antMatchers("/naver/**").permitAll()
+                .antMatchers("/api/post/*").permitAll()
+
                 .anyRequest().authenticated()
 
                 .and()
