@@ -5,6 +5,7 @@ import com.wak.igo.domain.Post;
 import com.wak.igo.dto.request.PostRequestDto;
 import com.wak.igo.dto.response.PostResponseDto;
 import com.wak.igo.dto.response.ResponseDto;
+import com.wak.igo.jwt.TokenProvider;
 import com.wak.igo.repository.MemberRepository;
 import com.wak.igo.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ import java.util.Optional;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final TokenProvider tokenProvider;
 //    private final MemberRepository memberRepository;
 
 //    //전체 게시글 조회 (Tag X)
@@ -59,7 +61,11 @@ public class PostService {
 
     //게시글 생성
     @Transactional
-    public ResponseDto<?> createPost(PostRequestDto postRequestDto , MultipartFile multipartFile)throws IOException {
+    public ResponseDto<?> createPost(PostRequestDto postRequestDto,HttpServletRequest request)throws IOException {
+        Member member = validateMember(request);
+        if (null == member) {
+            return ResponseDto.fail("INVALID_TOKEN", "Token이 유효하지 않습니다.");
+        }
         Post post = Post.builder()
                 .title(postRequestDto.getTitle())
 //                .image(postRequestDto.getImage())
@@ -72,7 +78,6 @@ public class PostService {
 //                .report(0)
                 .tag(postRequestDto.getTag())
                 .build();
-
         postRepository.save(post);
 
         return ResponseDto.success(
@@ -90,9 +95,6 @@ public class PostService {
                         .createdAt(post.getCreatedAt())
                         .modifiedAt(post.getModifiedAt())
                         .build());
-
-
-
     }
 
     //게시글 수정
@@ -120,5 +122,12 @@ public class PostService {
     public Post isPresentPost(Long id) {
         Optional<Post> optionalPost = postRepository.findById(id);
         return optionalPost.orElse(null);
+    }
+    @Transactional
+    public Member validateMember(HttpServletRequest request) {
+        if (!tokenProvider.validateToken(request.getHeader("Refresh-Token"))) {
+            return null;
+        }
+        return tokenProvider.getMemberFromAuthentication().getMember();
     }
 }

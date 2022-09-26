@@ -143,6 +143,6 @@ public class CommentService {
         if (!tokenProvider.validateToken(request.getHeader("Refresh-Token"))) {
             return null;
         }
-        return tokenProvider.getMemberFromAuthentication();
+        return tokenProvider.getMemberFromAuthentication().getMember();
     }
 }

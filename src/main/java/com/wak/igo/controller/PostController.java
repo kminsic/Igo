@@ -36,10 +36,10 @@ public class PostController {
     // requestpart의 value값은 프론트엔드와 맞춰야 입력값이 제대로 들어옴
     //이미지 받아오는 밸류값 혹시 동영상이 추가될 수 있으니 file로 지정.
     @PostMapping(value = "/api/post")
-    public ResponseDto<?> createPost(@RequestPart(value = "post") PostRequestDto postRequestDto,
-                                     @RequestPart(value = "file", required = false) MultipartFile multipartFile
+    public ResponseDto<?> createPost(@RequestBody PostRequestDto postRequestDto,HttpServletRequest request
                                       ) throws IOException {
-        return postService.createPost(postRequestDto, multipartFile);
+        System.out.println(request);
+        return postService.createPost(postRequestDto,request);
     }
 
 
