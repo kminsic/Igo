@@ -20,6 +20,7 @@ import java.util.List;
 @Entity
 public class Post extends Timestamped {
 
+    //Json형식으로 받기
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,70 +31,58 @@ public class Post extends Timestamped {
     @Column(nullable = false) //
     private String content;
 
-    @Column(nullable = false)
-    private String imgurl;
+//    @Column
+//    private String imgurl;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
-//
+    //
     @JoinColumn(name = "member_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
-    @Column(nullable = false)
-    private String address;
+//    @Column(nullable = false)
+//    private String address;
 
+//    @Column(nullable = false)
+//    private int time;
 
-    @Column
-    private int viewcount;
-
-    @Column
-    private int report;
+//    @Column
+//    private int amount;
 
     @Column
     private int heart;
 
-    @Column (nullable = false)
-    private int time;
+    @Column
+    private int viewCount;
 
-    @Column(nullable = false)
-    private int amount;
-
-    @Column(nullable = false)
+    @Column
+//    @Column(nullable = false)
     private String tag;
 
 
-    public void add_viewcount() {
-        this.viewcount++;
-
-    }
-    public Post(PostRequestDto postRequestDto) {
-        this.title = postRequestDto.getTitle();
-        this.imgurl = postRequestDto.getImgurl();
-        this.content = postRequestDto.getContent();
-        this.address = postRequestDto.getAddress();
-        this.tag = postRequestDto.getTag();
-        this.time = postRequestDto.getTime();
-        this.amount = postRequestDto.getAmount();
-    }
+    public void add_viewCount() {
+        this.viewCount++;}
 
     public void update(PostRequestDto postRequestDto) {
         this.title = postRequestDto.getTitle();
-        this.imgurl = postRequestDto.getImgurl();
         this.content = postRequestDto.getContent();
-        this.address = postRequestDto.getAddress();
-        this.tag = postRequestDto.getTag();
-        this.time = postRequestDto.getTime();
-        this.amount = postRequestDto.getAmount();
+//            this.address = postRequestDto.getAddress();
+//            this.imgurl = postRequestDto.getImgurl();
+//            this.time = postRequestDto.getTime();
+//            this.amount = postRequestDto.getAmount();
+//            this.tag = postRequestDto.getTag();
+
     }
-
-
-//        @CreationTimestamp
-//    @Column
-//    private LocalDateTime createdAt = LocalDateTime.now();
-//
-////    @UpdateTimestamp
-//    @Column
-//    private LocalDateTime updatedAt = LocalDateTime.now();
-
 }
+
+
+
+
+
+
+
+
+
+
+

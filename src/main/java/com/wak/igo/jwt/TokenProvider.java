@@ -3,9 +3,9 @@ package com.wak.igo.jwt;
 import com.wak.igo.domain.Member;
 import com.wak.igo.domain.RefreshToken;
 import com.wak.igo.domain.UserDetailsImpl;
+import com.wak.igo.dto.response.ResponseDto;
 import com.wak.igo.repository.RefreshTokenRepository;
-import com.wak.igo.request.TokenDto;
-import com.wak.igo.response.ResponseDto;
+import com.wak.igo.dto.request.TokenDto;
 import com.wak.igo.shared.Authority;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -35,9 +35,7 @@ public class TokenProvider {
     private static final String BEARER_PREFIX = "Bearer ";
     private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30;            //30분
     private static final long REFRESH_TOKEN_EXPRIRE_TIME = 1000 * 60 * 60 * 24 * 7;     //7일
-
     private final Key key;
-
     private final RefreshTokenRepository refreshTokenRepository;
 
     public TokenProvider(@Value("${jwt.secret}") String secretKey,
@@ -49,12 +47,13 @@ public class TokenProvider {
 
     public TokenDto generateTokenDto(UserDetailsImpl userDetails) {
         long now = (new Date().getTime());
-        // access token 생성
+
+        // access token 생성 (사용자 정보를 복호화)
         Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
         String accessToken = Jwts.builder()
-                .setSubject(userDetails.getMemberId())                           // payload "sub": "name"
+                .setSubject(userDetails.getMemberId())                       // payload "sub": "memberId"
                 .claim(AUTHORITIES_KEY, Authority.ROLE_MEMBER.toString())   // payload "auth" : "ROLE_USER
-                .setExpiration(accessTokenExpiresIn)                        // payload "exp" : 1234321 (예시)
+                .setExpiration(accessTokenExpiresIn)                        // payload "exp" :
                 .signWith(key, SignatureAlgorithm.HS256)                    // header "alg" : "HS512"
                 .compact();
         // refresh token 생성
@@ -64,12 +63,13 @@ public class TokenProvider {
                 .compact();
 
         RefreshToken refreshTokenObject = RefreshToken.builder()
-                .id(userDetails.getId_member())
+
+                .id(userDetails.getId())
                 .member(userDetails.getMember())
                 .keyValue(refreshToken)
                 .build();
 
-        refreshTokenRepository.save(refreshTokenObject);
+        refreshTokenRepository.save(refreshTokenObject); // refreshToken 저장
 
         return TokenDto.builder()
                 .grantType(BEARER_PREFIX)
@@ -77,7 +77,6 @@ public class TokenProvider {
                 .accessTokenExpiresIn(accessTokenExpiresIn.getTime())
                 .refreshToken(refreshToken)
                 .build();
-
     }
 
     public UserDetailsImpl getMemberFromAuthentication() {
@@ -89,6 +88,7 @@ public class TokenProvider {
         return (UserDetailsImpl) authentication.getPrincipal();
     }
 
+    // 토큰 유효성 검증
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
@@ -117,7 +117,6 @@ public class TokenProvider {
         if (null == refreshToken) {
             return ResponseDto.fail("TOKEN_NOT_FOUND", "존재하지 않는 Token 입니다.");
         }
-
         refreshTokenRepository.delete(refreshToken);
         return ResponseDto.success("delete success");
     }

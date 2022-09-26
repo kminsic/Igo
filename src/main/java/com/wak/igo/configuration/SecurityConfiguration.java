@@ -72,6 +72,9 @@ public class SecurityConfiguration {
                 .antMatchers("/kakao/callback").permitAll()
                 .antMatchers("/naver/callback").permitAll()
                 .antMatchers("/","/**").permitAll()
+                .antMatchers("/api/**").permitAll()
+                .antMatchers("/api").permitAll()
+
                 .anyRequest().authenticated()
 
                 .and()

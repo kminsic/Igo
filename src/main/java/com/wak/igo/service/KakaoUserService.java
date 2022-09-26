@@ -6,12 +6,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.wak.igo.domain.Member;
 import com.wak.igo.domain.UserDetailsImpl;
+import com.wak.igo.dto.response.ResponseDto;
 import com.wak.igo.jwt.TokenProvider;
 import com.wak.igo.repository.MemberRepository;
-import com.wak.igo.repository.RefreshTokenRepository;
-import com.wak.igo.request.TokenDto;
-import com.wak.igo.request.MemberInfo;
-import com.wak.igo.response.ResponseDto;
+
+
+import com.wak.igo.dto.request.TokenDto;
+import com.wak.igo.dto.request.MemberInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
@@ -45,6 +46,7 @@ public class KakaoUserService {
         return tokenProvider.deleteRefreshToken(userDetails.getMember());
     }
 
+
     public ResponseDto<String> kakaologin(String code, HttpServletResponse response) throws JsonProcessingException {
         // 1. "인가 코드"로 전체 response 요청
         String accessToken = getAccessToken(code);
@@ -60,6 +62,8 @@ public class KakaoUserService {
 
         // 5. response Header에 JWT 토큰 추가
         kakaoUsersAuthorizationInput(authentication, response);
+
+
         return ResponseDto.success(kakaoUserInfo.getNickname());
 
     }
@@ -76,7 +80,7 @@ public class KakaoUserService {
 //        body.add("client_id", "3d365192ea8ab4f32c7f9c1d7c5688e1");          // 프론트엔드 client_id
         body.add("client_secret", "FuvfQecT3uPmfM3wlzF5VxRJU7Iz654F");
         body.add("redirect_url", "http://localhost:8080/kakao/callback"); // localhost redirect_url
- //       body.add("redirect_uri", "http://localhost:3000/kakaoloading");     // 프론트엔드 redirect_url
+
         body.add("code", code);
 
         // HTTP 요청 보내기
@@ -113,6 +117,7 @@ public class KakaoUserService {
                 String.class
         );
 
+        // 사용자 정보 파싱
         String responseBody = response.getBody();
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(responseBody);
@@ -123,19 +128,15 @@ public class KakaoUserService {
     }
 
     private Member registerKakaoUserIfNeeded(MemberInfo kakaoUserInfo) {
-        // DB 에 중복된 Kakao Id 가 있는지 확인
-        String kakaoId = kakaoUserInfo.getMemberid();
-//        String kakaoId = kakaoUserInfo.getMemberId();
+
+        String kakaoId = kakaoUserInfo.getMemberid();                   // DB 에 중복된 Kakao Id 가 있는지 확인
         Member kakaoUser = memberRepository.findByMemberid(kakaoId)
                 .orElse(null);
+        // 회원가입
         if (kakaoUser == null) {
-            // 회원가입
-            // nickname: kakao nickname
-            String nickname = kakaoUserInfo.getNickname();
-
-            // password: random UUID
-            String password = UUID.randomUUID().toString();
-            String encodedPassword = passwordEncoder.encode(password);
+            String nickname = kakaoUserInfo.getNickname();              // nickname: kakao nickname
+            String password = UUID.randomUUID().toString();             // password: random UUID
+            String encodedPassword = passwordEncoder.encode(password);  // password 암호화
 
             kakaoUser = Member.builder()
                     .nickname(nickname)
@@ -157,7 +158,8 @@ public class KakaoUserService {
 
     private void kakaoUsersAuthorizationInput(Authentication authentication, HttpServletResponse response) {
         // response header에 token 추가
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getAuthorities();
+
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         TokenDto token = tokenProvider.generateTokenDto(userDetails);
         response.addHeader("Authorization", "BEARER" + " " + token.getAccessToken());
         response.addHeader("RefreshToken", token.getRefreshToken());
