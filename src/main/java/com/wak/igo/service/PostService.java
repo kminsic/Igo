@@ -130,7 +130,6 @@ public class PostService {
         if (!tokenProvider.validateToken(request.getHeader("RefreshToken"))) {
             return null;
         }
-        System.out.println(tokenProvider.getMemberFromAuthentication().getMember());
         return tokenProvider.getMemberFromAuthentication().getMember();
     }
 }

@@ -1,6 +1,6 @@
 package com.wak.igo.domain;
 
-import com.wak.igo.request.CommentRequestDto;
+import com.wak.igo.dto.request.CommentRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

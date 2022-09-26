@@ -3,11 +3,11 @@ package com.wak.igo.service;
 import com.wak.igo.domain.Comment;
 import com.wak.igo.domain.Member;
 import com.wak.igo.domain.Post;
+import com.wak.igo.dto.request.CommentRequestDto;
 import com.wak.igo.dto.response.CommentResponseDto;
+import com.wak.igo.dto.response.ResponseDto;
 import com.wak.igo.jwt.TokenProvider;
 import com.wak.igo.repository.CommentRepository;
-import com.wak.igo.request.CommentRequestDto;
-import com.wak.igo.response.ResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,7 +62,7 @@ public class CommentService {
     }
     @Transactional
     public ResponseDto<?> updateComment(Long id, CommentRequestDto requestDto, HttpServletRequest request) {
-        if (null == request.getHeader("Refresh-Token")) {
+        if (null == request.getHeader("RefreshToken")) {
             return ResponseDto.fail("MEMBER_NOT_FOUND",
                     "로그인이 필요합니다.");
         }
