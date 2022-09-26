@@ -2,7 +2,6 @@ package com.wak.igo.service;
 
 import com.wak.igo.domain.Member;
 import com.wak.igo.domain.Post;
-import com.wak.igo.domain.UserDetailsImpl;
 import com.wak.igo.dto.request.PostRequestDto;
 import com.wak.igo.dto.response.PostResponseDto;
 import com.wak.igo.dto.response.ResponseDto;
@@ -10,10 +9,8 @@ import com.wak.igo.jwt.TokenProvider;
 import com.wak.igo.repository.MemberRepository;
 import com.wak.igo.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.mapping.Bag;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 import io.jsonwebtoken.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
