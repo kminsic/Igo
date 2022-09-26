@@ -67,7 +67,7 @@ public class PostService {
 
     // 처음 추천 페이지
     @Transactional
-    public ResponseDto<?> getRecommend(Long id) {
+    public ResponseDto<?> getSuggestion(Long id) {
 
         Member member = memberRepository.findById(1L).get();
 
