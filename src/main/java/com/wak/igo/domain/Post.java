@@ -26,7 +26,7 @@ public class Post extends Timestamped {
     @Column(nullable = false) //
     private String content;
 
-    @Column(nullable = false)
+    @Column
     private String image;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
@@ -61,6 +61,10 @@ public class Post extends Timestamped {
 
         this.viewcount++;
 
+    }
+
+    public boolean validateMember(Member member) {
+        return !this.member.equals(member);
     }
 
 

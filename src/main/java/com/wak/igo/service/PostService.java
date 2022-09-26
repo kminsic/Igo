@@ -63,7 +63,6 @@ public class PostService {
     @Transactional
     public ResponseDto<?> createPost(PostRequestDto postRequestDto,HttpServletRequest request)throws IOException {
         Member member = validateMember(request);
-        System.out.println(request);
         if (null == member) {
             return ResponseDto.fail("INVALID_TOKEN", "Token이 유효하지 않습니다.");
         }
@@ -80,6 +79,7 @@ public class PostService {
 //                .report(0)
                 .tag(postRequestDto.getTag())
                 .build();
+        System.out.println(member);
         postRepository.save(post);
 
         return ResponseDto.success(
@@ -127,9 +127,10 @@ public class PostService {
     }
     @Transactional
     public Member validateMember(HttpServletRequest request) {
-        if (!tokenProvider.validateToken(request.getHeader("Refresh-Token"))) {
+        if (!tokenProvider.validateToken(request.getHeader("RefreshToken"))) {
             return null;
         }
+        System.out.println(tokenProvider.getMemberFromAuthentication().getMember());
         return tokenProvider.getMemberFromAuthentication().getMember();
     }
 }

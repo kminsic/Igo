@@ -38,7 +38,6 @@ public class PostController {
     @PostMapping(value = "/api/post")
     public ResponseDto<?> createPost(@RequestBody PostRequestDto postRequestDto,HttpServletRequest request
                                       ) throws IOException {
-        System.out.println(request);
         return postService.createPost(postRequestDto,request);
     }
 
