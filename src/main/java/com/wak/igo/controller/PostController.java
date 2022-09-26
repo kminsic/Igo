@@ -25,8 +25,8 @@ public class PostController {
 
     // 처음 추천 페이지 (Member ID)
     @GetMapping("/api/suggestion/{id}")
-    public ResponseDto<?> getRecommend(@PathVariable Long id) {
-        return postService.getRecommend(id);
+    public ResponseDto<?> getSuggestion(@PathVariable Long id) {
+        return postService.getsuggestion(id);
     }
 
     // 게시글 상세 페이지(Post ID)
