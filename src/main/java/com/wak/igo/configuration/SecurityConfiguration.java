@@ -64,8 +64,10 @@ public class SecurityConfiguration {
 
                 .and()
                 .authorizeRequests()
-                .antMatchers("/kakao/**").permitAll()
-                .antMatchers("/naver/**").permitAll()
+                .antMatchers("/kakao/callback").permitAll()
+                .antMatchers("/naver/callback").permitAll()
+                .antMatchers("/api/**").permitAll()
+                .antMatchers("/api").permitAll()
                 .anyRequest().authenticated()
 
                 .and()

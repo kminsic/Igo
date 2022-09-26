@@ -12,18 +12,13 @@ import java.time.LocalDateTime;
 public class PostRequestDto {
 
 
-    private Long id;
     private String title;
     private String content;
     private String imgurl;
     private int time;
     private int amount;
     private String address;
-
     private String tag;
-
-    private LocalDateTime createdAt;
-    private LocalDateTime modifiedAt;
 
 
     //혹시나 몰라서

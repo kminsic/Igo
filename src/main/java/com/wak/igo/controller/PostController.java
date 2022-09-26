@@ -6,10 +6,9 @@ import com.wak.igo.repository.PostRepository;
 import com.wak.igo.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
+import io.jsonwebtoken.io.IOException;
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 
 @RequiredArgsConstructor
 @RestController
@@ -42,10 +41,10 @@ public class PostController {
     // requestpart의 value값은 프론트엔드와 맞춰야 입력값이 제대로 들어옴
     //이미지 받아오는 밸류값 혹시 동영상이 추가될 수 있으니 file로 지정.
     @PostMapping(value = "/api/post")
-    public ResponseDto<?> createPost(@RequestPart(value = "post") PostRequestDto postRequestDto
+    public ResponseDto<?> createPost(@RequestBody PostRequestDto postRequestDto, HttpServletRequest request
 //                                     @RequestPart(value = "file", required = false)  multipartFile
     ) throws IOException {
-        return postService.createPost(postRequestDto);
+        return postService.createPost(postRequestDto, request);
     }
 
 

@@ -24,7 +24,6 @@ public class PostResponseDto {
     private int viewCount;
     private String tag;
 
-//    private List<CategoryResponseDto> categoryResponseDtoList;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 

@@ -2,18 +2,21 @@ package com.wak.igo.service;
 
 import com.wak.igo.domain.Member;
 import com.wak.igo.domain.Post;
+import com.wak.igo.domain.UserDetailsImpl;
 import com.wak.igo.dto.request.PostRequestDto;
 import com.wak.igo.dto.response.PostResponseDto;
 import com.wak.igo.dto.response.ResponseDto;
+import com.wak.igo.jwt.TokenProvider;
 import com.wak.igo.repository.MemberRepository;
 import com.wak.igo.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.mapping.Bag;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import io.jsonwebtoken.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +27,8 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
+    private final TokenProvider tokenProvider;
+
 
     //전체 게시글 조회 (Tag X)
     @Transactional
@@ -86,9 +91,19 @@ public class PostService {
 
     //게시글 생성
     @Transactional
-    public ResponseDto<?> createPost(PostRequestDto postRequestDto) throws IOException {
+
+    public ResponseDto<?> createPost(PostRequestDto postRequestDto, HttpServletRequest request  ) throws IOException {
+
+        Member member = validateMember(request);
+        if (null ==member){
+            return ResponseDto.fail("INVALID TOKEN", "TOKEN이 유효하지않습니다");
+        }
+
         Post post = Post.builder()
+
+                .member(member)
                 .imgurl(postRequestDto.getImgurl())
+                .title(postRequestDto.getTitle())
                 .content(postRequestDto.getContent())
                 .address(postRequestDto.getAddress())
                 .amount(postRequestDto.getAmount())
@@ -101,23 +116,23 @@ public class PostService {
                 .build();
         postRepository.save(post);
 
-        return ResponseDto.success("게시글 작성이 완료되었습니다.");
-    }//원하시면 추가
-//                PostResponseDto.builder()
-//                        .title(postRequestDto.getTitle())
-//                         .imgurl(postRequestDto.getImgurl())
-//                        .content(postRequestDto.getContent())
-//                        .address(postRequestDto.getAddress())
-//                        .amount(postRequestDto.getAmount())
-//                        .time(postRequestDto.getTime())
-//                        .viewcount(0)
-//                        //신고하기 기능 구현 x
-////                .report(0)
-//                        .tag(postRequestDto.getTag())
-//                        .createdAt(post.getCreatedAt())
-//                        .modifiedAt(post.getModifiedAt())
-//                        .build());
-
+        return ResponseDto.success(
+    //원하시면 추가
+                PostResponseDto.builder()
+                        .title(postRequestDto.getTitle())
+                        .imgurl(postRequestDto.getImgurl())
+                        .content(postRequestDto.getContent())
+                        .address(postRequestDto.getAddress())
+                        .amount(postRequestDto.getAmount())
+                        .time(postRequestDto.getTime())
+                        .viewCount(0)
+                        //신고하기 기능 구현 x
+//                .report(0)
+                        .tag(postRequestDto.getTag())
+                        .createdAt(post.getCreatedAt())
+                        .modifiedAt(post.getModifiedAt())
+                        .build());
+    }
 
     //    게시글 수정
     @Transactional
@@ -152,7 +167,14 @@ public class PostService {
         return optionalPost.orElse(null);
     }
 
-
+    @Transactional
+    public Member validateMember(HttpServletRequest request) {
+        if (!tokenProvider.validateToken(request.getHeader("RefreshToken"))) {
+            return null;
+        }
+        System.out.println(tokenProvider.getMemberFromAuthentication().getMember());
+        return tokenProvider.getMemberFromAuthentication().getMember();
+    }
     //신고기능 미구현
 //    @Transactional
 //    public ResponseDto<?> getReport(Long id) {
