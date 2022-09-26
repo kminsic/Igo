@@ -89,15 +89,15 @@ public class PostService {
     //게시글 생성
     @Transactional
 
-    public ResponseDto<?> createPost(PostRequestDto postRequestDto, HttpServletRequest request  ) throws IOException {
+    public ResponseDto<?> createPost(PostRequestDto postRequestDto, HttpServletRequest request) throws IOException {
 
         Member member = validateMember(request);
-        if (null ==member){
+
+        if (null == member){
             return ResponseDto.fail("INVALID TOKEN", "TOKEN이 유효하지않습니다");
         }
 
         Post post = Post.builder()
-
                 .member(member)
                 .imgurl(postRequestDto.getImgurl())
                 .title(postRequestDto.getTitle())
@@ -169,7 +169,6 @@ public class PostService {
         if (!tokenProvider.validateToken(request.getHeader("RefreshToken"))) {
             return null;
         }
-        System.out.println(tokenProvider.getMemberFromAuthentication().getMember());
         return tokenProvider.getMemberFromAuthentication().getMember();
     }
     //신고기능 미구현

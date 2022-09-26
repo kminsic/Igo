@@ -81,25 +81,7 @@ public class Post extends Timestamped {
 
 
 
-//    public Post(PostRequestDto postRequestDto) {
-//        this.title = postRequestDto.getTitle();
-//        this.imgurl = postRequestDto.getImgurl();
-//        this.content = postRequestDto.getContent();
-//        this.address = postRequestDto.getAddress();
-//        this.tag = postRequestDto.getTag();
-//        this.time = postRequestDto.getTime();
-//        this.amount = postRequestDto.getAmount();
-//    }
-//
-//    public void update(PostRequestDto postRequestDto) {
-//        this.title = postRequestDto.getTitle();
-//        this.imgurl = postRequestDto.getImgurl();
-//        this.content = postRequestDto.getContent();
-//        this.address = postRequestDto.getAddress();
-//        this.tag = postRequestDto.getTag();
-//        this.time = postRequestDto.getTime();
-//        this.amount = postRequestDto.getAmount();
-//    }
+
 
 
 
