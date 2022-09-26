@@ -53,4 +53,12 @@ public class UserDetailsImpl implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    public String getMemberId() {
+        return member.getMemberid();
+    }
+
+    public Long getId() {
+        return member.getId();
+    }
 }

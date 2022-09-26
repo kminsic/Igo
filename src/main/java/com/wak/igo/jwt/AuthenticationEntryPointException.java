@@ -1,7 +1,7 @@
 package com.wak.igo.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wak.igo.response.ResponseDto;
+import com.wak.igo.dto.response.ResponseDto;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
