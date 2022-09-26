@@ -51,13 +51,15 @@ public class PostService {
         return ResponseDto.success(
                 PostResponseDto.builder()
                         .heart(post.getHeart())
+                        .title(post.getTitle())
+                        .content(post.getContent())
                         .viewCount(post.getViewCount())
-                        .imgurl(post.getImgurl())
-                        .amount(post.getAmount())
-                        .time(post.getTime())
+//                        .imgurl(post.getImgurl())
+//                        .amount(post.getAmount())
+//                        .time(post.getTime())
                         //신고하기 기능 구현 x
 //                        .report(0)
-                        .tag(post.getTag())
+//                        .tag(post.getTag())
                         .createdAt(post.getCreatedAt())
                         .modifiedAt(post.getModifiedAt())
                         .build());
@@ -67,7 +69,7 @@ public class PostService {
 
     // 처음 추천 페이지
     @Transactional
-    public ResponseDto<?> getRecommend(Long id) {
+    public ResponseDto<?> getSuggestion(Long id) {
 
         Member member = memberRepository.findById(1L).get();
 
@@ -99,17 +101,17 @@ public class PostService {
 
         Post post = Post.builder()
                 .member(member)
-                .imgurl(postRequestDto.getImgurl())
                 .title(postRequestDto.getTitle())
                 .content(postRequestDto.getContent())
-                .address(postRequestDto.getAddress())
-                .amount(postRequestDto.getAmount())
-                .time(postRequestDto.getTime())
+//                .imgurl(postRequestDto.getImgurl())
+//                .address(postRequestDto.getAddress())
+//                .amount(postRequestDto.getAmount())
+//                .time(postRequestDto.getTime())
+//                .tag(postRequestDto.getTag())
                 .heart(0)
                 .viewCount(0)
                 //신고하기 기능 구현 x
 //                .report(0)
-                .tag(postRequestDto.getTag())
                 .build();
         postRepository.save(post);
 
@@ -117,15 +119,16 @@ public class PostService {
     //원하시면 추가
                 PostResponseDto.builder()
                         .title(postRequestDto.getTitle())
-                        .imgurl(postRequestDto.getImgurl())
                         .content(postRequestDto.getContent())
-                        .address(postRequestDto.getAddress())
-                        .amount(postRequestDto.getAmount())
-                        .time(postRequestDto.getTime())
+//                        .imgurl(postRequestDto.getImgurl())
+//                        .address(postRequestDto.getAddress())
+//                        .amount(postRequestDto.getAmount())
+//                        .time(postRequestDto.getTime())
+//                        .tag(postRequestDto.getTag())
                         .viewCount(0)
+                        .heart(0)
                         //신고하기 기능 구현 x
 //                .report(0)
-                        .tag(postRequestDto.getTag())
                         .createdAt(post.getCreatedAt())
                         .modifiedAt(post.getModifiedAt())
                         .build());
@@ -146,7 +149,6 @@ public class PostService {
 
     }
 
-
     //게시글 삭제
     @Transactional
     public ResponseDto<?> deletePost(Long id) {
@@ -156,7 +158,6 @@ public class PostService {
         return ResponseDto.success("Success");
 
     }
-
     //
     @Transactional(readOnly = true)
     public Post isPresentPost(Long id) {

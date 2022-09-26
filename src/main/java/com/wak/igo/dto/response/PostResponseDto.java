@@ -16,13 +16,13 @@ public class PostResponseDto {
     private Long id;
     private String title;
     private String content;
-    private String address;
-    private String imgurl;
-    private int time;
-    private int amount;
+//    private String address;
+//    private String imgurl;
+//    private int time;
+//    private int amount;
     private int heart;
     private int viewCount;
-    private String tag;
+//    private String tag;
 
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;

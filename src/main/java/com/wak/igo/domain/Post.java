@@ -31,8 +31,8 @@ public class Post extends Timestamped {
     @Column(nullable = false) //
     private String content;
 
-    @Column(nullable = false)
-    private String imgurl;
+//    @Column
+//    private String imgurl;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
@@ -41,37 +41,37 @@ public class Post extends Timestamped {
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
-    @Column(nullable = false)
-    private String address;
+//    @Column(nullable = false)
+//    private String address;
 
-    @Column(nullable = false)
-    private int time;
+//    @Column(nullable = false)
+//    private int time;
 
-    @Column(nullable = false)
-    private int amount;
+//    @Column
+//    private int amount;
 
-    @Column(nullable = false)
+    @Column
     private int heart;
 
-    @Column(nullable = false)
+    @Column
     private int viewCount;
 
-    @Column(nullable = false)
+    @Column
+//    @Column(nullable = false)
     private String tag;
 
 
-
-        public void add_viewCount() {
+    public void add_viewCount() {
         this.viewCount++;}
 
         public void update(PostRequestDto postRequestDto) {
             this.title = postRequestDto.getTitle();
             this.content = postRequestDto.getContent();
-            this.address = postRequestDto.getAddress();
-            this.imgurl = postRequestDto.getImgurl();
-            this.time = postRequestDto.getTime();
-            this.amount = postRequestDto.getAmount();
-            this.tag = postRequestDto.getTag();
+//            this.address = postRequestDto.getAddress();
+//            this.imgurl = postRequestDto.getImgurl();
+//            this.time = postRequestDto.getTime();
+//            this.amount = postRequestDto.getAmount();
+//            this.tag = postRequestDto.getTag();
 
         }
 }
