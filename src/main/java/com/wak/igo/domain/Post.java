@@ -53,6 +53,10 @@ public class Post extends Timestamped {
     @Column(nullable = false)
     private String tag;
 
+    @JoinColumn(name = "member_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Member member;
+
     public void add_viewcount() {
 
         this.viewcount++;

@@ -63,6 +63,7 @@ public class PostService {
     @Transactional
     public ResponseDto<?> createPost(PostRequestDto postRequestDto,HttpServletRequest request)throws IOException {
         Member member = validateMember(request);
+        System.out.println(request);
         if (null == member) {
             return ResponseDto.fail("INVALID_TOKEN", "Token이 유효하지 않습니다.");
         }
@@ -73,6 +74,7 @@ public class PostService {
                 .address(postRequestDto.getAddress())
                 .amount(postRequestDto.getAmount())
                 .time(postRequestDto.getTime())
+                .member(member)
 //                .viewcount(0)
                 //신고하기 기능 구현 x
 //                .report(0)
