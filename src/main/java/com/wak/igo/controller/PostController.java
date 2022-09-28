@@ -39,6 +39,7 @@ public class PostController {
     // requestpart의 value값은 프론트엔드와 맞춰야 입력값이 제대로 들어옴
     @PostMapping(value = "/api/post")
     public ResponseDto<?> createPost(@RequestBody PostRequestDto postRequestDto, HttpServletRequest request
+
     ) throws IOException {
         return postService.createPost(postRequestDto, request);
     }

@@ -7,14 +7,17 @@ import com.wak.igo.shared.Authority;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
 
 
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
+
     public class UserDetailsImpl implements UserDetails {
 
         private Member member;
@@ -27,7 +30,7 @@ import org.springframework.security.core.userdetails.UserDetails;
             return authorities;
         }
         public Long getId() { return member.getId(); }
-        public String getMemberId() { return member.getMemberid(); }
+        public String getMemberId() { return member.getMemberId(); }
         @Override
         public String getPassword() {
             return member.getPassword();
@@ -56,4 +59,6 @@ import org.springframework.security.core.userdetails.UserDetails;
         public boolean isEnabled() {
             return true;
         }
-    }
+
+
+}

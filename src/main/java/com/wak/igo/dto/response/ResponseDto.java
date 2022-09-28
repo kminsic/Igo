@@ -15,7 +15,7 @@ public class ResponseDto<T> {
     }
 
     public static <T> ResponseDto<T> fail(String code, String message) {
-        return new ResponseDto<>(false, null, new Error(code, message));
+        return new ResponseDto<>(false, null,  new Error(code, message) );
     }
 
     @Getter

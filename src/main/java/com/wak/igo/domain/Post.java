@@ -10,6 +10,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -25,14 +26,15 @@ public class Post extends Timestamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
+    private String postId;
+
     @Column(nullable = false) //
     private String title;
 
     @Column(nullable = false) //
     private String content;
 
-//    @Column
-//    private String imgurl;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
@@ -41,39 +43,46 @@ public class Post extends Timestamped {
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
-//    @Column(nullable = false)
-//    private String address;
-
-//    @Column(nullable = false)
-//    private int time;
-
-//    @Column
-//    private int amount;
+    @Column(nullable = false)
+    private int amount;
 
     @Column
-    private int heart;
+    private String mapData;
 
+    @Column
+    private String tag;
     @Column
     private int viewCount;
-
     @Column
-//    @Column(nullable = false)
-    private String tag;
-
+    private int numOfHeart;
 
     public void add_viewCount() {
-        this.viewCount++;}
+        this.viewCount++;
+    }
 
-        public void update(PostRequestDto postRequestDto) {
-            this.title = postRequestDto.getTitle();
-            this.content = postRequestDto.getContent();
-//            this.address = postRequestDto.getAddress();
-//            this.imgurl = postRequestDto.getImgurl();
-//            this.time = postRequestDto.getTime();
-//            this.amount = postRequestDto.getAmount();
+    public void addHeart() {
+        this.numOfHeart++;
+    }
+    public void removeHeart() {
+        int tempHeart = this.numOfHeart - 1;
+        if (tempHeart < 0) {
+            return;
+        }
+        this.numOfHeart = tempHeart;
+    }
+
+
+
+    public void update(PostRequestDto postRequestDto) {
+        this.title = postRequestDto.getTitle();
+        this.content = postRequestDto.getContent();
+        this.amount = postRequestDto.getAmount();
+//        this.mapData = postRequestDto.getMapData();
 //            this.tag = postRequestDto.getTag();
 
-        }
+
+
+    }
 }
 
 

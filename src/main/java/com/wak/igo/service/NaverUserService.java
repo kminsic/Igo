@@ -53,10 +53,10 @@ public class NaverUserService {
         // HTTP Body 생성
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
-        body.add("client_id", "DmLVvurxVnPCqlnSp0XZ");      // localhost client_id
-//        body.add("client_id", "1tmOBpKKBicBaUmPQpaF");        // 프론트엔드 client_id
-        body.add("client_secret", "9fbJI0kZub");            // localhost client_secret
-//        body.add("client_secret", "ybrSh2bxg2");              // 프론트엔드 client_secret
+//        body.add("client_id", "DmLVvurxVnPCqlnSp0XZ");      // localhost client_id
+        body.add("client_id", "1tmOBpKKBicBaUmPQpaF");        // 프론트엔드 client_id
+//        body.add("client_secret", "9fbJI0kZub");            // localhost client_secret
+        body.add("client_secret", "ybrSh2bxg2");              // 프론트엔드 client_secret
         body.add("code", code);
         body.add("state", state);
 
@@ -98,15 +98,15 @@ public class NaverUserService {
         String responseBody = response.getBody();
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(responseBody);
-        String memberid = jsonNode.get("response").get("id").asText();
+        String memberId = jsonNode.get("response").get("id").asText();
         String nickname = jsonNode.get("response").get("name").asText();
-        log.info("네이버 사용자 정보: " + memberid + ", " + nickname);
-        return new MemberInfo(memberid, nickname);
+        log.info("네이버 사용자 정보: " + memberId + ", " + nickname);
+        return new MemberInfo(memberId, nickname);
     }
 
     private Member registerNaverUserIfNeeded(MemberInfo MemberInfo) {
-        String naverId = MemberInfo.getMemberid();                      // DB 에 중복된 Kakao Id 가 있는지 확인
-        Member naverUser = memberRepository.findByMemberid(naverId)
+        String naverId = MemberInfo.getMemberId();                      // DB 에 중복된 Kakao Id 가 있는지 확인
+        Member naverUser = memberRepository.findByMemberId(naverId)
                 .orElse(null);
         // 회원가입
         if (naverUser == null) {
@@ -117,7 +117,7 @@ public class NaverUserService {
             naverUser = Member.builder()
                     .nickname(nickname)
                     .password(encodedPassword)
-                    .memberid(naverId)
+                    .memberId(naverId)
                     .build();
             memberRepository.save(naverUser);
             log.info(nickname + "회원가입이 완료되었습니다.");

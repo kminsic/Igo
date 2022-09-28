@@ -1,5 +1,6 @@
 package com.wak.igo.service;
 
+//import com.wak.igo.domain.MapData;
 import com.wak.igo.domain.Member;
 import com.wak.igo.domain.Post;
 import com.wak.igo.dto.request.PostRequestDto;
@@ -35,7 +36,7 @@ public class PostService {
         } else if (type.equals("view")) {
             return ResponseDto.success(postRepository.findAllByOrderByViewCountDesc());
         } else if (type.equals("heart")) {
-            return ResponseDto.success(postRepository.findAllByOrderByHeartDesc());
+            return ResponseDto.success(postRepository.findAllByOrderByNumOfHeartDesc());
         } else
             return ResponseDto.fail("잘못된 URL 입니다.", "잘못된 접근입니다");
     }
@@ -50,41 +51,39 @@ public class PostService {
         post.add_viewCount();
         return ResponseDto.success(
                 PostResponseDto.builder()
-                        .heart(post.getHeart())
                         .title(post.getTitle())
                         .content(post.getContent())
                         .viewCount(post.getViewCount())
-//                        .imgurl(post.getImgurl())
-//                        .amount(post.getAmount())
-//                        .time(post.getTime())
+                        .numOfHeart(post.getNumOfHeart())
+                        .amount(post.getAmount())
+                        .mapData(post.getMapData())
                         //신고하기 기능 구현 x
 //                        .report(0)
 //                        .tag(post.getTag())
                         .createdAt(post.getCreatedAt())
                         .modifiedAt(post.getModifiedAt())
                         .build());
-
-
     }
 
     // 처음 추천 페이지
     @Transactional
-    public ResponseDto<?> getSuggestion(Long id) {
+        public ResponseDto<?> getSuggestion(Long id) {
 
-        Member member = memberRepository.findById(1L).get();
+            Member member = memberRepository.findById(1L).get();
 
-        String[] sarr = member.getTag().split("#");
-        List<Post> postList = new ArrayList<>();
-        for (String s : sarr) {
-            List<Post> byTagContaining = postRepository.findByTagContaining(s);
-            for (Post post : byTagContaining) {
-                if (postList.contains(post)) {
-                    continue;
-                } else
-                    postList.add(post);
+            String[] sarr = member.getTag().split("#");
+
+            List<Post> postList = new ArrayList<>();
+            for (String s : sarr) {
+                List<Post> byTagContaining = postRepository.findByTagContaining(s);
+                for (Post post : byTagContaining) {
+                    if (postList.contains(post)) {
+                        continue;
+                    } else
+                        postList.add(post);
+                }
             }
-        }
-        return ResponseDto.success(postList);
+            return ResponseDto.success(postList);
     }
 
 
@@ -99,16 +98,15 @@ public class PostService {
             return ResponseDto.fail("INVALID TOKEN", "TOKEN이 유효하지않습니다");
         }
 
+//        List<MapData> addressList = new ArrayList<>();
         Post post = Post.builder()
                 .member(member)
                 .title(postRequestDto.getTitle())
                 .content(postRequestDto.getContent())
-//                .imgurl(postRequestDto.getImgurl())
-//                .address(postRequestDto.getAddress())
-//                .amount(postRequestDto.getAmount())
-//                .time(postRequestDto.getTime())
+                .amount(postRequestDto.getAmount())
+//                .mapData(postRequestDto.getMapData())
 //                .tag(postRequestDto.getTag())
-                .heart(0)
+//                .heart(0)
                 .viewCount(0)
                 //신고하기 기능 구현 x
 //                .report(0)
@@ -118,15 +116,15 @@ public class PostService {
         return ResponseDto.success(
     //원하시면 추가
                 PostResponseDto.builder()
+
                         .title(postRequestDto.getTitle())
                         .content(postRequestDto.getContent())
-//                        .imgurl(postRequestDto.getImgurl())
-//                        .address(postRequestDto.getAddress())
-//                        .amount(postRequestDto.getAmount())
-//                        .time(postRequestDto.getTime())
+                        .amount(postRequestDto.getAmount())
+//                        .mapData(postRequestDto.getMapData())
+                        .amount(postRequestDto.getAmount())
 //                        .tag(postRequestDto.getTag())
                         .viewCount(0)
-                        .heart(0)
+                        .numOfHeart(0)
                         //신고하기 기능 구현 x
 //                .report(0)
                         .createdAt(post.getCreatedAt())
@@ -170,7 +168,7 @@ public class PostService {
         if (!tokenProvider.validateToken(request.getHeader("RefreshToken"))) {
             return null;
         }
-        return tokenProvider.getMemberFromAuthentication().getMember();
+        return tokenProvider.getMemberFromAuthentication();
     }
     //신고기능 미구현
 //    @Transactional

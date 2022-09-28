@@ -50,6 +50,7 @@ dependencies {
 
     //     validation 머지할때 삭제하기
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+
     implementation 'com.h2database:h2'
 
 }

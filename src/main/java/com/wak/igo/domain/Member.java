@@ -5,13 +5,17 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Builder
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "member")
 @Entity
 public class Member {
 
@@ -20,7 +24,7 @@ public class Member {
     private Long id;
 
     @Column(nullable = false)
-    private String memberid;
+    private String memberId;
 
     @Column(nullable = false)
     @JsonIgnore
@@ -30,10 +34,16 @@ public class Member {
     private String nickname;
 
     @Column
-    private String profileimage;
+    private String profileImage;
 
     @Column
     private String tag;
+
+    @OneToMany(mappedBy = "member")
+    private List<Post> postList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<Heart> wishLists = new ArrayList<>();
 
 
 }
