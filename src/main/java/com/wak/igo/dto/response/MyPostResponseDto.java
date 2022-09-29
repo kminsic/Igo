@@ -6,23 +6,24 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
-
 @Builder
 @Getter
 @Component
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostResponseDto {
-
+public class MyPostResponseDto {
     private Long id;
-    private String title;
+
+
+    private int done;
+
+    private int money;
+
+    private String time;
+
+    private String imgUrl;
+
     private String content;
-    private int amount;
-    private int heartNum;
-    private int viewCount;
-    private LocalDateTime createdAt;
-    private LocalDateTime modifiedAt;
 
-
+    private String title;
 }

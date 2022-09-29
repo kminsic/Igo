@@ -5,12 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.List;
+
 
 
 @Builder
@@ -31,8 +28,7 @@ public class Post extends Timestamped {
     @Column(nullable = false) //
     private String content;
 
-//    @Column
-//    private String imgurl;
+
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
@@ -41,37 +37,38 @@ public class Post extends Timestamped {
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
-//    @Column(nullable = false)
-//    private String address;
-
-//    @Column(nullable = false)
-//    private int time;
-
-//    @Column
-//    private int amount;
-
-    @Column
-    private int heart;
 
     @Column
     private int viewCount;
 
     @Column
-//    @Column(nullable = false)
     private String tag;
 
+    @Column
+    private int heartNum;
+
+    @Column(nullable = false)
+    private int amount;
 
     public void add_viewCount() {
         this.viewCount++;}
 
+    public void addHeart() {
+        this.heartNum++;
+    }
+
+    public void removeHeart() {
+        int tempHeart = this.heartNum - 1;
+        if (tempHeart < 0) {
+            return;
+        }
+        this.heartNum = tempHeart;
+    }
+
     public void update(PostRequestDto postRequestDto) {
         this.title = postRequestDto.getTitle();
         this.content = postRequestDto.getContent();
-//            this.address = postRequestDto.getAddress();
-//            this.imgurl = postRequestDto.getImgurl();
-//            this.time = postRequestDto.getTime();
-//            this.amount = postRequestDto.getAmount();
-//            this.tag = postRequestDto.getTag();
+        this.amount = postRequestDto.getAmount();
 
     }
 }

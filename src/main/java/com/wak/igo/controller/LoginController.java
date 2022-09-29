@@ -7,7 +7,6 @@ import com.wak.igo.service.KakaoUserService;
 import com.wak.igo.service.NaverUserService;
 import io.jsonwebtoken.io.IOException;
 import lombok.RequiredArgsConstructor;
-import io.jsonwebtoken.io.IOException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,4 +38,5 @@ public class LoginController {
     public ResponseDto<?> logout(@AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
         return kakaoUserService.logout(userDetails);
     }
+
 }

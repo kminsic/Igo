@@ -1,21 +1,23 @@
 package com.wak.igo.dto.response;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Builder
 @Getter
+@Component
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommentResponseDto {
-  private Long id_post;
-  private String nickname;
-  private String content;
-  private LocalDateTime createdAt;
-  private LocalDateTime modifiedAt;
+public class MemberResponseDto {
+    private String memberid;
+    private String nickname;
+    private String profileimage;
+    private List<String> interested;
+
 }

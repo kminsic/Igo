@@ -1,7 +1,17 @@
 package com.wak.igo.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 
+@Builder
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
 public class Mypost extends Timestamped{
 
     @Id
@@ -17,6 +27,9 @@ public class Mypost extends Timestamped{
 
     @Column
     private int money;
+
+    @Column(nullable = false)
+    private String time;
 
     @Column(nullable = false)
     private String imgUrl;

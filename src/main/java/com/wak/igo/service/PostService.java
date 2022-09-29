@@ -8,14 +8,12 @@ import com.wak.igo.dto.response.ResponseDto;
 import com.wak.igo.jwt.TokenProvider;
 import com.wak.igo.repository.MemberRepository;
 import com.wak.igo.repository.PostRepository;
+import io.jsonwebtoken.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import io.jsonwebtoken.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -27,6 +25,12 @@ public class PostService {
     private final TokenProvider tokenProvider;
 
 
+
+    @Transactional
+    public ResponseDto<?> getAllPosts() {
+        return ResponseDto.success(postRepository.findAllByOrderByCreatedAtDesc());
+    }
+
     //전체 게시글 조회 (Tag X)
     @Transactional
     public ResponseDto<?> getAllPosts(String type) {
@@ -35,7 +39,7 @@ public class PostService {
         } else if (type.equals("view")) {
             return ResponseDto.success(postRepository.findAllByOrderByViewCountDesc());
         } else if (type.equals("heart")) {
-            return ResponseDto.success(postRepository.findAllByOrderByHeartDesc());
+            return ResponseDto.success(postRepository.findAllByOrderByHeartNumDesc());
         } else
             return ResponseDto.fail("잘못된 URL 입니다.", "잘못된 접근입니다");
     }
@@ -46,46 +50,29 @@ public class PostService {
     @Transactional
     public ResponseDto<?> getDetail(Long id) {
 
-        Post post = postRepository.findById(id).get();
+        Post post = isPresentPost(id);
+        if(null == post) {
+            return ResponseDto.fail("NOT_FOUND", "게시글이 존재하지 않습니다.");
+        }
+
         post.add_viewCount();
         return ResponseDto.success(
                 PostResponseDto.builder()
-                        .heart(post.getHeart())
                         .title(post.getTitle())
                         .content(post.getContent())
                         .viewCount(post.getViewCount())
-//                        .imgurl(post.getImgurl())
-//                        .amount(post.getAmount())
-//                        .time(post.getTime())
+                        .heartNum(post.getHeartNum())
+                        .amount(post.getAmount())
+//                        .mapData(post.getMapData())
                         //신고하기 기능 구현 x
 //                        .report(0)
 //                        .tag(post.getTag())
                         .createdAt(post.getCreatedAt())
                         .modifiedAt(post.getModifiedAt())
                         .build());
-
-
     }
 
-    // 처음 추천 페이지
-    @Transactional
-    public ResponseDto<?> getSuggestion(Long id) {
 
-        Member member = memberRepository.findById(1L).get();
-
-        String[] sarr = member.getTag().split("#");
-        List<Post> postList = new ArrayList<>();
-        for (String s : sarr) {
-            List<Post> byTagContaining = postRepository.findByTagContaining(s);
-            for (Post post : byTagContaining) {
-                if (postList.contains(post)) {
-                    continue;
-                } else
-                    postList.add(post);
-            }
-        }
-        return ResponseDto.success(postList);
-    }
 
 
     //게시글 생성
@@ -99,16 +86,15 @@ public class PostService {
             return ResponseDto.fail("INVALID TOKEN", "TOKEN이 유효하지않습니다");
         }
 
+//        List<MapData> addressList = new ArrayList<>();
         Post post = Post.builder()
                 .member(member)
                 .title(postRequestDto.getTitle())
                 .content(postRequestDto.getContent())
-//                .imgurl(postRequestDto.getImgurl())
-//                .address(postRequestDto.getAddress())
-//                .amount(postRequestDto.getAmount())
-//                .time(postRequestDto.getTime())
+                .amount(postRequestDto.getAmount())
+//                .mapData(postRequestDto.getMapData())
 //                .tag(postRequestDto.getTag())
-                .heart(0)
+                .heartNum(0)
                 .viewCount(0)
                 //신고하기 기능 구현 x
 //                .report(0)
@@ -118,15 +104,15 @@ public class PostService {
         return ResponseDto.success(
                 //원하시면 추가
                 PostResponseDto.builder()
+
                         .title(postRequestDto.getTitle())
                         .content(postRequestDto.getContent())
-//                        .imgurl(postRequestDto.getImgurl())
-//                        .address(postRequestDto.getAddress())
-//                        .amount(postRequestDto.getAmount())
-//                        .time(postRequestDto.getTime())
+                        .amount(postRequestDto.getAmount())
+//                        .mapData(postRequestDto.getMapData())
+                        .amount(postRequestDto.getAmount())
 //                        .tag(postRequestDto.getTag())
                         .viewCount(0)
-                        .heart(0)
+                        .heartNum(0)
                         //신고하기 기능 구현 x
 //                .report(0)
                         .createdAt(post.getCreatedAt())
@@ -172,11 +158,15 @@ public class PostService {
         }
         return tokenProvider.getMemberFromAuthentication().getMember();
     }
-    //신고기능 미구현
+}
+
+//신고기능 미구현
 //    @Transactional
 //    public ResponseDto<?> getReport(Long id) {
-//        if
+//        if(report >= 50 ){
+//            postRepository.delete(id);
+//        }
 //
 //    }
 
-}
+
