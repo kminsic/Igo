@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -38,12 +37,5 @@ public class Member {
 
     @Column
     private String tag;
-
-    @OneToMany(mappedBy = "member")
-    private List<Post> postList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "member")
-    private List<Heart> hearts = new ArrayList<>();
-
 
 }

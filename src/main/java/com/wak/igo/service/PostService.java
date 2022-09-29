@@ -47,7 +47,11 @@ public class PostService {
     @Transactional
     public ResponseDto<?> getDetail(Long id) {
 
-        Post post = postRepository.findById(id).get();
+        Post post = isPresentPost(id);
+        if(null == post) {
+            return ResponseDto.fail("NOT_FOUND", "게시글이 존재하지 않습니다.");
+        }
+
         post.add_viewCount();
         return ResponseDto.success(
                 PostResponseDto.builder()
