@@ -156,12 +156,12 @@ public class KakaoUserService {
         return userDetails;
     }
 
-    // 가입 후 이미지나 관심사가 null일 때
     private MemberResponseDto memberInfo(UserDetailsImpl userDetails){
         List<String> tag = new ArrayList<>();
         Member member = userDetails.getMember();
         System.out.println(member.getNickname());
 
+        // 가입 후 이미지나 관심사가 null일 때
         List<String> tags = member.getInterested();
         if (tags == null) {
             tag.add("false");
