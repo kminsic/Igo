@@ -54,21 +54,21 @@ public class Post extends Timestamped {
     @Column
     private int viewCount;
     @Column
-    private int numOfHeart;
+    private int heartNum;
 
     public void add_viewCount() {
         this.viewCount++;
     }
 
     public void addHeart() {
-        this.numOfHeart++;
+        this.heartNum++;
     }
     public void removeHeart() {
-        int tempHeart = this.numOfHeart - 1;
+        int tempHeart = this.heartNum - 1;
         if (tempHeart < 0) {
             return;
         }
-        this.numOfHeart = tempHeart;
+        this.heartNum = tempHeart;
     }
 
 

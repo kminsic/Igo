@@ -21,7 +21,7 @@ public class PostResponseDto {
     private String title;
     private String content;
     private int amount;
-    private int numOfHeart;
+    private int heartNum;
     private int viewCount;
     private String mapData;
 //    private List<MapData> mapData;

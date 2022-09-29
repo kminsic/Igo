@@ -36,7 +36,7 @@ public class PostService {
         } else if (type.equals("view")) {
             return ResponseDto.success(postRepository.findAllByOrderByViewCountDesc());
         } else if (type.equals("heart")) {
-            return ResponseDto.success(postRepository.findAllByOrderByNumOfHeartDesc());
+            return ResponseDto.success(postRepository.findAllByOrderByHeartNumDesc());
         } else
             return ResponseDto.fail("잘못된 URL 입니다.", "잘못된 접근입니다");
     }
@@ -54,7 +54,7 @@ public class PostService {
                         .title(post.getTitle())
                         .content(post.getContent())
                         .viewCount(post.getViewCount())
-                        .numOfHeart(post.getNumOfHeart())
+                        .heartNum(post.getHeartNum())
                         .amount(post.getAmount())
                         .mapData(post.getMapData())
                         //신고하기 기능 구현 x
@@ -106,7 +106,7 @@ public class PostService {
                 .amount(postRequestDto.getAmount())
 //                .mapData(postRequestDto.getMapData())
 //                .tag(postRequestDto.getTag())
-//                .heart(0)
+                .heartNum(0)
                 .viewCount(0)
                 //신고하기 기능 구현 x
 //                .report(0)
@@ -124,7 +124,7 @@ public class PostService {
                         .amount(postRequestDto.getAmount())
 //                        .tag(postRequestDto.getTag())
                         .viewCount(0)
-                        .numOfHeart(0)
+                        .heartNum(0)
                         //신고하기 기능 구현 x
 //                .report(0)
                         .createdAt(post.getCreatedAt())

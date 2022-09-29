@@ -43,7 +43,7 @@ public class Member {
     private List<Post> postList = new ArrayList<>();
 
     @OneToMany(mappedBy = "member")
-    private List<Heart> wishLists = new ArrayList<>();
+    private List<Heart> hearts = new ArrayList<>();
 
 
 }
