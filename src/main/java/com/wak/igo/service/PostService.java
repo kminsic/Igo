@@ -2,6 +2,8 @@ package com.wak.igo.service;
 
 import com.wak.igo.domain.Member;
 import com.wak.igo.domain.Post;
+import com.wak.igo.domain.UserDetailsImpl;
+import com.wak.igo.dto.request.InterestedTagDto;
 import com.wak.igo.dto.request.PostRequestDto;
 import com.wak.igo.dto.response.PostResponseDto;
 import com.wak.igo.dto.response.ResponseDto;
@@ -14,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import io.jsonwebtoken.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,13 +52,9 @@ public class PostService {
         return ResponseDto.success(
                 PostResponseDto.builder()
                         .heart(post.getHeart())
+                        .title(post.getTitle())
+                        .content(post.getContent())
                         .viewCount(post.getViewCount())
-                        .imgurl(post.getImgurl())
-                        .amount(post.getAmount())
-                        .time(post.getTime())
-                        //신고하기 기능 구현 x
-//                        .report(0)
-                        .tag(post.getTag())
                         .createdAt(post.getCreatedAt())
                         .modifiedAt(post.getModifiedAt())
                         .build());
@@ -65,24 +62,18 @@ public class PostService {
 
     }
 
-    // 처음 추천 페이지
-    @Transactional
-    public ResponseDto<?> getSuggestion(Long id) {
-
-        Member member = memberRepository.findById(1L).get();
-
-        String[] sarr = member.getTag().split("#");
-        List<Post> postList = new ArrayList<>();
-        for (String s : sarr) {
-            List<Post> byTagContaining = postRepository.findByTagContaining(s);
-            for (Post post : byTagContaining) {
-                if (postList.contains(post)) {
-                    continue;
-                } else
-                    postList.add(post);
-            }
+    // 태그 저장
+    public ResponseDto<?> getTag(UserDetailsImpl userDetails, InterestedTagDto tagDto) {
+        if (null == userDetails.getAuthorities()) {
+            ResponseDto.fail("MEMBER_NOT_FOUND",
+                    "사용자를 찾을 수 없습니다.");
         }
-        return ResponseDto.success(postList);
+        Member member = userDetails.getMember();
+
+        List<String> tags = tagDto.getInterested();
+        member.tag(tags);
+        memberRepository.save(member);
+        return ResponseDto.success("저장 완료");
     }
 
 
@@ -99,33 +90,24 @@ public class PostService {
 
         Post post = Post.builder()
                 .member(member)
-                .imgurl(postRequestDto.getImgurl())
                 .title(postRequestDto.getTitle())
                 .content(postRequestDto.getContent())
-                .address(postRequestDto.getAddress())
-                .amount(postRequestDto.getAmount())
-                .time(postRequestDto.getTime())
                 .heart(0)
                 .viewCount(0)
                 //신고하기 기능 구현 x
 //                .report(0)
-                .tag(postRequestDto.getTag())
                 .build();
         postRepository.save(post);
 
         return ResponseDto.success(
-    //원하시면 추가
+                //원하시면 추가
                 PostResponseDto.builder()
                         .title(postRequestDto.getTitle())
-                        .imgurl(postRequestDto.getImgurl())
                         .content(postRequestDto.getContent())
-                        .address(postRequestDto.getAddress())
-                        .amount(postRequestDto.getAmount())
-                        .time(postRequestDto.getTime())
                         .viewCount(0)
+                        .heart(0)
                         //신고하기 기능 구현 x
 //                .report(0)
-                        .tag(postRequestDto.getTag())
                         .createdAt(post.getCreatedAt())
                         .modifiedAt(post.getModifiedAt())
                         .build());
@@ -146,17 +128,14 @@ public class PostService {
 
     }
 
-
     //게시글 삭제
     @Transactional
     public ResponseDto<?> deletePost(Long id) {
-        //이게 이미 Optional이란 소리인가? Post 부른순간?
         Post post = isPresentPost(id);
         postRepository.delete(post);
         return ResponseDto.success("Success");
 
     }
-
     //
     @Transactional(readOnly = true)
     public Post isPresentPost(Long id) {
@@ -171,11 +150,5 @@ public class PostService {
         }
         return tokenProvider.getMemberFromAuthentication().getMember();
     }
-    //신고기능 미구현
-//    @Transactional
-//    public ResponseDto<?> getReport(Long id) {
-//        if
-//
-//    }
 
 }

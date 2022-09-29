@@ -7,6 +7,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static java.util.Collections.emptyList;
 
 @Builder
 @Getter
@@ -26,14 +31,30 @@ public class Member {
     @JsonIgnore
     private String password;
 
-    @Column
+    @Column(nullable = false)
     private String nickname;
 
     @Column
     private String profileimage;
 
-    @Column
-    private String tag;
+    @Convert(converter = StringListConverter.class)
+    private List<String> interested = new ArrayList<>();
 
+    public void tag(List<String> interested){
+        this.interested = interested;
+    }
 
+}
+
+@Converter
+class StringListConverter implements AttributeConverter<List<String>, String> {
+    private static final String SPLIT_CHAR = ";";
+    @Override
+    public String convertToDatabaseColumn(List<String> stringList) {
+        return stringList != null ? String.join(SPLIT_CHAR, stringList) : "";
+    }
+    @Override
+    public List<String> convertToEntityAttribute(String string) {
+        return string != null ? Arrays.asList(string.split(SPLIT_CHAR)) : emptyList();
+    }
 }

@@ -13,14 +13,7 @@ public class PostRequestDto {
 
     private String title;
     private String content;
-    private String imgurl;
-    private int time;
     private int amount;
-    private String address;
-    private String tag;
-
-
-    //혹시나 몰라서
 
 
 }

@@ -1,25 +1,20 @@
 package com.wak.igo.dto.response;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@Builder
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
-public class PostResponseDto {
-
+@Builder
+public class MyPostResponseDto {
     private Long id;
     private String title;
+    private int money;
+    private String time;
+    private String imgUrl;
     private String content;
-    private int heart;
-    private int viewCount;
+    private int done;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
-
-
 }

@@ -1,21 +1,25 @@
 package com.wak.igo.controller;
 
+import com.wak.igo.domain.UserDetailsImpl;
+import com.wak.igo.dto.request.InterestedTagDto;
 import com.wak.igo.dto.request.PostRequestDto;
 import com.wak.igo.dto.response.ResponseDto;
 import com.wak.igo.repository.PostRepository;
 import com.wak.igo.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import io.jsonwebtoken.io.IOException;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
 public class PostController {
 
     private final PostService postService;
-    private final PostRepository postRepository;
 
     // 전체 목록 조회(메인 페이지)
     @GetMapping("/api/post")
@@ -23,10 +27,10 @@ public class PostController {
         return postService.getAllPosts(type);
     }
 
-    // 처음 추천 페이지 (Member ID)
-    @GetMapping("/api/suggestion/{id}")
-    public ResponseDto<?> getSuggestion(@PathVariable Long id) {
-        return postService.getsuggestion(id);
+    // 로그인 후 태그 설정
+    @RequestMapping(value = "/api/member/tag", method = RequestMethod.PUT)
+    public ResponseDto<?> getTag(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody InterestedTagDto tagDto) {
+        return postService.getTag(userDetails, tagDto);
     }
 
     // 게시글 상세 페이지(Post ID)
@@ -56,7 +60,6 @@ public class PostController {
     // 게시글 삭제
     @DeleteMapping("/api/post/{id}")
     public ResponseDto<?> deletePost(@PathVariable Long id) {
-//        postRepository.delete(id);
         return postService.deletePost(id);
     }
 
