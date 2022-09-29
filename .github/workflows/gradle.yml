@@ -3,9 +3,9 @@ name: myaction-system
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "develop" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "develop" ]
     
 env:
   S3_BUCKET_NAME: mygitaction
