@@ -25,7 +25,7 @@ public class HeartService {
 
 
 
-    // 관심 상품 등록
+    // 좋아요
     @Transactional
     public ResponseDto<?> addHeartPost(Long id, HttpServletRequest request) {
         ResponseDto<?> chkResponse = validateCheck(request);
@@ -49,6 +49,8 @@ public class HeartService {
         return ResponseDto.success(" 좋아요 완료.");
     }
 
+
+    //좋아요 취소
     @Transactional
     public ResponseDto<?> removeHeartPost(Long id, HttpServletRequest request) {
         ResponseDto<?> chkResponse = validateCheck(request);
@@ -81,7 +83,7 @@ public class HeartService {
         return ResponseDto.success(member);
     }
 
-    // refreshtoken으로 유저찾기
+    // refreshtoken으로 멤버찾기
     @Transactional
     public Member validateMember(HttpServletRequest request) {
         if (!tokenProvider.validateToken(request.getHeader("RefreshToken"))) {
