@@ -1,7 +1,8 @@
 package com.wak.igo.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wak.igo.response.ResponseDto;
+
+import com.wak.igo.dto.response.ResponseDto;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
@@ -18,7 +19,7 @@ public class AccessDeniedHandlerException implements AccessDeniedHandler {
         response.setContentType("application/json;charset=UTF-8");
         response.getWriter().println(
                 new ObjectMapper().writeValueAsString(
-                        ResponseDto.fail("BAD_REQUEST", "로그인이 필요합니다.")
+                        ResponseDto.fail("BAD_REQUEST", "권한이 없습니다.")
                 )
         );
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);

@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class PostRequestDto {
 
-    private Long id_post;
     private String title;
     private String content;
     private String image;
@@ -19,10 +18,6 @@ public class PostRequestDto {
     private int amount;
     private String address;
     private String tag;
-
-    private LocalDateTime createdAt;
-    private LocalDateTime modifiedAt;
-
 
 
 }
