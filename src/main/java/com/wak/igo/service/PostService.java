@@ -33,7 +33,7 @@ public class PostService {
 
     //전체 게시글 조회 (Tag X)
     @Transactional
-    public ResponseDto<?> getAllPosts(String type) {
+    public ResponseDto<?> getAllTagPosts(String type) {
         if (type.equals("create")) {
             return ResponseDto.success(postRepository.findAllByOrderByCreatedAtDesc());
         } else if (type.equals("view")) {
@@ -81,7 +81,6 @@ public class PostService {
     public ResponseDto<?> createPost(PostRequestDto postRequestDto, HttpServletRequest request) throws IOException {
 
         Member member = validateMember(request);
-
         if (null == member){
             return ResponseDto.fail("INVALID TOKEN", "TOKEN이 유효하지않습니다");
         }
@@ -144,6 +143,7 @@ public class PostService {
         return ResponseDto.success("Success");
 
     }
+
     //
     @Transactional(readOnly = true)
     public Post isPresentPost(Long id) {

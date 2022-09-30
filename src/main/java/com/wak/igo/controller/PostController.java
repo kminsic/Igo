@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,11 +25,16 @@ public class PostController {
 
     // 전체 목록 조회(메인 페이지)
     @GetMapping("/api/post")
-    public ResponseDto<?> getAllPosts(@RequestParam String type) {
-        return postService.getAllPosts(type);
+    public ResponseDto<?> getAllPosts() {
+        return postService.getAllPosts();
     }
 
 
+    // 태그 별 목록 조회(메인 페이지)
+    @GetMapping("/api/post/array")
+    public ResponseDto<?> getAllTagPosts(@RequestParam String type) {
+        return postService.getAllTagPosts(type);
+    }
 
 
     // 게시글 상세 페이지(Post ID)
@@ -53,8 +59,6 @@ public class PostController {
                                      HttpServletRequest request) throws IOException {
         return postService.updatePost(id, requestDto);
     }
-
-
 
 
 }

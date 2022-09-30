@@ -51,7 +51,9 @@ public class SecurityConfiguration {
     @Order(SecurityProperties.BASIC_AUTH_ORDER)
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.cors().configurationSource(corsConfigurationSource());
+
         http.headers().frameOptions().sameOrigin();
+
         http.csrf().disable()
 
                 .exceptionHandling()
