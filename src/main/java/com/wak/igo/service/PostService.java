@@ -2,6 +2,8 @@ package com.wak.igo.service;
 
 import com.wak.igo.domain.Member;
 import com.wak.igo.domain.Post;
+import com.wak.igo.domain.UserDetailsImpl;
+import com.wak.igo.dto.request.InterestedTagDto;
 import com.wak.igo.dto.request.PostRequestDto;
 import com.wak.igo.dto.response.PostResponseDto;
 import com.wak.igo.dto.response.ResponseDto;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -26,14 +29,15 @@ public class PostService {
 
 
 
+    //전체 게시글 조회
     @Transactional
     public ResponseDto<?> getAllPosts() {
         return ResponseDto.success(postRepository.findAllByOrderByCreatedAtDesc());
     }
 
-    //전체 게시글 조회 (Tag X)
+    //게시글 조회 (조회수, 좋아요 , 최신순)
     @Transactional
-    public ResponseDto<?> getAllPosts(String type) {
+    public ResponseDto<?> getAllGroupPosts(String type) {
         if (type.equals("create")) {
             return ResponseDto.success(postRepository.findAllByOrderByCreatedAtDesc());
         } else if (type.equals("view")) {
@@ -44,9 +48,8 @@ public class PostService {
             return ResponseDto.fail("잘못된 URL 입니다.", "잘못된 접근입니다");
     }
 
-    //
-//
-//    //상세 페이지 조회
+
+   //상세 페이지 조회
     @Transactional
     public ResponseDto<?> getDetail(Long id) {
 
@@ -55,7 +58,7 @@ public class PostService {
             return ResponseDto.fail("NOT_FOUND", "게시글이 존재하지 않습니다.");
         }
 
-        post.add_viewCount();
+//        post.add_viewCount();
         return ResponseDto.success(
                 PostResponseDto.builder()
                         .title(post.getTitle())
@@ -73,6 +76,19 @@ public class PostService {
     }
 
 
+    // 태그 저장
+    public ResponseDto<?> getTag(UserDetailsImpl userDetails, InterestedTagDto tagDto) {
+        if (null == userDetails.getAuthorities()) {
+            ResponseDto.fail("MEMBER_NOT_FOUND",
+                    "사용자를 찾을 수 없습니다.");
+        }
+        Member member = userDetails.getMember();
+
+        List<String> tags = tagDto.getInterested();
+        member.tag(tags);
+        memberRepository.save(member);
+        return ResponseDto.success("저장 완료");
+    }
 
 
     //게시글 생성
@@ -138,7 +154,6 @@ public class PostService {
     //게시글 삭제
     @Transactional
     public ResponseDto<?> deletePost(Long id) {
-        //이게 이미 Optional이란 소리인가? Post 부른순간?
         Post post = isPresentPost(id);
         postRepository.delete(post);
         return ResponseDto.success("Success");
@@ -168,5 +183,3 @@ public class PostService {
 //        }
 //
 //    }
-
-

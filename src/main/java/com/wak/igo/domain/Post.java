@@ -22,21 +22,18 @@ public class Post extends Timestamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false) //
+    @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false) //
+    @Column(nullable = false)
     private String content;
-
-
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
-    //
+
     @JoinColumn(name = "member_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
-
 
     @Column
     private int viewCount;
@@ -69,14 +66,8 @@ public class Post extends Timestamped {
         this.title = postRequestDto.getTitle();
         this.content = postRequestDto.getContent();
         this.amount = postRequestDto.getAmount();
-
     }
 }
-
-
-
-
-
 
 
 

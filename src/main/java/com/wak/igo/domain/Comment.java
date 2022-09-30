@@ -33,5 +33,4 @@ public class Comment extends Timestamped {
         return !this.member.equals(member);
     }
 
-
 }

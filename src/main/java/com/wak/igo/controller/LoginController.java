@@ -23,13 +23,13 @@ public class LoginController {
 
     // 카카오 로그인
     @RequestMapping(value = "/kakao/callback", method = RequestMethod.GET)
-    public ResponseDto<String> kakaologin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
+    public ResponseDto<?> kakaologin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
         return kakaoUserService.kakaologin(code, response);
     }
 
     // 네이버 로그인
     @RequestMapping(value = "/naver/callback", method = RequestMethod.GET)
-    public ResponseDto<String> naverlogin(@RequestParam String code, @RequestParam String state, HttpServletResponse response) throws JsonProcessingException {
+    public ResponseDto<?> naverlogin(@RequestParam String code, @RequestParam String state, HttpServletResponse response) throws JsonProcessingException {
         return naverUserService.naverlogin(code, state, response);
     }
 

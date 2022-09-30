@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.ArrayList;
 
 @Builder
 @Getter
@@ -28,18 +29,14 @@ public class Member {
     @JsonIgnore
     private String password;
 
-    @Column
+    @Column(nullable = false)
     private String nickname;
 
     @Column
     private String profileimage;
 
-
     @Convert(converter = StringListConverter.class)
-    @Column
-    private List<String> interested;
-
-
+    private List<String> interested = new ArrayList<>();
 
     @Transactional
     public void profileUpdate(MemberResponseDto memberResponseDto, MultipartFile multipartFile) {
@@ -47,10 +44,7 @@ public class Member {
         this.profileimage = String.valueOf(multipartFile);
 
     }
-
-    @Transactional
-   public void tagUpdate(List<String> interested) {
+    public void tag(List<String> interested) {
         this.interested = interested;
     }
-
 }
