@@ -16,10 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
-<<<<<<< HEAD
-=======
 import java.util.List;
->>>>>>> 5898ea08a74e7453b88f705a5433f4feb09c7c0f
+
 import java.util.Optional;
 
 @Service
@@ -31,12 +29,8 @@ public class PostService {
     private final TokenProvider tokenProvider;
 
 
-<<<<<<< HEAD
-   //전체 게시글 조회
-=======
 
     //전체 게시글 조회
->>>>>>> 5898ea08a74e7453b88f705a5433f4feb09c7c0f
     @Transactional
     public ResponseDto<?> getAllPosts() {
         return ResponseDto.success(postRepository.findAllByOrderByCreatedAtDesc());
@@ -56,29 +50,20 @@ public class PostService {
     }
 
 
-<<<<<<< HEAD
-//    //상세 페이지 조회
-    @Transactional
-    public ResponseDto<?> getDetail(Long id) {
 
 
-=======
    //상세 페이지 조회
     @Transactional
     public ResponseDto<?> getDetail(Long id) {
 
->>>>>>> 5898ea08a74e7453b88f705a5433f4feb09c7c0f
         Post post = isPresentPost(id);
         if(null == post) {
             return ResponseDto.fail("NOT_FOUND", "게시글이 존재하지 않습니다.");
         }
 
-<<<<<<< HEAD
 
         post.add_viewCount();
-=======
 //        post.add_viewCount();
->>>>>>> 5898ea08a74e7453b88f705a5433f4feb09c7c0f
         return ResponseDto.success(
                 PostResponseDto.builder()
                         .title(post.getTitle())
@@ -93,8 +78,7 @@ public class PostService {
                         .createdAt(post.getCreatedAt())
                         .modifiedAt(post.getModifiedAt())
                         .build());
-<<<<<<< HEAD
-=======
+
     }
 
 
@@ -110,7 +94,6 @@ public class PostService {
         member.tag(tags);
         memberRepository.save(member);
         return ResponseDto.success("저장 완료");
->>>>>>> 5898ea08a74e7453b88f705a5433f4feb09c7c0f
     }
 
 
@@ -141,10 +124,6 @@ public class PostService {
         postRepository.save(post);
 
         return ResponseDto.success(
-<<<<<<< HEAD
-=======
-                //원하시면 추가
->>>>>>> 5898ea08a74e7453b88f705a5433f4feb09c7c0f
                 PostResponseDto.builder()
 
                         .title(postRequestDto.getTitle())
@@ -189,7 +168,6 @@ public class PostService {
 
     //게시글 삭제
     @Transactional
-<<<<<<< HEAD
     public ResponseDto<?> deletePost(Long id, HttpServletRequest request) {
 
         ResponseDto<?> chkResponse = validateCheck(request);
@@ -199,24 +177,17 @@ public class PostService {
         Member member = (Member) chkResponse.getData();
         Member updateMember = memberRepository.findByNickname(member.getNickname()).get();
 
-=======
-    public ResponseDto<?> deletePost(Long id) {
->>>>>>> 5898ea08a74e7453b88f705a5433f4feb09c7c0f
-        Post post = isPresentPost(id);
-        if (post == null)
-            return ResponseDto.fail("글 삭제에 실패하였습니다. (NOT_EXIST)", "글 삭제에 실패하였습니다. (NOT_EXIST)");
+            Post post = isPresentPost(id);
+            if (post == null)
+                return ResponseDto.fail("글 삭제에 실패하였습니다. (NOT_EXIST)", "글 삭제에 실패하였습니다. (NOT_EXIST)");
 
-        if (post.validateMember(updateMember))
-            return ResponseDto.fail("작성자가 아닙니다.","작성자가 아닙니다.");
-        postRepository.delete(post);
-        return ResponseDto.success("Success");
+            if (post.validateMember(updateMember))
+                return ResponseDto.fail("작성자가 아닙니다.", "작성자가 아닙니다.");
+            postRepository.delete(post);
+            return ResponseDto.success("Success");
 
-    }
-<<<<<<< HEAD
+        }
 
-=======
-    //
->>>>>>> 5898ea08a74e7453b88f705a5433f4feb09c7c0f
     @Transactional(readOnly = true)
     public Post isPresentPost(Long id) {
         Optional<Post> optionalPost = postRepository.findById(id);
@@ -228,9 +199,8 @@ public class PostService {
         if (!tokenProvider.validateToken(request.getHeader("RefreshToken"))) {
             return null;
         }
-        return tokenProvider.getMemberFromAuthentication();
+        return tokenProvider.getMemberFromAuthentication().getMember();
     }
-<<<<<<< HEAD
     private ResponseDto<?> validateCheck(HttpServletRequest request) {
 
         // RefreshToken 및 Authorization 유효성 검사
@@ -247,12 +217,8 @@ public class PostService {
     }
 }
 
-    //신고기능 미구현
-=======
-}
 
 //신고기능 미구현
->>>>>>> 5898ea08a74e7453b88f705a5433f4feb09c7c0f
 //    @Transactional
 //    public ResponseDto<?> getReport(Long id) {
 //        if(report >= 50 ){
@@ -260,7 +226,4 @@ public class PostService {
 //        }
 //
 //    }
-<<<<<<< HEAD
 
-=======
->>>>>>> 5898ea08a74e7453b88f705a5433f4feb09c7c0f

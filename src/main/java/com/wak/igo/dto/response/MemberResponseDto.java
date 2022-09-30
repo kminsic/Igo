@@ -16,6 +16,6 @@ import java.util.List;
 @AllArgsConstructor
 public class MemberResponseDto {
     private String nickname;
-    private String profileimage;
+    private String profileImage;
     private List<String> interested;
 }

@@ -7,31 +7,25 @@ import com.wak.igo.dto.response.ResponseDto;
 import com.wak.igo.repository.RefreshTokenRepository;
 import com.wak.igo.dto.request.TokenDto;
 import com.wak.igo.shared.Authority;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SecurityException;
 import java.security.Key;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Date;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
-
-import javax.servlet.http.HttpServletRequest;
 
 @Slf4j
 @Component
@@ -85,13 +79,13 @@ public class TokenProvider {
                 .build();
     }
 
-    public Member getMemberFromAuthentication() {
+    public UserDetailsImpl getMemberFromAuthentication() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || AnonymousAuthenticationToken.class.
                 isAssignableFrom(authentication.getClass())) {
             return null;
         }
-        return ((UserDetailsImpl) authentication.getPrincipal()).getMember();
+        return (UserDetailsImpl) authentication.getPrincipal();
     }
 
     // 토큰 유효성 검증
@@ -126,38 +120,4 @@ public class TokenProvider {
         refreshTokenRepository.delete(refreshToken);
         return ResponseDto.success("delete success");
     }
-    public Authentication getAuthentication(HttpServletRequest request) {
-        String token=getAccessToken(request);
-        if(token==null) {
-            return null;
-        }
-        else {
-            Claims claims = Jwts
-                    .parserBuilder()
-                    .setSigningKey(key)
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
-
-            Collection<? extends GrantedAuthority> authorities =
-                    Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
-                            .map(SimpleGrantedAuthority::new)
-                            .collect(Collectors.toList());
-
-            User principal = new User(claims.getSubject(), "", authorities);
-
-            return new UsernamePasswordAuthenticationToken(principal, token, authorities);
-        }
-    }
-
-    private String getAccessToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization");
-
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
-        }
-
-        return null;
-    }
-
 }

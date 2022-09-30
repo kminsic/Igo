@@ -29,23 +29,18 @@ public class PostController {
     public ResponseDto<?> getAllPosts() {
         return postService.getAllPosts();
     }
-<<<<<<< HEAD
-=======
 
->>>>>>> 5898ea08a74e7453b88f705a5433f4feb09c7c0f
+
     // 그룹 별 목록 조회(메인 페이지)
     @GetMapping("/api/post/group")
     public ResponseDto<?> getAllGroupPosts(@RequestParam String type) {
         return postService.getAllGroupPosts(type);
-<<<<<<< HEAD
-=======
     }
 
     // 로그인 후 태그 설정
     @RequestMapping(value = "/api/member/tag", method = RequestMethod.PUT)
     public ResponseDto<?> getTag(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody InterestedTagDto tagDto) {
         return postService.getTag(userDetails, tagDto);
->>>>>>> 5898ea08a74e7453b88f705a5433f4feb09c7c0f
     }
 
     // 게시글 상세 페이지(Post ID)
@@ -55,10 +50,8 @@ public class PostController {
     }
 
     // 게시글 등록
-    // requestpart의 value값은 프론트엔드와 맞춰야 입력값이 제대로 들어옴
     @PostMapping(value = "/api/post")
     public ResponseDto<?> createPost(@RequestBody PostRequestDto postRequestDto, HttpServletRequest request
-
     ) throws IOException {
         return postService.createPost(postRequestDto, request);
     }
@@ -75,16 +68,10 @@ public class PostController {
 
     // 게시글 삭제
     @DeleteMapping("/api/post/{id}")
-<<<<<<< HEAD
     public ResponseDto<?> deletePost(@PathVariable Long id, HttpServletRequest request) {
 //        postRepository.delete(id);
         return postService.deletePost(id,request);
     }
-=======
-    public ResponseDto<?> deletePost(@PathVariable Long id) {
-        return postService.deletePost(id);
-    }
 
->>>>>>> 5898ea08a74e7453b88f705a5433f4feb09c7c0f
 }
 

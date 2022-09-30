@@ -1,9 +1,6 @@
 package com.wak.igo.service;
 
-<<<<<<< HEAD
-=======
 
->>>>>>> 5898ea08a74e7453b88f705a5433f4feb09c7c0f
 import com.wak.igo.domain.Heart;
 import com.wak.igo.domain.Member;
 import com.wak.igo.domain.Post;
@@ -29,11 +26,7 @@ public class HeartService {
 
 
 
-<<<<<<< HEAD
     // 좋아요
-=======
-    // 관심 상품 등록
->>>>>>> 5898ea08a74e7453b88f705a5433f4feb09c7c0f
     @Transactional
     public ResponseDto<?> addHeartPost(Long id, HttpServletRequest request) {
         ResponseDto<?> chkResponse = validateCheck(request);
@@ -57,11 +50,8 @@ public class HeartService {
         return ResponseDto.success(" 좋아요 완료.");
     }
 
-<<<<<<< HEAD
 
     //좋아요 취소
-=======
->>>>>>> 5898ea08a74e7453b88f705a5433f4feb09c7c0f
     @Transactional
     public ResponseDto<?> removeHeartPost(Long id, HttpServletRequest request) {
         ResponseDto<?> chkResponse = validateCheck(request);
@@ -94,21 +84,13 @@ public class HeartService {
         return ResponseDto.success(member);
     }
 
-<<<<<<< HEAD
     // refreshtoken으로 멤버찾기
-=======
-    // refreshtoken으로 유저찾기
->>>>>>> 5898ea08a74e7453b88f705a5433f4feb09c7c0f
     @Transactional
     public Member validateMember(HttpServletRequest request) {
         if (!tokenProvider.validateToken(request.getHeader("RefreshToken"))) {
             return null;
         }
-<<<<<<< HEAD
-        return tokenProvider.getMemberFromAuthentication();
-=======
         return tokenProvider.getMemberFromAuthentication().getMember();
->>>>>>> 5898ea08a74e7453b88f705a5433f4feb09c7c0f
     }
 
 

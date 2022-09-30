@@ -7,13 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
-<<<<<<< HEAD
 import java.util.ArrayList;
 import java.util.List;
-=======
-import java.util.List;
-import java.util.ArrayList;
->>>>>>> 5898ea08a74e7453b88f705a5433f4feb09c7c0f
 
 @Builder
 @Getter
@@ -47,14 +42,10 @@ public class Member {
     @Transactional
     public void profileUpdate(MemberResponseDto memberResponseDto, MultipartFile multipartFile) {
         this.nickname = memberResponseDto.getNickname();
-        this.profileimage = String.valueOf(multipartFile);
+        this.profileImage = String.valueOf(multipartFile);
 
-<<<<<<< HEAD
-
-=======
     }
     public void tag(List<String> interested) {
         this.interested = interested;
     }
->>>>>>> 5898ea08a74e7453b88f705a5433f4feb09c7c0f
 }

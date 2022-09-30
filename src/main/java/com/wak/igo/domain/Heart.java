@@ -1,12 +1,7 @@
 package com.wak.igo.domain;
 
-<<<<<<< HEAD
 import lombok.*;
 import net.minidev.json.annotate.JsonIgnore;
-=======
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
->>>>>>> 5898ea08a74e7453b88f705a5433f4feb09c7c0f
 
 import javax.persistence.*;
 
