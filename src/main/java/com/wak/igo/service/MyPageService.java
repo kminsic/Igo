@@ -77,7 +77,7 @@ public class MyPageService {
             return ResponseDto.fail("INVALID TOKEN", "TOKEN이 유효하지않습니다");
         }
 
-        member.profileUpdate(memberResponseDto,multipartFile);
+        member.profileUpdate(memberResponseDto,imageUrl(multipartFile));
         memberRepository.save(member);
         return ResponseDto.success(
                 MemberResponseDto.builder()
@@ -190,15 +190,15 @@ public class MyPageService {
     }
 
 
-    public String imageUrl(MultipartFile multipartFile) throws IOException {
+    public String imageUrl(MultipartFile multipartFile) throws IOException{
         String s3FileName = UUID.randomUUID() + "-" + multipartFile.getOriginalFilename(); // 파일 이름 중복되지 않게 랜덤한 값으로 업로드
 
-        ObjectMetadata objMeta = new ObjectMetadata(); // ObjectMetadata를 통해 파일 사이즈를 ContentLength로 S3에 알려준다
+        ObjectMetadata objMeta = new ObjectMetadata(); // ObjectMetadata를 통해 파일 사이즈를 ContentLength로 S3에 알려줌
         objMeta.setContentLength(multipartFile.getInputStream().available());
 
         amazonS3.putObject(bucket, s3FileName, multipartFile.getInputStream(), objMeta); // S3 api 메소드 인 putObject를 이용해 파일 stream을 열어서 s3에 파일 업로드
-        System.out.println(bucket+ s3FileName.toString());
-        return amazonS3.getUrl(bucket, s3FileName).toString(); // S3에 업로드 된 사진 url을 가져온다
+
+        return amazonS3.getUrl(bucket, s3FileName).toString(); // S3에 업로드 된 사진 url 가져오기
     }
 
 

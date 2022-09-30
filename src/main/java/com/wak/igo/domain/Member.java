@@ -39,9 +39,9 @@ public class Member {
     private List<String> interested = new ArrayList<>();
 
     @Transactional
-    public void profileUpdate(MemberResponseDto memberResponseDto, MultipartFile multipartFile) {
+    public void profileUpdate(MemberResponseDto memberResponseDto, String imgUrl) {
         this.nickname = memberResponseDto.getNickname();
-        this.profileimage = String.valueOf(multipartFile);
+        this.profileimage = imgUrl;
 
     }
     public void tag(List<String> interested) {
