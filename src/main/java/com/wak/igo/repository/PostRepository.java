@@ -1,5 +1,6 @@
 package com.wak.igo.repository;
 
+import com.wak.igo.domain.Member;
 import com.wak.igo.domain.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -13,6 +14,10 @@ public interface PostRepository  extends JpaRepository<Post,Long> {
     List<Post> findAllByOrderByCreatedAtDesc(); //최신순 정렬
     List<Post> findAllByOrderByViewCountDesc(); //조회수순 정렬
     List<Post> findAllByOrderByHeartNumDesc(); //좋아요순 정렬
+<<<<<<< HEAD
 
+=======
+    List<Post> findByMember(Member member);
+>>>>>>> 5898ea08a74e7453b88f705a5433f4feb09c7c0f
 
 }

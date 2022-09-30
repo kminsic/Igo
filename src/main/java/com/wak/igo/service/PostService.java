@@ -2,18 +2,24 @@ package com.wak.igo.service;
 
 import com.wak.igo.domain.Member;
 import com.wak.igo.domain.Post;
+import com.wak.igo.domain.UserDetailsImpl;
+import com.wak.igo.dto.request.InterestedTagDto;
 import com.wak.igo.dto.request.PostRequestDto;
 import com.wak.igo.dto.response.PostResponseDto;
 import com.wak.igo.dto.response.ResponseDto;
 import com.wak.igo.jwt.TokenProvider;
 import com.wak.igo.repository.MemberRepository;
 import com.wak.igo.repository.PostRepository;
+import io.jsonwebtoken.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import io.jsonwebtoken.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
+<<<<<<< HEAD
+=======
+import java.util.List;
+>>>>>>> 5898ea08a74e7453b88f705a5433f4feb09c7c0f
 import java.util.Optional;
 
 @Service
@@ -25,7 +31,12 @@ public class PostService {
     private final TokenProvider tokenProvider;
 
 
+<<<<<<< HEAD
    //전체 게시글 조회
+=======
+
+    //전체 게시글 조회
+>>>>>>> 5898ea08a74e7453b88f705a5433f4feb09c7c0f
     @Transactional
     public ResponseDto<?> getAllPosts() {
         return ResponseDto.success(postRepository.findAllByOrderByCreatedAtDesc());
@@ -45,18 +56,29 @@ public class PostService {
     }
 
 
+<<<<<<< HEAD
 //    //상세 페이지 조회
     @Transactional
     public ResponseDto<?> getDetail(Long id) {
 
 
+=======
+   //상세 페이지 조회
+    @Transactional
+    public ResponseDto<?> getDetail(Long id) {
+
+>>>>>>> 5898ea08a74e7453b88f705a5433f4feb09c7c0f
         Post post = isPresentPost(id);
         if(null == post) {
             return ResponseDto.fail("NOT_FOUND", "게시글이 존재하지 않습니다.");
         }
 
+<<<<<<< HEAD
 
         post.add_viewCount();
+=======
+//        post.add_viewCount();
+>>>>>>> 5898ea08a74e7453b88f705a5433f4feb09c7c0f
         return ResponseDto.success(
                 PostResponseDto.builder()
                         .title(post.getTitle())
@@ -71,6 +93,24 @@ public class PostService {
                         .createdAt(post.getCreatedAt())
                         .modifiedAt(post.getModifiedAt())
                         .build());
+<<<<<<< HEAD
+=======
+    }
+
+
+    // 태그 저장
+    public ResponseDto<?> getTag(UserDetailsImpl userDetails, InterestedTagDto tagDto) {
+        if (null == userDetails.getAuthorities()) {
+            ResponseDto.fail("MEMBER_NOT_FOUND",
+                    "사용자를 찾을 수 없습니다.");
+        }
+        Member member = userDetails.getMember();
+
+        List<String> tags = tagDto.getInterested();
+        member.tag(tags);
+        memberRepository.save(member);
+        return ResponseDto.success("저장 완료");
+>>>>>>> 5898ea08a74e7453b88f705a5433f4feb09c7c0f
     }
 
 
@@ -101,6 +141,10 @@ public class PostService {
         postRepository.save(post);
 
         return ResponseDto.success(
+<<<<<<< HEAD
+=======
+                //원하시면 추가
+>>>>>>> 5898ea08a74e7453b88f705a5433f4feb09c7c0f
                 PostResponseDto.builder()
 
                         .title(postRequestDto.getTitle())
@@ -145,6 +189,7 @@ public class PostService {
 
     //게시글 삭제
     @Transactional
+<<<<<<< HEAD
     public ResponseDto<?> deletePost(Long id, HttpServletRequest request) {
 
         ResponseDto<?> chkResponse = validateCheck(request);
@@ -154,6 +199,9 @@ public class PostService {
         Member member = (Member) chkResponse.getData();
         Member updateMember = memberRepository.findByNickname(member.getNickname()).get();
 
+=======
+    public ResponseDto<?> deletePost(Long id) {
+>>>>>>> 5898ea08a74e7453b88f705a5433f4feb09c7c0f
         Post post = isPresentPost(id);
         if (post == null)
             return ResponseDto.fail("글 삭제에 실패하였습니다. (NOT_EXIST)", "글 삭제에 실패하였습니다. (NOT_EXIST)");
@@ -164,7 +212,11 @@ public class PostService {
         return ResponseDto.success("Success");
 
     }
+<<<<<<< HEAD
 
+=======
+    //
+>>>>>>> 5898ea08a74e7453b88f705a5433f4feb09c7c0f
     @Transactional(readOnly = true)
     public Post isPresentPost(Long id) {
         Optional<Post> optionalPost = postRepository.findById(id);
@@ -178,6 +230,7 @@ public class PostService {
         }
         return tokenProvider.getMemberFromAuthentication();
     }
+<<<<<<< HEAD
     private ResponseDto<?> validateCheck(HttpServletRequest request) {
 
         // RefreshToken 및 Authorization 유효성 검사
@@ -195,6 +248,11 @@ public class PostService {
 }
 
     //신고기능 미구현
+=======
+}
+
+//신고기능 미구현
+>>>>>>> 5898ea08a74e7453b88f705a5433f4feb09c7c0f
 //    @Transactional
 //    public ResponseDto<?> getReport(Long id) {
 //        if(report >= 50 ){
@@ -202,4 +260,7 @@ public class PostService {
 //        }
 //
 //    }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 5898ea08a74e7453b88f705a5433f4feb09c7c0f

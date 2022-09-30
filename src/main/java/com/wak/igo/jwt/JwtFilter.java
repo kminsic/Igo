@@ -34,6 +34,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
     public static String AUTHORIZATION_HEADER = "Authorization";
     public static String BEARER_PREFIX = "BEARER";
+
     public static String AUTHORITIES_KEY = "auth";
     private final String SECRET_KEY;
     private final TokenProvider tokenProvider;
@@ -44,7 +45,9 @@ public class JwtFilter extends OncePerRequestFilter {
 
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         Key key = Keys.hmacShaKeyFor(keyBytes);
+
         String jwt = resolveToken(request);     // request의 jwt 토큰 받기
+
 
         if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
             Claims claims;

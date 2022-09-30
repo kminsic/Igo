@@ -23,6 +23,9 @@ public class MyPost extends Timestamped{
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
+    @Column
+    private int money;
+
     @Column(nullable = false)
     private String time;
 
@@ -36,6 +39,8 @@ public class MyPost extends Timestamped{
     private String title;
 
     public void update(MyPostRequestDto requestDto, String imgUrl){
+//        this.done = requestDto.getDone();
+        this.money = requestDto.getMoney();
         this.imgUrl = imgUrl;
         this.time = requestDto.getTime();
         this.content = requestDto.getContent();

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wak.igo.domain.Member;
 import com.wak.igo.domain.UserDetailsImpl;
+import com.wak.igo.dto.response.MemberResponseDto;
 import com.wak.igo.dto.response.ResponseDto;
 import com.wak.igo.jwt.TokenProvider;
 import com.wak.igo.repository.MemberRepository;
@@ -27,6 +28,8 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -36,13 +39,14 @@ public class NaverUserService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
-    public ResponseDto<String> naverlogin(String code, String state, HttpServletResponse response) throws JsonProcessingException {
-        String accesstoken = getAccessToken(code, state);           // 인가 코드로 전체 response 요청해서 access token를 받아온다.
-        MemberInfo MemberInfo = getMemberInfo(accesstoken);         // access token 으로 api 요청해서 회원정보를 받아온다.
-        Member naverUser = registerNaverUserIfNeeded(MemberInfo);   // DB에 회원이 존재하지 않으면 회원정보를 저장한다(회원가입)
-        Authentication authentication = forceLogin(naverUser);      // 강제 로그인
-        naverUsersAuthorizationInput(authentication, response);     // 로그인 인증정보로 jwt 토큰 생성, header에 Jwt 토큰 추가.
-        return ResponseDto.success(MemberInfo.getNickname());
+    public ResponseDto<?> naverlogin(String code, String state, HttpServletResponse response) throws JsonProcessingException {
+        String accesstoken = getAccessToken(code, state); // 인가 코드로 전체 response 요청해서 access token를 받아온다.
+        MemberInfo MemberInfo = getMemberInfo(accesstoken); // access token 으로 api 요청해서 회원정보를 받아온다.
+        Member naverUser = registerNaverUserIfNeeded(MemberInfo); // DB에 회원이 존재하지 않으면 회원정보를 저장한다(회원가입)
+        Authentication authentication = forceLogin(naverUser); // 강제 로그인
+        UserDetailsImpl userDetails = naverUsersAuthorizationInput(authentication, response); // 로그인 인증정보로 jwt 토큰 생성, header에 Jwt 토큰 추가.
+        MemberResponseDto memberInfo = memberInfo(userDetails); // 회원정보 가져오기
+        return ResponseDto.success(memberInfo);
     }
 
     private String getAccessToken(String code, String state) throws JsonProcessingException {
@@ -53,6 +57,10 @@ public class NaverUserService {
         // HTTP Body 생성
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
+<<<<<<< HEAD
+=======
+
+>>>>>>> 5898ea08a74e7453b88f705a5433f4feb09c7c0f
 //        body.add("client_id", "DmLVvurxVnPCqlnSp0XZ");      // localhost client_id
         body.add("client_id", "1tmOBpKKBicBaUmPQpaF");        // 프론트엔드 client_id
 //        body.add("client_secret", "9fbJI0kZub");            // localhost client_secret
@@ -110,6 +118,8 @@ public class NaverUserService {
                 .orElse(null);
         // 회원가입
         if (naverUser == null) {
+
+
             String nickname = MemberInfo.getNickname();                 // nickname: naver name
             String password = UUID.randomUUID().toString();             // password: random UUID
             String encodedPassword = passwordEncoder.encode(password);  // password 암호화
@@ -132,11 +142,33 @@ public class NaverUserService {
         return authentication;
     }
 
-    private void naverUsersAuthorizationInput(Authentication authentication, HttpServletResponse response) {
+    private UserDetailsImpl naverUsersAuthorizationInput(Authentication authentication, HttpServletResponse response) {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         TokenDto token = tokenProvider.generateTokenDto(userDetails);
         response.addHeader("Authorization", "BEARER" + " " + token.getAccessToken());
         response.addHeader("RefreshToken", token.getRefreshToken());
         response.addHeader("Access-Token-Expire-Time", token.getAccessTokenExpiresIn().toString());
+        return userDetails;
+    }
+
+    private MemberResponseDto memberInfo(UserDetailsImpl userDetails){
+        List<String> tag = new ArrayList<>();
+        Member member = userDetails.getMember();
+
+        // 가입 후 이미지나 관심사가 null일 때
+        List<String> tags = member.getInterested();
+        if (tags == null) {
+            tag.add("false");
+        } else {
+            tag = tags;
+        }
+        String profileImg = (member.getProfileimage() == null) ? "false" : member.getProfileimage();
+
+        MemberResponseDto response = MemberResponseDto.builder()
+                .nickname(member.getNickname())
+                .profileimage(profileImg)
+                .interested(tag)
+                .build();
+        return response;
     }
 }

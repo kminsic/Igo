@@ -1,21 +1,27 @@
 package com.wak.igo.controller;
 
+import com.wak.igo.domain.UserDetailsImpl;
+import com.wak.igo.dto.request.InterestedTagDto;
 import com.wak.igo.dto.request.PostRequestDto;
 import com.wak.igo.dto.response.ResponseDto;
-import com.wak.igo.repository.PostRepository;
 import com.wak.igo.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.io.IOException;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import io.jsonwebtoken.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 
-@RequiredArgsConstructor
 @RestController
+@RequiredArgsConstructor
 public class PostController {
 
     private final PostService postService;
-    private final PostRepository postRepository;
+
 
 
     // 전체 목록 조회(메인 페이지)
@@ -23,10 +29,23 @@ public class PostController {
     public ResponseDto<?> getAllPosts() {
         return postService.getAllPosts();
     }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 5898ea08a74e7453b88f705a5433f4feb09c7c0f
     // 그룹 별 목록 조회(메인 페이지)
     @GetMapping("/api/post/group")
     public ResponseDto<?> getAllGroupPosts(@RequestParam String type) {
         return postService.getAllGroupPosts(type);
+<<<<<<< HEAD
+=======
+    }
+
+    // 로그인 후 태그 설정
+    @RequestMapping(value = "/api/member/tag", method = RequestMethod.PUT)
+    public ResponseDto<?> getTag(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody InterestedTagDto tagDto) {
+        return postService.getTag(userDetails, tagDto);
+>>>>>>> 5898ea08a74e7453b88f705a5433f4feb09c7c0f
     }
 
     // 게시글 상세 페이지(Post ID)
@@ -56,9 +75,16 @@ public class PostController {
 
     // 게시글 삭제
     @DeleteMapping("/api/post/{id}")
+<<<<<<< HEAD
     public ResponseDto<?> deletePost(@PathVariable Long id, HttpServletRequest request) {
 //        postRepository.delete(id);
         return postService.deletePost(id,request);
     }
+=======
+    public ResponseDto<?> deletePost(@PathVariable Long id) {
+        return postService.deletePost(id);
+    }
+
+>>>>>>> 5898ea08a74e7453b88f705a5433f4feb09c7c0f
 }
 

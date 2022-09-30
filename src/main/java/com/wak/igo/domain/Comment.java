@@ -33,5 +33,8 @@ public class Comment extends Timestamped {
         return !this.member.equals(member);
     }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 5898ea08a74e7453b88f705a5433f4feb09c7c0f
 }

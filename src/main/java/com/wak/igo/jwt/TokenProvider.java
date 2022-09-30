@@ -53,6 +53,7 @@ public class TokenProvider {
 
     public TokenDto generateTokenDto(UserDetailsImpl userDetails) {
         long now = (new Date().getTime());
+
         // access token 생성 (사용자 정보를 복호화)
         Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
         String accessToken = Jwts.builder()
@@ -68,6 +69,7 @@ public class TokenProvider {
                 .compact();
 
         RefreshToken refreshTokenObject = RefreshToken.builder()
+
                 .id(userDetails.getId())
                 .member(userDetails.getMember())
                 .keyValue(refreshToken)
