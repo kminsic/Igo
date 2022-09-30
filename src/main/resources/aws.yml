@@ -7,10 +7,10 @@ spring:
 cloud:
   aws:
     credentials:
-      accessKey: AKIAQFBK5SIW3KOU3H56
-      secretKey: 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
+      accessKey: AKIAQFBK5SIWUKJ3SMC6
+      secretKey: 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
     s3:
-      bucket: minipro-bucket
+      bucket: igobucket
     region:
       static: ap-northeast-2
     stack:

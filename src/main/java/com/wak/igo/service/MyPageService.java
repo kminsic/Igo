@@ -59,7 +59,7 @@ public class MyPageService {
         memberResponseDtoList.add(
                 MemberResponseDto.builder()
                         .nickname(member.getNickname())
-                        .profileimage(member.getProfileimage())
+                        .profileImage(member.getProfileImage())
                         .build()
         );
         return ResponseDto.success(memberResponseDtoList);
@@ -78,14 +78,14 @@ public class MyPageService {
             return ResponseDto.fail("INVALID TOKEN", "TOKEN이 유효하지않습니다");
         }
         member.setNickname(memberResponseDto.getNickname());
-        member.setProfileimage(multipartFile.getOriginalFilename());
+        member.setProfileImage(multipartFile.getOriginalFilename());
         memberRepository.save(member);
 
 //        member.profileUpdate(memberResponseDto,multipartFile);
         return ResponseDto.success(
                 MemberResponseDto.builder()
                         .nickname(memberResponseDto.getNickname())
-                        .profileimage(imageUrl(multipartFile))
+                        .profileImage(imageUrl(multipartFile))
                         .build()
         );
 
