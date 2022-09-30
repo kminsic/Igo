@@ -1,15 +1,13 @@
 package com.wak.igo.dto.response;
 
-//import com.wak.igo.domain.MapData;
-//import com.wak.igo.domain.Post;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+
 
 @Builder
 @Getter
@@ -23,9 +21,6 @@ public class PostResponseDto {
     private int amount;
     private int heartNum;
     private int viewCount;
-    private String mapData;
-//    private List<MapData> mapData;
-//    private String tag;
 
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;

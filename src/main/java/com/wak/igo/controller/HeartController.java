@@ -3,7 +3,6 @@ package com.wak.igo.controller;
 import com.wak.igo.dto.response.ResponseDto;
 import com.wak.igo.service.HeartService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;

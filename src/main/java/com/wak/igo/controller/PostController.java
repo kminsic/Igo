@@ -17,16 +17,16 @@ public class PostController {
     private final PostService postService;
     private final PostRepository postRepository;
 
+
     // 전체 목록 조회(메인 페이지)
     @GetMapping("/api/post")
-    public ResponseDto<?> getAllPosts(@RequestParam String type) {
-        return postService.getAllPosts(type);
+    public ResponseDto<?> getAllPosts() {
+        return postService.getAllPosts();
     }
-
-    // 처음 추천 페이지 (Member ID)
-    @GetMapping("/api/suggestion/{id}")
-    public ResponseDto<?> getSuggestion(@PathVariable Long id) {
-        return postService.getSuggestion(id);
+    // 그룹 별 목록 조회(메인 페이지)
+    @GetMapping("/api/post/group")
+    public ResponseDto<?> getAllGroupPosts(@RequestParam String type) {
+        return postService.getAllGroupPosts(type);
     }
 
     // 게시글 상세 페이지(Post ID)
@@ -50,19 +50,15 @@ public class PostController {
     public ResponseDto<?> updatePost(@PathVariable Long id,
                                      @RequestPart(value = "post") PostRequestDto requestDto,
                                      HttpServletRequest request) throws IOException {
-        return postService.updatePost(id, requestDto);
+        return postService.updatePost(id, requestDto,request);
     }
 
 
     // 게시글 삭제
     @DeleteMapping("/api/post/{id}")
-    public ResponseDto<?> deletePost(@PathVariable Long id) {
+    public ResponseDto<?> deletePost(@PathVariable Long id, HttpServletRequest request) {
 //        postRepository.delete(id);
-        return postService.deletePost(id);
+        return postService.deletePost(id,request);
     }
-
-
-
-
 }
 

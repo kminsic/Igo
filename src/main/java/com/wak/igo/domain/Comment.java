@@ -1,6 +1,5 @@
 package com.wak.igo.domain;
 
-import com.wak.igo.dto.request.CommentRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -34,6 +33,5 @@ public class Comment extends Timestamped {
         return !this.member.equals(member);
     }
 
-    public void update(CommentRequestDto commentRequestDto)
-    { this.content = commentRequestDto.getContent(); }
+
 }

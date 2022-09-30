@@ -17,8 +17,5 @@ public class MemberController {
         kakaoUserService.kakaologin(code, response);
     }
 
-//    @RequestMapping(value = "/kakao/logout", method = RequestMethod.GET)
-//    public void kakaologout(UserDetailsImpl userDetails){
-//        kakaoUserService.kakaologout(userDetails);
-//    }
+
 }

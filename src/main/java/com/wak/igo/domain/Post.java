@@ -50,6 +50,9 @@ public class Post extends Timestamped {
     private String tag;
     @Column
     private int viewCount;
+
+//    @Column
+//    private int report;
     @Column
     private int heartNum;
 
@@ -75,10 +78,14 @@ public class Post extends Timestamped {
         this.content = postRequestDto.getContent();
         this.amount = postRequestDto.getAmount();
 //        this.mapData = postRequestDto.getMapData();
-//            this.tag = postRequestDto.getTag();
+//        this.tag = postRequestDto.getTag();
 
 
 
+    }
+
+    public boolean validateMember(Member member) {
+        return !this.member.equals(member);
     }
 }
 
