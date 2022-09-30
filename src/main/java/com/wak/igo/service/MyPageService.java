@@ -78,11 +78,9 @@ public class MyPageService {
         if (null == member) {
             return ResponseDto.fail("INVALID TOKEN", "TOKEN이 유효하지않습니다");
         }
-        member.setNickname(memberResponseDto.getNickname());
-        member.setProfileimage(multipartFile.getOriginalFilename());
-        memberRepository.save(member);
 
-//        member.profileUpdate(memberResponseDto,multipartFile);
+        member.profileUpdate(memberResponseDto,multipartFile);
+        memberRepository.save(member);
         return ResponseDto.success(
                 MemberResponseDto.builder()
                         .nickname(memberResponseDto.getNickname())
