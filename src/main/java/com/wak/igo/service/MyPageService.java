@@ -4,7 +4,6 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.wak.igo.domain.Heart;
 import com.wak.igo.domain.Member;
-import com.wak.igo.domain.Mypost;
 import com.wak.igo.domain.Post;
 import com.wak.igo.dto.HeartDto;
 import com.wak.igo.dto.response.MemberResponseDto;
@@ -104,7 +103,8 @@ public class MyPageService {
     }
 
         List<String> tags = memberResponseDto.getInterested();
-        member.tagUpdate(tags);
+//        member.tagUpdate(tags);
+        member.tag(tags);
         memberRepository.save(member);
         return ResponseDto.success("태그 수정 완료");
     }
@@ -144,36 +144,7 @@ public class MyPageService {
     }
 
     //마이포스트 불러오기
-    @Transactional(readOnly = true)
-    public ResponseDto<?> getMypost(HttpServletRequest request) {
-        // 리프레쉬 토큰 확인
-        if (null == request.getHeader("RefreshToken")) {
-            return ResponseDto.fail("MEMBER_NOT_FOUND",
-                    "로그인이 필요합니다.");
-        }
-        // 리프레시 토큰을 이용해서 유저정보찾기
-        Member member = validateMember(request);
-        if (null == member) {
-            return ResponseDto.fail("INVALID TOKEN", "TOKEN이 유효하지않습니다");
-        };
-        //2.마이 포스트 가져와서 dto리스트로 저장
-        List<Mypost> myposts = myPostRepository.findByMember(member);
-        List<MyPostResponseDto> myPostResponseDtoList = new ArrayList<>();
-        for (Mypost mypost : myposts) {
-            myPostResponseDtoList.add(
-                    MyPostResponseDto.builder()
-                            .id(mypost.getId())
-                            .done(mypost.getDone())
-                            .money(mypost.getMoney())
-                            .time(mypost.getTime())
-                            .imgUrl(mypost.getImgUrl())
-                            .content(mypost.getContent())
-                            .title(mypost.getTitle())
-                            .build()
-            );
-        }
-        return ResponseDto.success(myPostResponseDtoList);
-    }
+
     //좋아요 한 게시글 불러오기
     @Transactional(readOnly = true)
     public ResponseDto<?> getHeartpost(HttpServletRequest request) {

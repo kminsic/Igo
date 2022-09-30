@@ -1,5 +1,6 @@
 package com.wak.igo.domain;
 
+import com.wak.igo.dto.request.MyPostRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,7 +13,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Mypost extends Timestamped{
+public class MyPost extends Timestamped{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,16 +23,10 @@ public class Mypost extends Timestamped{
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
-    @Column
-    private int done;
-
-    @Column
-    private int money;
-
     @Column(nullable = false)
     private String time;
 
-    @Column(nullable = false)
+    @Column
     private String imgUrl;
 
     @Column(nullable = false)
@@ -40,4 +35,11 @@ public class Mypost extends Timestamped{
     @Column(nullable = false)
     private String title;
 
+
+    public void update(MyPostRequestDto requestDto, String imgUrl){
+        this.imgUrl = imgUrl;
+        this.time = requestDto.getTime();
+        this.content = requestDto.getContent();
+        this.title = requestDto.getTitle();
+    }
 }

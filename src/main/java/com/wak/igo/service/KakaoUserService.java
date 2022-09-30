@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.wak.igo.domain.Member;
 import com.wak.igo.domain.UserDetailsImpl;
+import com.wak.igo.dto.response.MemberResponseDto;
 import com.wak.igo.dto.response.ResponseDto;
 import com.wak.igo.jwt.TokenProvider;
 import com.wak.igo.repository.MemberRepository;
@@ -26,6 +27,9 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import javax.servlet.http.HttpServletResponse;
+import java.nio.file.attribute.UserPrincipalNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -44,25 +48,14 @@ public class KakaoUserService {
         return tokenProvider.deleteRefreshToken(userDetails.getMember());
     }
 
-
-    public ResponseDto<String> kakaologin(String code, HttpServletResponse response) throws JsonProcessingException {
-        // 1. "인가 코드"로 전체 response 요청
-        String accessToken = getAccessToken(code);
-
-        // 2. response에 access token으로 카카오 api 호출
-        MemberInfo kakaoUserInfo = getkakaoUserInfo(accessToken);
-
-        // 3. 필요시에 회원가입
-        Member kakaoUser = registerKakaoUserIfNeeded(kakaoUserInfo);
-
-        // 4. 강제 로그인 처리
-        Authentication authentication = forceLogin(kakaoUser);
-
-        // 5. response Header에 JWT 토큰 추가
-        kakaoUsersAuthorizationInput(authentication, response);
-
-
-        return ResponseDto.success(kakaoUserInfo.getNickname());
+    public ResponseDto<?> kakaologin(String code, HttpServletResponse response) throws JsonProcessingException {
+        String accessToken = getAccessToken(code);  // 인가 코드로 전체 response 요청해서 access token를 받아온다.
+        MemberInfo kakaoUserInfo = getkakaoUserInfo(accessToken);  // access token 으로 api 요청해서 회원정보를 받아온다.
+        Member kakaoUser = registerKakaoUserIfNeeded(kakaoUserInfo); // DB에 회원이 존재하지 않으면 회원정보를 저장한다(회원가입)
+        Authentication authentication = forceLogin(kakaoUser); // 강제 로그인
+        UserDetailsImpl userDetails = kakaoUsersAuthorizationInput(authentication, response); // 로그인 인증정보로 jwt 토큰 생성, header에 Jwt 토큰 추가.
+        MemberResponseDto memberInfo = memberInfo(userDetails); // 회원정보 가져오기
+        return ResponseDto.success(memberInfo);
 
     }
 
@@ -74,11 +67,12 @@ public class KakaoUserService {
         // HTTP Body 생성
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
-//        body.add("client_id", "fdb42734830cbb186c8221bf3acdd6c6");        // localhost client_id
-        body.add("client_id", "3d365192ea8ab4f32c7f9c1d7c5688e1");          // 프론트엔드 client_id
+        body.add("client_id", "fdb42734830cbb186c8221bf3acdd6c6");        // localhost client_id
+//        body.add("client_id", "3d365192ea8ab4f32c7f9c1d7c5688e1");          // 프론트엔드 client_id
         body.add("client_secret", "FuvfQecT3uPmfM3wlzF5VxRJU7Iz654F");
 //        body.add("redirect_url", "http://localhost:8080/kakao/callback"); // localhost redirect_url
         body.add("redirect_uri", "http://localhost:3000/kakaoloading"); // 프론트엔드 client_id
+
         body.add("code", code);
 
         // HTTP 요청 보내기
@@ -154,7 +148,7 @@ public class KakaoUserService {
         return authentication;
     }
 
-    private void kakaoUsersAuthorizationInput(Authentication authentication, HttpServletResponse response) {
+    private UserDetailsImpl kakaoUsersAuthorizationInput(Authentication authentication, HttpServletResponse response) {
         // response header에 token 추가
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
@@ -162,5 +156,28 @@ public class KakaoUserService {
         response.addHeader("Authorization", "BEARER" + " " + token.getAccessToken());
         response.addHeader("RefreshToken", token.getRefreshToken());
         response.addHeader("Access-Token-Expire-Time", token.getAccessTokenExpiresIn().toString());
+
+        return userDetails;
+    }
+
+    private MemberResponseDto memberInfo(UserDetailsImpl userDetails){
+        List<String> tag = new ArrayList<>();
+        Member member = userDetails.getMember();
+
+        // 가입 후 이미지나 관심사가 null일 때
+        List<String> tags = member.getInterested();
+        if (tags == null) {
+            tag.add("false");
+        } else {
+            tag = tags;
+        }
+        String profileImg = (member.getProfileimage() == null) ? "false" : member.getProfileimage();
+
+        MemberResponseDto response = MemberResponseDto.builder()
+                .nickname(member.getNickname())
+                .profileimage(profileImg)
+                .interested(tag)
+                .build();
+        return response;
     }
 }
