@@ -24,6 +24,4 @@ public class MyPostController {
                                          @RequestPart(value = "content", required = false)MyPostRequestDto requestDto) throws IOException{  // @RequestPart 애너테이션을 이용해서 multipart/form-data 요청받음
         return myPostService.createSchedule(userDetails, multipartFile, requestDto);
     }
-
-
 }

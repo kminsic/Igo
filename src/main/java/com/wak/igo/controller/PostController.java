@@ -29,6 +29,8 @@ public class PostController {
     }
 
 
+
+
     // 게시글 상세 페이지(Post ID)
     @GetMapping("/api/detail/{id}")
     public ResponseDto<?> getDetail(@PathVariable Long id) {

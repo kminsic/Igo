@@ -40,6 +40,4 @@ public class Mypost extends Timestamped{
     @Column(nullable = false)
     private String title;
 
-
-
 }
