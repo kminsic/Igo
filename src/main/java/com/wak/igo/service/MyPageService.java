@@ -7,7 +7,6 @@ import com.wak.igo.domain.Member;
 import com.wak.igo.domain.Post;
 import com.wak.igo.dto.HeartDto;
 import com.wak.igo.dto.response.MemberResponseDto;
-import com.wak.igo.dto.response.MyPostResponseDto;
 import com.wak.igo.dto.response.PostResponseDto;
 import com.wak.igo.dto.response.ResponseDto;
 import com.wak.igo.jwt.TokenProvider;
@@ -124,7 +123,6 @@ public class MyPageService {
         if (null == member) {
             return ResponseDto.fail("INVALID TOKEN", "TOKEN이 유효하지않습니다");
         };
-
         // 자신이 쓴 글 기준으로 찾기
         //  자신이 쓴 글 전부 가져와서 dto리스트로 저장.
         List<Post> postList = postRepository.findByMember(member);
@@ -158,7 +156,6 @@ public class MyPageService {
         if (null == member) {
             return ResponseDto.fail("INVALID TOKEN", "TOKEN이 유효하지않습니다");
         };
-
         List<Heart> heart = heartRepository.findByMember(member);
         List<HeartDto> heartDtoList = new ArrayList<>();
         List<PostResponseDto> postList = new ArrayList<>();
@@ -180,7 +177,6 @@ public class MyPageService {
                             .build()
             );
         }
-
         return ResponseDto.success(postList);
     }
 
@@ -201,7 +197,7 @@ public class MyPageService {
         objMeta.setContentLength(multipartFile.getInputStream().available());
 
         amazonS3.putObject(bucket, s3FileName, multipartFile.getInputStream(), objMeta); // S3 api 메소드 인 putObject를 이용해 파일 stream을 열어서 s3에 파일 업로드
-
+        System.out.println(bucket+ s3FileName.toString());
         return amazonS3.getUrl(bucket, s3FileName).toString(); // S3에 업로드 된 사진 url을 가져온다
     }
 

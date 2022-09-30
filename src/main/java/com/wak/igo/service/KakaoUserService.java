@@ -3,20 +3,20 @@ package com.wak.igo.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import com.wak.igo.domain.Member;
 import com.wak.igo.domain.UserDetailsImpl;
+import com.wak.igo.dto.request.MemberInfo;
+import com.wak.igo.dto.request.TokenDto;
 import com.wak.igo.dto.response.MemberResponseDto;
 import com.wak.igo.dto.response.ResponseDto;
 import com.wak.igo.jwt.TokenProvider;
 import com.wak.igo.repository.MemberRepository;
-
-
-import com.wak.igo.dto.request.TokenDto;
-import com.wak.igo.dto.request.MemberInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,8 +26,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+
 import javax.servlet.http.HttpServletResponse;
-import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -70,8 +70,8 @@ public class KakaoUserService {
         body.add("client_id", "fdb42734830cbb186c8221bf3acdd6c6");        // localhost client_id
 //        body.add("client_id", "3d365192ea8ab4f32c7f9c1d7c5688e1");          // 프론트엔드 client_id
         body.add("client_secret", "FuvfQecT3uPmfM3wlzF5VxRJU7Iz654F");
-//        body.add("redirect_url", "http://localhost:8080/kakao/callback"); // localhost redirect_url
-        body.add("redirect_uri", "http://localhost:3000/kakaoloading"); // 프론트엔드 client_id
+        body.add("redirect_url", "http://localhost:8080/kakao/callback"); // localhost redirect_url
+//        body.add("redirect_uri", "http://localhost:3000/kakaoloading"); // 프론트엔드 client_id
 
         body.add("code", code);
 
@@ -172,7 +172,7 @@ public class KakaoUserService {
             tag = tags;
         }
         String profileImg = (member.getProfileimage() == null) ? "false" : member.getProfileimage();
-
+        System.out.println(profileImg);
         MemberResponseDto response = MemberResponseDto.builder()
                 .nickname(member.getNickname())
                 .profileimage(profileImg)

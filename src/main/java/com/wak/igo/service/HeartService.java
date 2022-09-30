@@ -24,8 +24,6 @@ public class HeartService {
     private final HeartRepository heartRepository;
 
 
-
-
     // 관심 상품 등록
     @Transactional
     public ResponseDto<?> addHeartPost(Long id, HttpServletRequest request) {
