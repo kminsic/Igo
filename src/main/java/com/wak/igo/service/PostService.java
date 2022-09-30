@@ -61,7 +61,6 @@ public class PostService {
             return ResponseDto.fail("NOT_FOUND", "게시글이 존재하지 않습니다.");
         }
 
-
         post.add_viewCount();
 //        post.add_viewCount();
         return ResponseDto.success(

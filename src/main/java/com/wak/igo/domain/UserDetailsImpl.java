@@ -34,6 +34,7 @@ public class UserDetailsImpl implements UserDetails {
     public String getPassword() {
         return member.getPassword();
     }
+
     private Member member;
 
 
