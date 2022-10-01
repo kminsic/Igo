@@ -1,38 +1,22 @@
 package com.wak.igo.domain;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import javax.persistence.AttributeConverter;
-import java.io.IOException;
+import javax.persistence.Converter;
+import java.util.Arrays;
 import java.util.List;
 
+import static java.util.Collections.emptyList;
+
+// AttricuteConverter 인터페이스를 이용하여 list <-> string 으로 변환
+@Converter
 public class StringListConverter implements AttributeConverter<List<String>, String> {
-    private static final ObjectMapper mapper = new ObjectMapper()
-            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-            .configure(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, false);
-
-    // DB 테이블에 들어갈 때 적용됨
+    private static final String SPLIT_CHAR = ";";
     @Override
-    public String convertToDatabaseColumn(List<String> attribute) {
-        try {
-            // Object to JSON in String
-            return mapper.writeValueAsString(attribute);
-        } catch (JsonProcessingException e) {
-            throw new IllegalArgumentException();
-        }
-
+    public String convertToDatabaseColumn(List<String> stringList) { // 엔티티의 데이터를 데이터베이스 컬럼에 저장할 데이터로 변환
+        return stringList != null ? String.join(SPLIT_CHAR, stringList) : ""; // List의 문자열들을 ";"를 구분자로 문자열로 반환
     }
-
-    // DB 테이블의 데이터를 Object 에 매핑시킬 때 적용됨
     @Override
-    public List<String> convertToEntityAttribute(String dbData) {
-        try {
-            // JSON from String to Object
-            return mapper.readValue(dbData, List.class);
-        } catch (IOException e) {
-            throw new IllegalArgumentException();
-        }
+    public List<String> convertToEntityAttribute(String string) { // DB에서 조회한 컬럼 데이터를 엔티티의 데이터로 변환
+        return string != null ? Arrays.asList(string.split(SPLIT_CHAR)) : emptyList(); // 문자열을 ";" 구분자로 분리해 리스트로 반환
     }
 }

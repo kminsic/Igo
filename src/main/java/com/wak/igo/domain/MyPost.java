@@ -19,7 +19,7 @@ public class MyPost extends Timestamped{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JoinColumn(name = "id_member", nullable = false)
+    @JoinColumn(name = "member_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
@@ -34,7 +34,6 @@ public class MyPost extends Timestamped{
 
     @Column(nullable = false)
     private String title;
-
 
     public void update(MyPostRequestDto requestDto, String imgUrl){
         this.imgUrl = imgUrl;

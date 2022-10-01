@@ -22,8 +22,6 @@ public class MyPageController {
         return myPageService.getPost(request);
     }
 
-    // 나의일정 불러오기
-
     // 회원정보 표시하기
     @GetMapping("api/member/mypage")
     public ResponseDto<?> getMember(HttpServletRequest request) {
