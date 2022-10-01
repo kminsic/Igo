@@ -51,7 +51,7 @@ public class TokenProvider {
         // access token 생성 (사용자 정보를 복호화)
         Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
         String accessToken = Jwts.builder()
-                .setSubject(userDetails.getMemberId())                       // payload "sub": "memberId"
+                .setSubject(userDetails.getmemberId())                       // payload "sub": "memberId"
                 .claim(AUTHORITIES_KEY, Authority.ROLE_MEMBER.toString())   // payload "auth" : "ROLE_USER
                 .setExpiration(accessTokenExpiresIn)                        // payload "exp" :
                 .signWith(key, SignatureAlgorithm.HS256)                    // header "alg" : "HS512"

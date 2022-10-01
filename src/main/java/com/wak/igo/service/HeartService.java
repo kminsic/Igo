@@ -34,7 +34,7 @@ public class HeartService {
         Optional<Post> post = postRepository.findById(id);
         if (post.isEmpty())
             return ResponseDto.fail("해당 게시글이 존재하지 않습니다.","해당 게시글이 존재하지 않습니다.");
-        if (heartRepository.findByMemberIdAndPostId(member.getId(), post.get().getId()) != null) {
+        if (heartRepository.findBymemberIdAndPostId(member.getId(), post.get().getId()) != null) {
             return ResponseDto.fail("이미 좋아요한 게시물입니다.","이미 좋아요한 게시물입니다.");
         }
 
@@ -58,7 +58,7 @@ public class HeartService {
         if (post.isEmpty())
             return ResponseDto.fail("해당 게시글이 존재하지 않습니다.", "해당 게시글이 존재하지 않습니다.");
 
-        Heart heart = heartRepository.findByMemberIdAndPostId(member.getId(), post.get().getId());
+        Heart heart = heartRepository.findBymemberIdAndPostId(member.getId(), post.get().getId());
         if (heart == null) {
             return ResponseDto.fail("좋아요하지 않은 글입니다.","좋아요하지 않은 글입니다.");
         }

@@ -24,8 +24,8 @@ import org.springframework.security.core.userdetails.UserDetails;
         authorities.add(authority);
         return authorities;
     }
-    public String getMemberId() {
-        return member.getMemberid();
+    public String getmemberId() {
+        return member.getMemberId();
     }
     public Long getId_member() {
         return member.getId();

@@ -18,7 +18,7 @@ import java.util.Optional;
         private final MemberRepository memberRepository;
         @Override
         public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-            Optional<Member> member = memberRepository.findByMemberid(username);
+            Optional<Member> member = memberRepository.findBymemberId(username);
             return member
                     .map(UserDetailsImpl::new)
                     .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));

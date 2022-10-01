@@ -37,7 +37,7 @@ public class MyPageController {
     //회원정보 수정하기
     @PutMapping (value = "/api/auth/member/mypage")
     public ResponseDto<?> updateMember(HttpServletRequest request,
-                                       @RequestPart("profileimage") MultipartFile file,
+                                       @RequestPart("profileImage") MultipartFile file,
                                        @RequestPart("nickname") MemberResponseDto memberResponseDto
                                        ) throws IOException {
         return myPageService.updateMember(request,file,memberResponseDto);

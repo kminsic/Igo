@@ -58,7 +58,7 @@ public class MyPageService {
         memberResponseDtoList.add(
                 MemberResponseDto.builder()
                         .nickname(member.getNickname())
-                        .profileimage(member.getProfileimage())
+                        .profileImage(member.getProfileImage())
                         .build()
         );
         return ResponseDto.success(memberResponseDtoList);
@@ -82,7 +82,7 @@ public class MyPageService {
         return ResponseDto.success(
                 MemberResponseDto.builder()
                         .nickname(memberResponseDto.getNickname())
-                        .profileimage(imageUrl(multipartFile))
+                        .profileImage(imageUrl(multipartFile))
                         .build()
         );
 

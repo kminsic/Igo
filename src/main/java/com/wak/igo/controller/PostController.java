@@ -38,7 +38,7 @@ public class PostController {
     }
 
     // 로그인 후 태그 설정
-    @RequestMapping(value = "/api/member/tag", method = RequestMethod.PUT)
+    @RequestMapping(value = "/api/member/tag", method = RequestMethod.POST)
     public ResponseDto<?> getTag(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody InterestedTagDto tagDto) {
         return postService.getTag(userDetails, tagDto);
     }

@@ -23,7 +23,7 @@ public class Member {
     private Long id;
 
     @Column(nullable = false)
-    private String memberid;
+    private String memberId;
 
     @Column(nullable = false)
     @JsonIgnore
@@ -33,7 +33,7 @@ public class Member {
     private String nickname;
 
     @Column
-    private String profileimage;
+    private String profileImage;
 
     @Convert(converter = StringListConverter.class)
     private List<String> interested = new ArrayList<>();
@@ -41,8 +41,7 @@ public class Member {
     @Transactional
     public void profileUpdate(MemberResponseDto memberResponseDto, String imgUrl) {
         this.nickname = memberResponseDto.getNickname();
-        this.profileimage = imgUrl;
-
+        this.profileImage = imgUrl;
     }
     public void tag(List<String> interested) {
         this.interested = interested;

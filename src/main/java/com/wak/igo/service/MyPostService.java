@@ -12,12 +12,16 @@ import com.wak.igo.domain.State;
 import com.wak.igo.dto.response.MyPostResponseDto;
 import com.wak.igo.repository.StateRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.awt.image.ImagingOpException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,12 +34,18 @@ public class MyPostService {
     private final AmazonS3 amazonS3;
     private final MyPostRepository myPostRepository;
     private final StateRepository myPostStateRepository;
+    private static final Tika tika = new Tika();
 
     // 일정 추가
     public ResponseDto<?> createSchedule(UserDetailsImpl userDetails, MultipartFile multipartFile, MyPostRequestDto requestDto) throws IOException{
         if (null == userDetails.getAuthorities()) {
             ResponseDto.fail("MEMBER_NOT_FOUND",
                     "사용자를 찾을 수 없습니다.");
+        }
+
+        // 이미지 형식 유효성 검사
+        if (!validImgFile(multipartFile)) {
+            throw new RuntimeException("올바른 이미지 형식이 아닙니다.");
         }
         // s3 이미지 저장
         if (multipartFile.isEmpty()) {
@@ -66,6 +76,11 @@ public class MyPostService {
 
         String getImage = mypost.getImgUrl(); // mypost에 저장된 이미지 url
         String s3Image = amazonS3.getUrl(bucket, getImage).toString(); // s3에 저장된 이미지 url
+
+        // 이미지 형식 유효성 검사
+        if (!validImgFile(multipartFile)) {
+            throw new RuntimeException("올바른 이미지 형식이 아닙니다.");
+        }
 
         if (StringUtils.isNullOrEmpty(getImage)) {  // mypost에 저장된게 없을 때
             if ( !multipartFile.isEmpty() ) {
@@ -171,5 +186,22 @@ public class MyPostService {
         amazonS3.putObject(bucket, s3FileName, multipartFile.getInputStream(), objMeta); // S3 api 메소드 인 putObject를 이용해 파일 stream을 열어서 s3에 파일 업로드
 
         return amazonS3.getUrl(bucket, s3FileName).toString(); // S3에 업로드 된 사진 url 가져오기
+    }
+
+    public static boolean validImgFile(MultipartFile multipartFile) {
+        try {
+            // 업로드를 허용하는 파일 타입
+            List<String> ValidTypeList = Arrays.asList("image/jpeg", "image/pjpeg", "image/png", "image/gif", "image/jpg");
+
+            // 입력 받은 파일을 “파일종류/파일포맷” 으로 구분 짓는다
+            String mimeType = tika.detect(multipartFile.getInputStream());
+
+            // mimeType이 validTypeList 중 하나라도 만족하면 true 아니면 false
+            boolean isValid = ValidTypeList.stream().anyMatch(ValidType -> ValidType.equalsIgnoreCase(mimeType));
+            return isValid;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

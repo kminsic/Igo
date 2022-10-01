@@ -120,8 +120,8 @@ public class KakaoUserService {
 
     private Member registerKakaoUserIfNeeded(MemberInfo kakaoUserInfo) {
 
-        String kakaoId = kakaoUserInfo.getMemberid();                   // DB 에 중복된 Kakao Id 가 있는지 확인
-        Member kakaoUser = memberRepository.findByMemberid(kakaoId)
+        String kakaoId = kakaoUserInfo.getMemberId();                   // DB 에 중복된 Kakao Id 가 있는지 확인
+        Member kakaoUser = memberRepository.findBymemberId(kakaoId)
                 .orElse(null);
         // 회원가입
         if (kakaoUser == null) {
@@ -132,7 +132,7 @@ public class KakaoUserService {
             kakaoUser = Member.builder()
                     .nickname(nickname)
                     .password(encodedPassword)
-                    .memberid(kakaoId)
+                    .memberId(kakaoId)
                     .build();
             memberRepository.save(kakaoUser);
             log.info(nickname + "회원가입이 완료되었습니다.");
@@ -170,11 +170,11 @@ public class KakaoUserService {
         } else {
             tag = tags;
         }
-        String profileImg = (member.getProfileimage() == null) ? "false" : member.getProfileimage();
-        System.out.println(profileImg);
+
+        String profileImg = (member.getProfileImage() == null) ? "false" : member.getProfileImage();
         MemberResponseDto response = MemberResponseDto.builder()
                 .nickname(member.getNickname())
-                .profileimage(profileImg)
+                .profileImage(profileImg)
                 .interested(tag)
                 .build();
         return response;
