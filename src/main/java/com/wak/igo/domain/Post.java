@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -43,33 +44,31 @@ public class Post extends Timestamped {
     @Column
     private String mapData;
 
-    @Column
-    private String tag;
+
     @Column
     private int viewCount;
 
-//    @Column
-//    private int report;
+    @Column
+    private int reportNum;
 
     @Column
     private int heartNum;
 
+    @Convert(converter = StringListConverter.class)
+    private List<String> tags = new ArrayList<>();
 
 
     public void add_viewCount() {
         this.viewCount++;}
 
+    public void reportNum() {
+        this.reportNum++;
+    }
+
     public void addHeart() {
         this.heartNum++;
     }
 
-    public void removeHeart() {
-        int tempHeart = this.heartNum - 1;
-        if (tempHeart < 0) {
-            return;
-        }
-        this.heartNum = tempHeart;
-    }
 
 
 

@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Builder
@@ -23,6 +25,10 @@ public class PostResponseDto {
     private int amount;
     private int heartNum;
     private int viewCount;
+    private int reportNum;
+    private List<String> tags = new ArrayList<>();
+
+
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 

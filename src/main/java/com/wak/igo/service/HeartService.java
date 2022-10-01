@@ -29,46 +29,34 @@ public class HeartService {
     // 좋아요
     @Transactional
     public ResponseDto<?> addHeartPost(Long id, HttpServletRequest request) {
+
         ResponseDto<?> chkResponse = validateCheck(request);
+
         if (!chkResponse.isSuccess())
             return chkResponse;
+
         Member member = (Member) chkResponse.getData();
+
         Optional<Post> post = postRepository.findById(id);
-        if (post.isEmpty())
-            return ResponseDto.fail("해당 게시글이 존재하지 않습니다.","해당 게시글이 존재하지 않습니다.");
-        if (heartRepository.findByMemberIdAndPostId(member.getId(), post.get().getId()) != null) {
-            return ResponseDto.fail("이미 좋아요한 게시물입니다.","이미 좋아요한 게시물입니다.");
+
+        if (post.isEmpty()) {
+            return ResponseDto.fail("해당 게시글이 존재하지 않습니다.", "해당 게시글이 존재하지 않습니다.)");
         }
+        Optional<Heart> heart = heartRepository.findByMemberIdAndPostId(member.getId(), post.get().getId());
 
-        Heart heart = Heart.builder()
-                .member(member)
-                .post(post.get())
-                .build();
+        if (heart.isEmpty()) {
+            heartRepository.save(Heart.builder()
+                    .post(post.get())
+                    .member(member)
+                    .build());
 
-        heartRepository.save(heart);
-        post.get().addHeart();
-        return ResponseDto.success(" 좋아요 완료.");
-    }
-
-
-    //좋아요 취소
-    @Transactional
-    public ResponseDto<?> removeHeartPost(Long id, HttpServletRequest request) {
-        ResponseDto<?> chkResponse = validateCheck(request);
-        if (!chkResponse.isSuccess())
-            return chkResponse;
-        Member member = (Member) chkResponse.getData();
-        Optional<Post> post = postRepository.findById(id);
-        if (post.isEmpty())
-            return ResponseDto.fail("해당 게시글이 존재하지 않습니다.", "해당 게시글이 존재하지 않습니다.");
-
-        Heart heart = heartRepository.findByMemberIdAndPostId(member.getId(), post.get().getId());
-        if (heart == null) {
-            return ResponseDto.fail("좋아요하지 않은 글입니다.","좋아요하지 않은 글입니다.");
+            post.get().addHeart();
+            return ResponseDto.success("true");
         }
-        heartRepository.delete(heart);
-        post.get().removeHeart();
-        return ResponseDto.success("좋아요 취소 완료.");
+        else {
+            heartRepository.delete(heart.get());
+            return ResponseDto.success("false");
+        }
     }
 
 
@@ -81,6 +69,7 @@ public class HeartService {
         if (null == member) {
             return ResponseDto.fail("Token이 유효하지 않습니다.","Token이 유효하지 않습니다.");
         }
+        System.out.println(member.getNickname());
         return ResponseDto.success(member);
     }
 
