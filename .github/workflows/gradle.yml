@@ -1,5 +1,7 @@
- 
-name: myaction-system
+
+# logging-deploy.yml
+
+name: logging-system
 
 on:
   push:
@@ -8,7 +10,7 @@ on:
     branches: [ "develop" ]
     
 env:
-  S3_BUCKET_NAME: igobuc
+  S3_BUCKET_NAME: dh-github-actions-s3-bucket
   PROJECT_NAME: playground-logging
   # CODE_DEPLOY_APPLICATION_NAME: deploy
   # CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: deploy-group-two
@@ -27,14 +29,6 @@ jobs:
         with:
           java-version: 11
           distribution: 'temurin'
-      
-      - uses: actions/checkout@v2
-      - run: touch ./src/main/resources/application.properties
-      - run: echo "${{secrets.PROPERTIES}}" > ./src/main/resources/application.properties
-      - uses: actions/upload-artifact@v2
-        with:
-          name: application.properties
-          path: ./src/main/resources/application.properties
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -45,7 +39,7 @@ jobs:
         shell: bash
 
       - name: Make zip file
-        run: zip -r ./IGO.zip .
+        run: zip -r ./GITHUB.zip .
         shell: bash
         
       - name: Configure AWS credentials
@@ -54,15 +48,14 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
-          
 
       - name: Upload to S3
-        run: aws s3 cp --region ap-northeast-2 ./IGO.zip s3://$S3_BUCKET_NAME/IGO.zip
+        run: aws s3 cp --region ap-northeast-2 ./GITHUB.zip s3://$S3_BUCKET_NAME/GITHUB.zip
         
       - name: Deploy to AWS EC2 from S3
           
-        run: aws deploy create-deployment
-          --deployment-config-name CodeDeployDefault.AllAtOnce
-          --deployment-group-name develop
-          --s3-location bucket=$S3_BUCKET_NAME,key=IGO.zip,bundleType=zip
-          --application-name logging-system-deploy
+        run: aws deploy create-deployment 
+          --deployment-config-name CodeDeployDefault.AllAtOnce 
+          --deployment-group-name deploy-group-two
+          --s3-location bucket=$S3_BUCKET_NAME,key=GITHUB.zip,bundleType=zip
+          --application-name deploy
