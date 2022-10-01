@@ -56,4 +56,4 @@ jobs:
           --deployment-config-name CodeDeployDefault.AllAtOnce
           --deployment-group-name develop
           --s3-location bucket=$S3_BUCKET_NAME,key=IGO.zip,bundleType=zip
-          --application-name logging-systme-deploy
+          --application-name logging-system-deploy
