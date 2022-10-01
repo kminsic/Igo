@@ -9,7 +9,7 @@ on:
     
 env:
   S3_BUCKET_NAME: igobuc
-  PROJECT_NAME: playjar
+  PROJECT_NAME: playground-logging
   # CODE_DEPLOY_APPLICATION_NAME: deploy
   # CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: deploy-group-two
 
