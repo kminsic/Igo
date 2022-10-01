@@ -8,7 +8,7 @@ on:
     branches: [ "develop" ]
     
 env:
-  S3_BUCKET_NAME: mygitaction
+  S3_BUCKET_NAME: igobuc
   PROJECT_NAME: playjar
   # CODE_DEPLOY_APPLICATION_NAME: deploy
   # CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: deploy-group-two
