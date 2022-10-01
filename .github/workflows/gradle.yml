@@ -27,6 +27,7 @@ jobs:
         with:
           java-version: 11
           distribution: 'temurin'
+          
       - uses: actions/checkout@v2
       - run: touch ./src/main/resources/application.properties
       - run: echo "${{secrets.PROPERTIES}}" > ./src/main/resources/application.properties
