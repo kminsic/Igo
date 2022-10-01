@@ -137,6 +137,7 @@ public class KakaoUserService {
             memberRepository.save(kakaoUser);
             log.info(nickname + "회원가입이 완료되었습니다.");
         }
+        System.out.println(kakaoUser);
         return kakaoUser;
     }
 
