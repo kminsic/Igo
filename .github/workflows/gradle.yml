@@ -39,7 +39,7 @@ jobs:
         shell: bash
 
       - name: Make zip file
-        run: zip -r ./GITHUB.zip .
+        run: zip -r ./IGO.zip .
         shell: bash
         
       - name: Configure AWS credentials
