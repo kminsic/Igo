@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -35,15 +36,15 @@ public class ReportService {
         Optional<Post> post = postRepository.findById(id);
         if (post.isEmpty())
             return ResponseDto.fail("해당 게시글이 존재하지 않습니다.", "해당 게시글이 존재하지 않습니다.");
-        if(reportRepository.findByMemberIdAndPostId(member.getId(),post.get().getId()) !=null) {
+
+        if(!reportRepository.findByMemberIdAndPostId(member.getId(),post.get().getId()).isEmpty()) {
             return ResponseDto.fail("이미 신고한 글 입니다.", "이미 신고한 글 입니다.");}
 
         Optional<Report> reportPost = reportRepository.findByMemberIdAndPostId(member.getId(), post.get().getId());
         if (reportPost.isPresent()) {
-
-            if (49 >= 0)
+            if (49 >= reportRepository.findAllByPostId(post.get().getId()).size())
             postRepository.deleteById(id);
-            //삭제 후 flush로 신고 게시글 업데이트
+        //삭제 후 flush로 신고 게시글 업데이트
             reportRepository.flush();
             return ResponseDto.success("삭제된 게시글 입니다.");}
         else
