@@ -22,11 +22,11 @@ public class Comment extends Timestamped {
     @Column(nullable = false)
     private String content;
 
-    @JoinColumn(name = "id_post", nullable = false)
+    @JoinColumn(name = "post_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Post post;
 
-    @JoinColumn(name = "id_member", nullable = false)
+    @JoinColumn(name = "member_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
@@ -34,8 +34,7 @@ public class Comment extends Timestamped {
     public void update(CommentRequestDto commentRequestDto) {
         this.content = commentRequestDto.getContent();
     }
-    public boolean validateMember(Member member) {
-        return this.member.equals(member);
-    }
+    // 멤버 검증
+
 
 }

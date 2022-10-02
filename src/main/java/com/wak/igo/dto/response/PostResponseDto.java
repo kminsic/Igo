@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
 @Builder
 @Getter
@@ -21,6 +23,10 @@ public class PostResponseDto {
     private int amount;
     private int heartNum;
     private int viewCount;
+    private List<CommentResponseDto> commentResponseDtoList;
+    private String nickname;
+    private String profile;
+
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 

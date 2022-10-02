@@ -1,13 +1,16 @@
 package com.wak.igo.service;
 
+import com.wak.igo.domain.Comment;
 import com.wak.igo.domain.Member;
 import com.wak.igo.domain.Post;
 import com.wak.igo.domain.UserDetailsImpl;
 import com.wak.igo.dto.request.InterestedTagDto;
 import com.wak.igo.dto.request.PostRequestDto;
+import com.wak.igo.dto.response.CommentResponseDto;
 import com.wak.igo.dto.response.PostResponseDto;
 import com.wak.igo.dto.response.ResponseDto;
 import com.wak.igo.jwt.TokenProvider;
+import com.wak.igo.repository.CommentRepository;
 import com.wak.igo.repository.MemberRepository;
 import com.wak.igo.repository.PostRepository;
 import io.jsonwebtoken.io.IOException;
@@ -16,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,8 +30,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
     private final TokenProvider tokenProvider;
-
-
+    private final CommentRepository commentRepository;
 
     //전체 게시글 조회
     @Transactional
@@ -58,6 +61,19 @@ public class PostService {
         if(null == post) {
             return ResponseDto.fail("NOT_FOUND", "게시글이 존재하지 않습니다.");
         }
+        List<Comment> commentList = commentRepository.findAllByPost(post);
+        List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
+        for (Comment comment : commentList) {
+            commentResponseDtoList.add(
+                    CommentResponseDto.builder()
+                            .id(comment.getId())
+                            .nickname(comment.getMember().getNickname())
+                            .content(comment.getContent())
+                            .createdAt(comment.getCreatedAt())
+                            .modifiedAt(comment.getModifiedAt())
+                            .build()
+            );
+        }
 
 //        post.add_viewCount();
         return ResponseDto.success(
@@ -71,6 +87,9 @@ public class PostService {
                         //신고하기 기능 구현 x
 //                        .report(0)
 //                        .tag(post.getTag())
+                        .nickname(post.getMember().getNickname())
+                        .profile(post.getMember().getProfileImage())
+                        .commentResponseDtoList(commentResponseDtoList)
                         .createdAt(post.getCreatedAt())
                         .modifiedAt(post.getModifiedAt())
                         .build());

@@ -12,10 +12,10 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public class UserDetailsImpl implements UserDetails {
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class UserDetailsImpl implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -24,44 +24,49 @@ import org.springframework.security.core.userdetails.UserDetails;
         authorities.add(authority);
         return authorities;
     }
+
     public String getmemberId() {
         return member.getMemberId();
     }
+
     public Long getId_member() {
         return member.getId();
     }
+
     @Override
     public String getPassword() {
         return member.getPassword();
     }
-        private Member member;
+
+    private Member member;
 
 
-        public Long getId() {
-            return member.getId();
-        }
-
-        @Override
-        public String getUsername() {
-            return member.getNickname();
-        }
-        @Override
-        public boolean isAccountNonExpired() {
-            return true;
-        }
-
-        @Override
-        public boolean isAccountNonLocked() {
-            return true;
-        }
-
-        @Override
-        public boolean isCredentialsNonExpired() {
-            return true;
-        }
-
-        @Override
-        public boolean isEnabled() {
-            return true;
-        }
+    public Long getId() {
+        return member.getId();
     }
+
+    @Override
+    public String getUsername() {
+        return member.getNickname();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+}

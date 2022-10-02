@@ -37,7 +37,6 @@ public class MyPageService {
     private final PostRepository postRepository;
 
     private final MemberRepository memberRepository;
-    private final MyPostRepository myPostRepository;
 
     private final HeartRepository heartRepository;
 

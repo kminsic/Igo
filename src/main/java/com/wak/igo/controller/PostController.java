@@ -66,8 +66,6 @@ public class PostController {
         return postService.updatePost(id, requestDto);
     }
 
-
-
     // 게시글 삭제
     @DeleteMapping("/api/post/{id}")
     public ResponseDto<?> deletePost(@PathVariable Long id) {
