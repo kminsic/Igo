@@ -82,7 +82,6 @@ public class PostService {
                         .content(post.getContent())
                         .viewCount(post.getViewCount())
                         .heartNum(post.getHeartNum())
-                        .amount(post.getAmount())
 //                        .mapData(post.getMapData())
                         //신고하기 기능 구현 x
 //                        .report(0)

@@ -20,7 +20,6 @@ public class PostResponseDto {
     private Long id;
     private String title;
     private String content;
-    private int amount;
     private int heartNum;
     private int viewCount;
     private List<CommentResponseDto> commentResponseDtoList;
