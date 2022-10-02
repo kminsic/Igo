@@ -1,5 +1,7 @@
 
-name: myaction-system
+# logging-deploy.yml
+
+name: logging-system
 
 on:
   push:
@@ -9,7 +11,7 @@ on:
     
 env:
   S3_BUCKET_NAME: igobuc
-  PROJECT_NAME: playjar
+  PROJECT_NAME: playground-logging
   # CODE_DEPLOY_APPLICATION_NAME: deploy
   # CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: deploy-group-two
 
@@ -27,6 +29,14 @@ jobs:
         with:
           java-version: 11
           distribution: 'temurin'
+          
+      - uses: actions/checkout@v2
+      - run: touch ./igo/src/main/resources/application.properties
+      - run: echo "${{secrets.PROPERTIES}}" > ./igo/src/main/resources/application.properties
+      - uses: actions/upload-artifact@v2
+        with:
+          name: application.properties
+          path: ./igo/src/main/resources/application.properties    
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -48,7 +58,7 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Upload to S3
-        run: aws s3 cp --region ap-northeast-2 ./IGO.zip s3://$S3_BUCKET_NAME/IGO.zip
+        run: aws s3 cp --region ap-northeast-2 ./GITHUB.zip s3://$S3_BUCKET_NAME/GITHUB.zip
         
       - name: Deploy to AWS EC2 from S3
           
