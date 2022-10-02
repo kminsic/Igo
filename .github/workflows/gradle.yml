@@ -31,12 +31,12 @@ jobs:
           distribution: 'temurin'
           
       - uses: actions/checkout@v2
-      - run: touch ./igo/src/main/resources/application.properties
-      - run: echo "${{secrets.PROPERTIES}}" > ./igo/src/main/resources/application.properties
+      - run: touch ./Igo/src/main/resources/application.properties
+      - run: echo "${{secrets.PROPERTIES}}" > ./Igo/src/main/resources/application.properties
       - uses: actions/upload-artifact@v2
         with:
           name: application.properties
-          path: ./igo/src/main/resources/application.properties    
+          path: ./Igo/src/main/resources/application.properties    
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
