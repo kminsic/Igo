@@ -45,8 +45,6 @@ public class Post extends Timestamped {
     @Column
     private int heartNum;
 
-    @Column(nullable = false)
-    private int amount;
 
     public void add_viewCount() {
         this.viewCount++;}
