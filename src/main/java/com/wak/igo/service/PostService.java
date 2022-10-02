@@ -126,7 +126,6 @@ public class PostService {
                 .member(member)
                 .title(postRequestDto.getTitle())
                 .content(postRequestDto.getContent())
-                .amount(postRequestDto.getAmount())
 //                .mapData(postRequestDto.getMapData())
 //                .tag(postRequestDto.getTag())
                 .heartNum(0)
@@ -142,9 +141,7 @@ public class PostService {
 
                         .title(postRequestDto.getTitle())
                         .content(postRequestDto.getContent())
-                        .amount(postRequestDto.getAmount())
 //                        .mapData(postRequestDto.getMapData())
-                        .amount(postRequestDto.getAmount())
 //                        .tag(postRequestDto.getTag())
                         .viewCount(0)
                         .heartNum(0)
