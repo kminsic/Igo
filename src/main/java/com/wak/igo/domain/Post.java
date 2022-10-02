@@ -44,6 +44,8 @@ public class Post extends Timestamped {
     @Column
     private String mapData;
 
+//    @Column
+//    private String thumnail;
 
     @Column
     private int viewCount;
@@ -61,7 +63,7 @@ public class Post extends Timestamped {
     public void add_viewCount() {
         this.viewCount++;}
 
-    public void reportNum() {
+    public void addReport() {
         this.reportNum++;
     }
 
