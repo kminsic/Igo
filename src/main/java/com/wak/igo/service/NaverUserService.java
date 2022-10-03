@@ -58,10 +58,10 @@ public class NaverUserService {
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
 
-        body.add("client_id", "DmLVvurxVnPCqlnSp0XZ");      // localhost client_id
-//        body.add("client_id", "1tmOBpKKBicBaUmPQpaF");        // 프론트엔드 client_id
-        body.add("client_secret", "9fbJI0kZub");            // localhost client_secret
-//        body.add("client_secret", "ybrSh2bxg2");              // 프론트엔드 client_secret
+//        body.add("client_id", "DmLVvurxVnPCqlnSp0XZ");      // localhost client_id
+        body.add("client_id", "1tmOBpKKBicBaUmPQpaF");        // 프론트엔드 client_id
+//        body.add("client_secret", "9fbJI0kZub");            // localhost client_secret
+        body.add("client_secret", "ybrSh2bxg2");              // 프론트엔드 client_secret
         body.add("code", code);
         body.add("state", state);
 
