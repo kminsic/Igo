@@ -32,7 +32,6 @@ public class Post extends Timestamped {
 
     @JoinColumn
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-//    , length = 50000
     private List<Comment> comments;
 
     @JoinColumn(name = "member_id", nullable = false)

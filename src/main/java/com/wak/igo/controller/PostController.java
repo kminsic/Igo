@@ -69,7 +69,6 @@ public class PostController {
     // 게시글 삭제
     @DeleteMapping("/api/post/{id}")
     public ResponseDto<?> deletePost(@PathVariable Long id, HttpServletRequest request) {
-//        postRepository.delete(id);
         return postService.deletePost(id,request);
     }
 
