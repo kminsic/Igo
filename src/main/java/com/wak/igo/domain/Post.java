@@ -16,6 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+//@DisplayName
 public class Post extends Timestamped {
 
     //Json형식으로 받기
@@ -26,12 +27,13 @@ public class Post extends Timestamped {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false) //
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
 
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+//    , length = 50000
     private List<Comment> comments;
 
     @JoinColumn(name = "member_id", nullable = false)
