@@ -34,6 +34,9 @@ dependencies {
     //h2
     implementation 'com.h2database:h2'
 
+    // json
+    implementation group: 'com.vladmihalcea', name: 'hibernate-types-55', version: '2.19.2'
+
     //s3
     implementation platform('com.amazonaws:aws-java-sdk-bom:1.12.290')
     implementation 'com.amazonaws:aws-java-sdk-s3'
@@ -55,8 +58,6 @@ dependencies {
 
     //     validation
     implementation 'org.springframework.boot:spring-boot-starter-validation'
-
-    implementation 'com.h2database:h2'
 
 }
 
