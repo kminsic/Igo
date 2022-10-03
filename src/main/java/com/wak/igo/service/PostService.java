@@ -1,13 +1,16 @@
 package com.wak.igo.service;
 
+import com.wak.igo.domain.Comment;
 import com.wak.igo.domain.Member;
 import com.wak.igo.domain.Post;
 import com.wak.igo.domain.UserDetailsImpl;
 import com.wak.igo.dto.request.InterestedTagDto;
 import com.wak.igo.dto.request.PostRequestDto;
+import com.wak.igo.dto.response.CommentResponseDto;
 import com.wak.igo.dto.response.PostResponseDto;
 import com.wak.igo.dto.response.ResponseDto;
 import com.wak.igo.jwt.TokenProvider;
+import com.wak.igo.repository.CommentRepository;
 import com.wak.igo.repository.MemberRepository;
 import com.wak.igo.repository.PostRepository;
 import io.jsonwebtoken.io.IOException;
@@ -16,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 import java.util.Optional;
@@ -23,13 +27,10 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class PostService {
-
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
     private final TokenProvider tokenProvider;
-
-
-
+    private final CommentRepository commentRepository;
 
     //전체 게시글 조회
     @Transactional
@@ -50,18 +51,28 @@ public class PostService {
             return ResponseDto.fail("잘못된 URL 입니다.", "잘못된 접근입니다");
     }
 
-
-
-
     //상세 페이지 조회
     @Transactional
     public ResponseDto<?> getDetail(Long id) {
 
         Post post = isPresentPost(id);
-        if(null == post) {
+        if (null == post) {
             return ResponseDto.fail("NOT_FOUND", "게시글이 존재하지 않습니다.");
         }
 
+        List<Comment> commentList = commentRepository.findAllByPost(post);
+        List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
+        for (Comment comment : commentList) {
+            commentResponseDtoList.add(
+                    CommentResponseDto.builder()
+                            .id(comment.getId())
+                            .nickname(comment.getMember().getNickname())
+                            .content(comment.getContent())
+                            .createdAt(comment.getCreatedAt())
+                            .modifiedAt(comment.getModifiedAt())
+                            .build()
+            );
+        }
         post.add_viewCount();
         return ResponseDto.success(
                 PostResponseDto.builder()
@@ -72,6 +83,7 @@ public class PostService {
 //                        .mapData(post.getMapData())
                         .reportNum(0)
                         .tags(post.getTags())
+                        .commentResponseDtoList(commentResponseDtoList)
                         .profile(post.getMember().getProfileImage())
                         .nickname(post.getMember().getNickname())
                         .createdAt(post.getCreatedAt())
@@ -79,6 +91,7 @@ public class PostService {
                         .build());
 
     }
+
 
 
     // 태그 저장
@@ -94,17 +107,14 @@ public class PostService {
         memberRepository.save(member);
         return ResponseDto.success("저장 완료");
     }
+
     //게시글 생성
     @Transactional
-
     public ResponseDto<?> createPost(PostRequestDto postRequestDto, HttpServletRequest request) throws IOException {
-
         Member member = validateMember(request);
-
         if (null == member){
             return ResponseDto.fail("INVALID TOKEN", "TOKEN이 유효하지않습니다");
         }
-
         Post post = Post.builder()
                 .member(member)
                 .title(postRequestDto.getTitle())
@@ -116,10 +126,8 @@ public class PostService {
                 .reportNum(0)
                 .build();
         postRepository.save(post);
-
         return ResponseDto.success(
                 PostResponseDto.builder()
-
                         .title(postRequestDto.getTitle())
                         .content(postRequestDto.getContent())
 //                        .mapData(postRequestDto.getMapData())
@@ -136,42 +144,33 @@ public class PostService {
     @Transactional
     public ResponseDto<?> updatePost(
             Long id, PostRequestDto requestDto,HttpServletRequest request) throws IOException {
-
         ResponseDto<?> chkResponse = validateCheck(request);
         if (!chkResponse.isSuccess())
             return chkResponse;
-
         Member member = (Member) chkResponse.getData();
         // 유저 테이블에서 유저객체 가져오기
         Member updateMember = memberRepository.findByNickname(member.getNickname()).get();
-
         Post post = isPresentPost(id);
         if (null == post) {
             return ResponseDto.fail("NOT_FOUND", "게시글이 존재하지 않습니다.");
         }
         if (post.validateMember(updateMember))
             return ResponseDto.fail("작성자가 아닙니다.","작성자가 아닙니다.");
-
         post.update(requestDto);
         return ResponseDto.success("update success");
-
     }
 
     //게시글 삭제
     @Transactional
     public ResponseDto<?> deletePost(Long id, HttpServletRequest request) {
-
         ResponseDto<?> chkResponse = validateCheck(request);
         if (!chkResponse.isSuccess())
             return chkResponse;
-
         Member member = (Member) chkResponse.getData();
         Member updateMember = memberRepository.findByNickname(member.getNickname()).get();
-
         Post post = isPresentPost(id);
         if (post == null)
             return ResponseDto.fail("글 삭제에 실패하였습니다. (NOT_EXIST)", "글 삭제에 실패하였습니다. (NOT_EXIST)");
-
         if (post.validateMember(updateMember))
             return ResponseDto.fail("작성자가 아닙니다.", "작성자가 아닙니다.");
         postRepository.delete(post);
@@ -205,7 +204,5 @@ public class PostService {
         }
         return ResponseDto.success(member);
     }
-
-
 }
 
