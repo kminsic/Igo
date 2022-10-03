@@ -23,10 +23,9 @@ public class PostController {
     private final PostService postService;
 
 
-
     // 전체 목록 조회(메인 페이지)
     @GetMapping("/api/post")
-    public ResponseDto<?> getAllPosts() {
+    public ResponseDto<?> getAllPosts( ) throws IOException {
         return postService.getAllPosts();
     }
 
