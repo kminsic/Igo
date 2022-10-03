@@ -25,7 +25,4 @@ hooks:
     - location: script/switch.sh
       timeout: 180
       runas: ubuntu
-<<<<<<< HEAD:src/main/java/appspec.yml
 
-=======
->>>>>>> 5898ea08a74e7453b88f705a5433f4feb09c7c0f:appspec.yml
