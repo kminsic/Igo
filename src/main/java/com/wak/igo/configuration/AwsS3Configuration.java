@@ -21,6 +21,8 @@ public class AwsS3Configuration {
     @Value("${cloud.aws.region.static}")
     private String region;
 
+    public static final String videoFolder = "video";
+
     @Bean
     public AmazonS3 amazonS3() {
         AWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
@@ -29,5 +31,6 @@ public class AwsS3Configuration {
                 .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
                 .build();
     }
+
 
 }

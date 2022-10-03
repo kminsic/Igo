@@ -56,6 +56,7 @@ public class SecurityConfiguration {
 
         http.csrf().disable()
 
+
                 .exceptionHandling()
                 .authenticationEntryPoint(authenticationEntryPointException) // 인증되지 않은 사용자가 요청했을 때 동작
                 .accessDeniedHandler(accessDeniedHandlerException) // 특정 권한이 있어야 접근 가능한 api에 일반 사용자가 접근했을 때 동작
@@ -71,6 +72,7 @@ public class SecurityConfiguration {
                 .antMatchers("/api/**").permitAll()
                 .antMatchers("/api").permitAll()
                 .anyRequest().authenticated()
+//                .anyRequest().permitAll()
 
                 .and()
                 .apply(new JwtSecurityConfiguration(SECRET_KEY, tokenProvider, userDetailsService)); // 회원가입 된 사용자임을 확인하고 토큰 부여

@@ -38,6 +38,9 @@ dependencies {
     implementation platform('com.amazonaws:aws-java-sdk-bom:1.12.290')
     implementation 'com.amazonaws:aws-java-sdk-s3'
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-aws', version: '2.2.6.RELEASE'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
     // Tika (이미지 파일만 업로드 할 수 있게 확장자 구별)
     implementation group: 'org.apache.tika', name: 'tika-core', version: '1.24.1'
 
@@ -52,6 +55,7 @@ dependencies {
 
     //     validation
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+
     implementation 'com.h2database:h2'
 
 }

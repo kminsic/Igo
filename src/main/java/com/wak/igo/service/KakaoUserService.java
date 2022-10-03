@@ -71,7 +71,7 @@ public class KakaoUserService {
         body.add("client_id", "3d365192ea8ab4f32c7f9c1d7c5688e1");          // 프론트엔드 client_id
         body.add("client_secret", "FuvfQecT3uPmfM3wlzF5VxRJU7Iz654F");
 //        body.add("redirect_url", "http://localhost:8080/kakao/callback"); // localhost redirect_url
-        body.add("redirect_uri", "http://localhost:3000/kakaoloading");     // 프론트엔드 client_id 
+        body.add("redirect_uri", "http://localhost:3000/kakaoloading");     // 프론트엔드 client_id
         body.add("code", code);
 
         // HTTP 요청 보내기
@@ -121,7 +121,8 @@ public class KakaoUserService {
     private Member registerKakaoUserIfNeeded(MemberInfo kakaoUserInfo) {
 
         String kakaoId = kakaoUserInfo.getMemberId();                   // DB 에 중복된 Kakao Id 가 있는지 확인
-        Member kakaoUser = memberRepository.findBymemberId(kakaoId)
+
+        Member kakaoUser = memberRepository.findByMemberId(kakaoId)
                 .orElse(null);
         // 회원가입
         if (kakaoUser == null) {
@@ -171,6 +172,7 @@ public class KakaoUserService {
         } else {
             tag = tags;
         }
+
 
         String profileImg = (member.getProfileImage() == null) ? "false" : member.getProfileImage();
         MemberResponseDto response = MemberResponseDto.builder()

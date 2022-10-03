@@ -24,4 +24,5 @@ public class RefreshToken extends Timestamped {
     @Column(nullable = false)
     private String keyValue;
 
+
 }

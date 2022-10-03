@@ -5,12 +5,12 @@ import com.wak.igo.dto.request.InterestedTagDto;
 import com.wak.igo.dto.request.PostRequestDto;
 import com.wak.igo.dto.response.ResponseDto;
 import com.wak.igo.service.PostService;
+import io.jsonwebtoken.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +26,7 @@ public class PostController {
 
     // 전체 목록 조회(메인 페이지)
     @GetMapping("/api/post")
-    public ResponseDto<?> getAllPosts() {
+    public ResponseDto<?> getAllPosts( ) throws IOException {
         return postService.getAllPosts();
     }
 
@@ -36,6 +36,7 @@ public class PostController {
     public ResponseDto<?> getAllGroupPosts(@RequestParam String type) {
         return postService.getAllGroupPosts(type);
     }
+
 
     // 로그인 후 태그 설정
     @RequestMapping(value = "/api/member/tag", method = RequestMethod.PUT)
@@ -50,7 +51,6 @@ public class PostController {
     }
 
     // 게시글 등록
-    // requestpart의 value값은 프론트엔드와 맞춰야 입력값이 제대로 들어옴
     @PostMapping(value = "/api/post")
     public ResponseDto<?> createPost(@RequestBody PostRequestDto postRequestDto, HttpServletRequest request
     ) throws IOException {
@@ -63,13 +63,14 @@ public class PostController {
     public ResponseDto<?> updatePost(@PathVariable Long id,
                                      @RequestPart(value = "post") PostRequestDto requestDto,
                                      HttpServletRequest request) throws IOException {
-        return postService.updatePost(id, requestDto);
+        return postService.updatePost(id, requestDto,request);
     }
 
     // 게시글 삭제
     @DeleteMapping("/api/post/{id}")
-    public ResponseDto<?> deletePost(@PathVariable Long id) {
-        return postService.deletePost(id);
+    public ResponseDto<?> deletePost(@PathVariable Long id, HttpServletRequest request) {
+//        postRepository.delete(id);
+        return postService.deletePost(id,request);
     }
 
 }

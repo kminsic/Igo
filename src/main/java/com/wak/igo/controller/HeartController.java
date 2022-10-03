@@ -20,11 +20,4 @@ public class HeartController {
     public ResponseDto<?> addHeartPost(@PathVariable Long id, HttpServletRequest request) {
         return heartService.addHeartPost(id, request);
     }
-
-    // 좋아요 취소
-    @PostMapping("/api/unheart/{id}")
-    public ResponseDto<?> removeHeartPost(@PathVariable Long id, HttpServletRequest request) {
-        return heartService.removeHeartPost(id, request);
-    }
-
 }

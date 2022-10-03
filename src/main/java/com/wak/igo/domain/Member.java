@@ -7,13 +7,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 @Builder
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "member")
 @Entity
 @Setter
 public class Member {
@@ -41,7 +42,9 @@ public class Member {
     @Transactional
     public void profileUpdate(MemberResponseDto memberResponseDto, String imgUrl) {
         this.nickname = memberResponseDto.getNickname();
+
         this.profileImage = imgUrl;
+
     }
     public void tag(List<String> interested) {
         this.interested = interested;

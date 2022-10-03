@@ -12,7 +12,6 @@ import com.wak.igo.dto.response.ResponseDto;
 import com.wak.igo.jwt.TokenProvider;
 import com.wak.igo.repository.HeartRepository;
 import com.wak.igo.repository.MemberRepository;
-import com.wak.igo.repository.MyPostRepository;
 import com.wak.igo.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -75,6 +74,10 @@ public class MyPageService {
         if (null == member) {
             return ResponseDto.fail("INVALID TOKEN", "TOKEN이 유효하지않습니다");
         }
+
+        member.setNickname(memberResponseDto.getNickname());
+        member.setProfileImage(multipartFile.getOriginalFilename());
+        memberRepository.save(member);
 
         member.profileUpdate(memberResponseDto,imageUrl(multipartFile));
         memberRepository.save(member);
@@ -140,7 +143,6 @@ public class MyPageService {
         return ResponseDto.success(postResponseDtoList);
     }
 
-    //마이포스트 불러오기
 
     //좋아요 한 게시글 불러오기
     @Transactional(readOnly = true)

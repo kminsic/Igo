@@ -6,13 +6,12 @@ import net.minidev.json.annotate.JsonIgnore;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "heart")
+@Table(name = "report")
 @Getter
-@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Heart  extends Timestamped{
+public class Report extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,4 +26,5 @@ public class Heart  extends Timestamped{
     @JoinColumn(name = "member_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
+
 }

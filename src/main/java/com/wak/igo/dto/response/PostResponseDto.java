@@ -1,5 +1,6 @@
 package com.wak.igo.dto.response;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,7 +9,8 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
+import java.util.ArrayList;
+
 
 @Builder
 @Getter
@@ -25,7 +27,8 @@ public class PostResponseDto {
     private List<CommentResponseDto> commentResponseDtoList;
     private String nickname;
     private String profile;
-
+    private int reportNum;
+    private List<String> tags = new ArrayList<>();
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 

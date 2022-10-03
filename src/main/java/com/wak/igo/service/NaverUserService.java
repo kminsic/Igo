@@ -57,10 +57,11 @@ public class NaverUserService {
         // HTTP Body 생성
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
-//        body.add("client_id", "DmLVvurxVnPCqlnSp0XZ");      // localhost client_id
-        body.add("client_id", "1tmOBpKKBicBaUmPQpaF");        // 프론트엔드 client_id
-//        body.add("client_secret", "9fbJI0kZub");            // localhost client_secret
-        body.add("client_secret", "ybrSh2bxg2");              // 프론트엔드 client_secret
+
+        body.add("client_id", "DmLVvurxVnPCqlnSp0XZ");      // localhost client_id
+//        body.add("client_id", "1tmOBpKKBicBaUmPQpaF");        // 프론트엔드 client_id
+        body.add("client_secret", "9fbJI0kZub");            // localhost client_secret
+//        body.add("client_secret", "ybrSh2bxg2");              // 프론트엔드 client_secret
         body.add("code", code);
         body.add("state", state);
 
@@ -110,7 +111,7 @@ public class NaverUserService {
 
     private Member registerNaverUserIfNeeded(MemberInfo MemberInfo) {
         String naverId = MemberInfo.getMemberId();                      // DB 에 중복된 Kakao Id 가 있는지 확인
-        Member naverUser = memberRepository.findBymemberId(naverId)
+        Member naverUser = memberRepository.findByMemberId(naverId)
                 .orElse(null);
         // 회원가입
         if (naverUser == null) {

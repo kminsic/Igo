@@ -29,10 +29,6 @@ public class UserDetailsImpl implements UserDetails {
         return member.getMemberId();
     }
 
-    public Long getId_member() {
-        return member.getId();
-    }
-
     @Override
     public String getPassword() {
         return member.getPassword();
@@ -50,6 +46,7 @@ public class UserDetailsImpl implements UserDetails {
         return member.getNickname();
     }
 
+
     @Override
     public boolean isAccountNonExpired() {
         return true;
@@ -57,7 +54,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return false;
     }
 
     @Override

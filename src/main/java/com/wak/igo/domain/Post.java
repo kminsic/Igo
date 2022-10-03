@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -15,6 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+//@DisplayName
 public class Post extends Timestamped {
 
     //Json형식으로 받기
@@ -25,11 +27,12 @@ public class Post extends Timestamped {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
     @JoinColumn
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+//    , length = 50000
     private List<Comment> comments;
 
     @JoinColumn(name = "member_id", nullable = false)
@@ -37,33 +40,47 @@ public class Post extends Timestamped {
     private Member member;
 
     @Column
+    private String mapData;
+
+//    @Column
+//    private String thumnail;
+
+    @Column
     private int viewCount;
 
     @Column
-    private String tag;
+    private int reportNum;
 
     @Column
     private int heartNum;
 
 
+    @Convert(converter = StringListConverter.class)
+    private List<String> tags = new ArrayList<>();
+
+
     public void add_viewCount() {
         this.viewCount++;}
+
+    public void addReport() {
+        this.reportNum++;
+    }
 
     public void addHeart() {
         this.heartNum++;
     }
 
-    public void removeHeart() {
-        int tempHeart = this.heartNum - 1;
-        if (tempHeart < 0) {
-            return;
-        }
-        this.heartNum = tempHeart;
-    }
+
+
 
     public void update(PostRequestDto postRequestDto) {
         this.title = postRequestDto.getTitle();
         this.content = postRequestDto.getContent();
+//        this.mapData = postRequestDto.getMapData();
+//        this.tag = postRequestDto.getTag();
+    }
+    public boolean validateMember(Member member) {
+        return !this.member.equals(member);
     }
 }
 
