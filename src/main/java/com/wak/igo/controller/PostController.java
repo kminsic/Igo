@@ -36,6 +36,22 @@ public class PostController {
         return postService.getAllGroupPosts(type);
     }
 
+    @GetMapping("/api/post/region") 강원 서울 경기 경남 충북
+    public ResponseDto<?> getAllGroupPosts(@RequestParam String type) {
+        return postService.getAllGroupPosts(type);
+    }
+
+    @GetMapping("/api/post/money")
+    public ResponseDto<?> getAllGroupPosts(@RequestParam String type) {
+        return postService.getAllGroupPosts(type);
+    }
+
+    @GetMapping("/api/post/like")
+    public ResponseDto<?> getAllGroupPosts(@RequestParam String type) {
+        return postService.getAllGroupPosts(type);
+    }
+
+
     // 로그인 후 태그 설정
     @RequestMapping(value = "/api/member/tag", method = RequestMethod.PUT)
     public ResponseDto<?> getTag(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody InterestedTagDto tagDto) {

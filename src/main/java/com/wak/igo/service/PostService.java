@@ -30,6 +30,7 @@ public class PostService {
 
 
 
+
     //전체 게시글 조회
     @Transactional
     public ResponseDto<?> getAllPosts() {
@@ -62,7 +63,6 @@ public class PostService {
         }
 
         post.add_viewCount();
-//        post.add_viewCount();
         return ResponseDto.success(
                 PostResponseDto.builder()
                         .title(post.getTitle())
@@ -73,7 +73,7 @@ public class PostService {
 //                        .mapData(post.getMapData())
                         //신고하기 기능 구현 x
 //                        .report(0)
-//                        .tag(post.getTag())
+                        .tags(post.getTags())
                         .createdAt(post.getCreatedAt())
                         .modifiedAt(post.getModifiedAt())
                         .build());
@@ -94,8 +94,6 @@ public class PostService {
         memberRepository.save(member);
         return ResponseDto.success("저장 완료");
     }
-
-
     //게시글 생성
     @Transactional
 
@@ -107,14 +105,13 @@ public class PostService {
             return ResponseDto.fail("INVALID TOKEN", "TOKEN이 유효하지않습니다");
         }
 
-//        List<MapData> addressList = new ArrayList<>();
         Post post = Post.builder()
                 .member(member)
                 .title(postRequestDto.getTitle())
                 .content(postRequestDto.getContent())
                 .amount(postRequestDto.getAmount())
 //                .mapData(postRequestDto.getMapData())
-//                .tag(postRequestDto.getTag())
+                .tags(postRequestDto.getTags())
                 .heartNum(0)
                 .viewCount(0)
                 //신고하기 기능 구현 x
@@ -130,7 +127,7 @@ public class PostService {
                         .amount(postRequestDto.getAmount())
 //                        .mapData(postRequestDto.getMapData())
                         .amount(postRequestDto.getAmount())
-//                        .tag(postRequestDto.getTag())
+                        .tags(postRequestDto.getTags())
                         .viewCount(0)
                         .heartNum(0)
                         //신고하기 기능 구현 x
@@ -214,6 +211,8 @@ public class PostService {
         }
         return ResponseDto.success(member);
     }
+
+
 }
 
 

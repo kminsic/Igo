@@ -19,5 +19,4 @@ public class PostRequestDto {
     private int amount;
     private List<String> tags = new ArrayList<>();
 
-
 }

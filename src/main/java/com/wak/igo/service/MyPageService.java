@@ -144,7 +144,6 @@ public class MyPageService {
         return ResponseDto.success(postResponseDtoList);
     }
 
-    //마이포스트 불러오기
 
     //좋아요 한 게시글 불러오기
     @Transactional(readOnly = true)

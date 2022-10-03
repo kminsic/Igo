@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -41,6 +40,8 @@ public class ReportService {
             return ResponseDto.fail("이미 신고한 글 입니다.", "이미 신고한 글 입니다.");}
 
         Optional<Report> reportPost = reportRepository.findByMemberIdAndPostId(member.getId(), post.get().getId());
+
+        //Test 후 49로 변경 (신고 누적)
         if (reportPost.isPresent()) {
             if (49 >= reportRepository.findAllByPostId(post.get().getId()).size())
             postRepository.deleteById(id);
