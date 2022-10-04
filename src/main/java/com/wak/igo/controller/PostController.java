@@ -1,5 +1,6 @@
 package com.wak.igo.controller;
 
+import com.wak.igo.domain.Post;
 import com.wak.igo.domain.UserDetailsImpl;
 import com.wak.igo.dto.request.InterestedTagDto;
 import com.wak.igo.dto.request.PostRequestDto;
@@ -16,6 +17,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -44,6 +46,13 @@ public class PostController {
         return postService.getTag(userDetails, tagDto);
     }
 
+    // 태그 기반 회원별 메인 게시글
+    @RequestMapping(value = "/api/member/posts", method = RequestMethod.GET)
+    public ResponseDto<?> getTagPost(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        List<Post> tagPosts = postService.getTagPost(userDetails);
+        return ResponseDto.success(tagPosts);
+    }
+
     // 게시글 상세 페이지(Post ID)
     @GetMapping("/api/detail/{id}")
     public ResponseDto<?> getDetail(@PathVariable Long id) {
@@ -69,7 +78,6 @@ public class PostController {
     // 게시글 삭제
     @DeleteMapping("/api/post/{id}")
     public ResponseDto<?> deletePost(@PathVariable Long id, HttpServletRequest request) {
-//        postRepository.delete(id);
         return postService.deletePost(id,request);
     }
 

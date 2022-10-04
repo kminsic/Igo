@@ -43,14 +43,14 @@ public class MyPostService {
                     "사용자를 찾을 수 없습니다.");
         }
 
-        // 이미지 형식 유효성 검사
-        if (!validImgFile(multipartFile)) {
-            throw new RuntimeException("올바른 이미지 형식이 아닙니다.");
-        }
         // s3 이미지 저장
         if (multipartFile.isEmpty()) {
               imgUrl = null;
         } else {
+            // 이미지 형식 유효성 검사
+            if (!validImgFile(multipartFile)) {
+                throw new RuntimeException("올바른 이미지 형식이 아닙니다.");
+            }
             imgUrl = imageUrl(multipartFile);
         }
 
@@ -77,13 +77,12 @@ public class MyPostService {
         String getImage = mypost.getImgUrl(); // mypost에 저장된 이미지 url
         String s3Image = amazonS3.getUrl(bucket, getImage).toString(); // s3에 저장된 이미지 url
 
-        // 이미지 형식 유효성 검사
-        if (!validImgFile(multipartFile)) {
-            throw new RuntimeException("올바른 이미지 형식이 아닙니다.");
-        }
-
         if (StringUtils.isNullOrEmpty(getImage)) {  // mypost에 저장된게 없을 때
             if ( !multipartFile.isEmpty() ) {
+                // 이미지 형식 유효성 검사
+                if (!validImgFile(multipartFile)) {
+                    throw new RuntimeException("올바른 이미지 형식이 아닙니다.");
+                }
                 imgUrl = imageUrl(multipartFile);
             } else {
                 imgUrl = null;
