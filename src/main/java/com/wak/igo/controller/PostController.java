@@ -34,6 +34,9 @@ public class PostController {
     }
 
 
+
+
+
     // 그룹 별 목록 조회(메인 페이지)
     @GetMapping("/api/post/group")
     public ResponseDto<?> getAllGroupPosts(@RequestParam String type) {

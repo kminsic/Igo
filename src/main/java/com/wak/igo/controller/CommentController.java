@@ -16,6 +16,12 @@ public class CommentController {
 
     private final CommentService commentService;
 
+    //댓글 조회
+    @GetMapping("/api/comment/{id}")
+    public ResponseDto<?> searchpostComment(@PathVariable Long id){
+        return commentService.searchpostComment(id);
+    }
+
     // 댓글 작성
     @PostMapping("/api/comments")
     public ResponseDto<?> createComment(@RequestBody CommentRequestDto requestDto,
