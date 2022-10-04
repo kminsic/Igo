@@ -42,13 +42,13 @@ public class Post extends Timestamped {
     private Member member;
 
     @Column
-    private int viewCount;
+    private Integer viewCount;
 
     @Column
-    private int reportNum;
+    private Integer reportNum;
 
     @Column
-    private int heartNum;
+    private Integer heartNum;
 
     @Column(nullable = false)
     private String thumnail;
