@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
@@ -76,11 +78,12 @@ public class PostService {
         post.add_viewCount();
         return ResponseDto.success(
                 PostResponseDto.builder()
+                        .id(post.getId())
                         .title(post.getTitle())
                         .content(post.getContent())
                         .viewCount(post.getViewCount())
                         .heartNum(post.getHeartNum())
-//                        .mapData(post.getMapData())
+                        .mapData(post.getMapData())
                         .reportNum(0)
                         .tags(post.getTags())
                         .commentResponseDtoList(commentResponseDtoList)
@@ -105,7 +108,29 @@ public class PostService {
         List<String> tags = tagDto.getInterested();
         member.tag(tags);
         memberRepository.save(member);
-        return ResponseDto.success("저장 완료");
+        return ResponseDto.success("태그 설정 완료");
+    }
+
+    // 태그 기반 회원별 메인 게시글
+    public List<Post> getTagPost(UserDetailsImpl userDetails) {
+        if (null == userDetails.getAuthorities()) {
+            ResponseDto.fail("MEMBER_NOT_FOUND",
+                    "사용자를 찾을 수 없습니다.");
+        }
+        List<Post> tagPosts = new ArrayList<>();
+        Member member = userDetails.getMember();
+        List<Post> posts = postRepository.findAll();
+
+        List<String> tags = member.getInterested(); // 회원이 선택한 태그 목록들
+        for (String tag : tags){
+            for (Post post : posts) {
+                String tagPost = post.getTags().get(0); // 게시글의 interested 항목만 비교 (index 0)
+                if (tag.equals(tagPost)) {
+                    tagPosts.add(post);
+                }
+            }
+        }
+        return tagPosts;
     }
 
     //게시글 생성
@@ -115,11 +140,15 @@ public class PostService {
         if (null == member){
             return ResponseDto.fail("INVALID TOKEN", "TOKEN이 유효하지않습니다");
         }
+        // 썸네일 추출
+        String thumnail = getThumnail(postRequestDto);
+
         Post post = Post.builder()
                 .member(member)
                 .title(postRequestDto.getTitle())
                 .content(postRequestDto.getContent())
-//                .mapData(postRequestDto.getMapData())
+                .mapData(postRequestDto.getMapData())
+                .thumnail(thumnail)
                 .tags(postRequestDto.getTags())
                 .heartNum(0)
                 .viewCount(0)
@@ -130,7 +159,7 @@ public class PostService {
                 PostResponseDto.builder()
                         .title(postRequestDto.getTitle())
                         .content(postRequestDto.getContent())
-//                        .mapData(postRequestDto.getMapData())
+                        .mapData(postRequestDto.getMapData())
                         .tags(postRequestDto.getTags())
                         .reportNum(0)
                         .viewCount(0)
@@ -156,7 +185,9 @@ public class PostService {
         }
         if (post.validateMember(updateMember))
             return ResponseDto.fail("작성자가 아닙니다.","작성자가 아닙니다.");
-        post.update(requestDto);
+        // 썸네일 추출
+        String thumnail = getThumnail(requestDto);
+        post.update(requestDto, thumnail);
         return ResponseDto.success("update success");
     }
 
@@ -176,6 +207,15 @@ public class PostService {
         postRepository.delete(post);
         return ResponseDto.success("Success");
 
+    }
+
+    // 썸네일 추출
+    public String getThumnail(PostRequestDto postRequestDto) {
+        String getThumnail = postRequestDto.getContent();
+        Pattern pattern = Pattern.compile("(https?://[^>\"']*)");
+        Matcher matcher = pattern.matcher(getThumnail);
+        String thumnail = (matcher.find()) ? matcher.group(0) : "false";
+        return thumnail;
     }
 
     @Transactional(readOnly = true)

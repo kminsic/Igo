@@ -1,14 +1,17 @@
 package com.wak.igo.domain;
 
+import com.vladmihalcea.hibernate.type.json.JsonType;
 import com.wak.igo.dto.request.PostRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Map;
 
 
 @Builder
@@ -16,7 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-//@DisplayName
+@TypeDef(name = "json", typeClass = JsonType.class) // Map을 Json 타입으로 컨버팅하여 넣기
 public class Post extends Timestamped {
 
     //Json형식으로 받기
@@ -39,12 +42,6 @@ public class Post extends Timestamped {
     private Member member;
 
     @Column
-    private String mapData;
-
-//    @Column
-//    private String thumnail;
-
-    @Column
     private int viewCount;
 
     @Column
@@ -52,6 +49,14 @@ public class Post extends Timestamped {
 
     @Column
     private int heartNum;
+
+    @Column(nullable = false)
+    private String thumnail;
+
+    // column json 설정
+    @Type(type = "json")
+    @Column(columnDefinition = "json", nullable = false)
+    private Map<String, Object> mapData;
 
 
     @Convert(converter = StringListConverter.class)
@@ -72,11 +77,12 @@ public class Post extends Timestamped {
 
 
 
-    public void update(PostRequestDto postRequestDto) {
+    public void update(PostRequestDto postRequestDto, String thumnail) {
         this.title = postRequestDto.getTitle();
         this.content = postRequestDto.getContent();
-//        this.mapData = postRequestDto.getMapData();
-//        this.tag = postRequestDto.getTag();
+        this.thumnail = thumnail;
+        this.tags = postRequestDto.getTags();
+        this.mapData = postRequestDto.getMapData();
     }
     public boolean validateMember(Member member) {
         return !this.member.equals(member);

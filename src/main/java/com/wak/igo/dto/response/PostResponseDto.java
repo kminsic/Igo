@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
 
 
 @Builder
@@ -29,6 +30,8 @@ public class PostResponseDto {
     private String profile;
     private int reportNum;
     private List<String> tags = new ArrayList<>();
+    private Map<String, Object> mapData;
+    private String thumnail;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 

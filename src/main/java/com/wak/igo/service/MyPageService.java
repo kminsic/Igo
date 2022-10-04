@@ -135,6 +135,7 @@ public class MyPageService {
                             .id(post.getId())
                             .title(post.getTitle())
                             .content(post.getContent())
+                            .thumnail(post.getThumnail())
                             .createdAt(post.getCreatedAt())
                             .modifiedAt(post.getModifiedAt())
                             .build()

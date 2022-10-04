@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 @Getter
@@ -15,6 +16,6 @@ import java.util.List;
 public class PostRequestDto {
     private String title;
     private String content;
-    private int amount;
     private List<String> tags = new ArrayList<>();
+    private Map<String, Object> mapData;
 }
