@@ -17,6 +17,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -52,6 +53,26 @@ public class PostController {
         List<Post> tagPosts = postService.getTagPost(userDetails);
         return ResponseDto.success(tagPosts);
     }
+    //관심사태그 조회
+    @RequestMapping(value = "/api/post/interest", method = RequestMethod.GET)
+    public ResponseDto<?> getAllInterestTags(@RequestParam String type) {
+        List<Post> InterestTagPosts = postService.getAllInterestTags(type);
+        return ResponseDto.success(InterestTagPosts);
+    }
+    //지역태그 조회
+    @RequestMapping(value = "/api/post/region", method = RequestMethod.GET)
+    public ResponseDto<?> getAllRegionTags(@RequestParam String type) {
+        List<Post> RegionTagPosts = postService.getAllRegionTags(type);
+        return ResponseDto.success(RegionTagPosts);
+    }
+    //비용태그 조회
+    @RequestMapping(value = "/api/post/cost", method = RequestMethod.GET)
+    public ResponseDto<?> getAllCostTags(@RequestParam String type) {
+        List<Post> CostTagPosts = postService.getAllCostTags(type);
+        return ResponseDto.success(CostTagPosts);
+    }
+
+
 
     // 게시글 상세 페이지(Post ID)
     @GetMapping("/api/detail/{id}")
@@ -70,7 +91,7 @@ public class PostController {
     // 게시글 수정
     @RequestMapping(value = "/api/post/{id}", method = RequestMethod.PUT)
     public ResponseDto<?> updatePost(@PathVariable Long id,
-                                     @RequestPart(value = "post") PostRequestDto requestDto,
+                                     @RequestBody @Valid PostRequestDto requestDto,
                                      HttpServletRequest request) throws IOException {
         return postService.updatePost(id, requestDto,request);
     }

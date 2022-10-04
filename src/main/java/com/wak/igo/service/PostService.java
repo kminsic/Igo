@@ -7,6 +7,7 @@ import com.wak.igo.domain.UserDetailsImpl;
 import com.wak.igo.dto.request.InterestedTagDto;
 import com.wak.igo.dto.request.PostRequestDto;
 import com.wak.igo.dto.response.CommentResponseDto;
+import com.wak.igo.dto.response.MyPostResponseDto;
 import com.wak.igo.dto.response.PostResponseDto;
 import com.wak.igo.dto.response.ResponseDto;
 import com.wak.igo.jwt.TokenProvider;
@@ -33,6 +34,7 @@ public class PostService {
     private final MemberRepository memberRepository;
     private final TokenProvider tokenProvider;
     private final CommentRepository commentRepository;
+
 
     //전체 게시글 조회
     @Transactional
@@ -96,7 +98,6 @@ public class PostService {
     }
 
 
-
     // 태그 저장
     public ResponseDto<?> getTag(UserDetailsImpl userDetails, InterestedTagDto tagDto) {
         if (null == userDetails.getAuthorities()) {
@@ -122,7 +123,7 @@ public class PostService {
         List<Post> posts = postRepository.findAll();
 
         List<String> tags = member.getInterested(); // 회원이 선택한 태그 목록들
-        for (String tag : tags){
+        for (String tag : tags) {
             for (Post post : posts) {
                 String tagPost = post.getTags().get(0); // 게시글의 interested 항목만 비교 (index 0)
                 if (tag.equals(tagPost)) {
@@ -131,6 +132,49 @@ public class PostService {
             }
         }
         return tagPosts;
+    }
+
+    //관심사 태그별 정렬
+    @Transactional
+    public List<Post> getAllInterestTags(String type) {
+
+        List<Post> InterestTagPosts = new ArrayList<>();
+        List<Post> posts = postRepository.findAll();
+        for (Post post : posts) {
+            String tagPost = post.getTags().get(0);
+            if (tagPost.equals(type)) {
+                InterestTagPosts.add(post);
+            }
+        }
+        return InterestTagPosts;
+    }
+    //지역 태그별 정렬
+    @Transactional
+    public List<Post> getAllRegionTags(String type) {
+
+            List<Post> RegionTagPosts = new ArrayList<>();
+            List<Post> posts = postRepository.findAll();
+            for (Post post : posts) {
+                String tagPost = post.getTags().get(1);
+                    if (tagPost.equals(type)) {
+                        RegionTagPosts.add(post);
+                    }
+                }
+            return RegionTagPosts;
+        }
+    //비용 태그별 정렬
+    @Transactional
+    public List<Post> getAllCostTags(String type) {
+
+            List<Post> CostTagPosts = new ArrayList<>();
+            List<Post> posts = postRepository.findAll();
+            for (Post post : posts) {
+                String tagPost = post.getTags().get(2);
+                if (tagPost.equals(type)) {
+                    CostTagPosts.add(post);
+            }
+        }
+        return CostTagPosts;
     }
 
     //게시글 생성
@@ -185,6 +229,8 @@ public class PostService {
         }
         if (post.validateMember(updateMember))
             return ResponseDto.fail("작성자가 아닙니다.","작성자가 아닙니다.");
+
+
         // 썸네일 추출
         String thumnail = getThumnail(requestDto);
         post.update(requestDto, thumnail);
