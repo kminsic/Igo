@@ -4,6 +4,7 @@ import com.wak.igo.domain.Post;
 import com.wak.igo.domain.UserDetailsImpl;
 import com.wak.igo.dto.request.InterestedTagDto;
 import com.wak.igo.dto.request.PostRequestDto;
+import com.wak.igo.dto.response.PostResponseDto;
 import com.wak.igo.dto.response.ResponseDto;
 import com.wak.igo.service.PostService;
 import io.jsonwebtoken.io.IOException;
@@ -32,6 +33,9 @@ public class PostController {
     public ResponseDto<?> getAllPosts( ) throws IOException {
         return postService.getAllPosts();
     }
+
+
+
 
 
     // 그룹 별 목록 조회(메인 페이지)
@@ -70,6 +74,13 @@ public class PostController {
     public ResponseDto<?> getAllCostTags(@RequestParam String type) {
         List<Post> CostTagPosts = postService.getAllCostTags(type);
         return ResponseDto.success(CostTagPosts);
+    }
+
+    //title content 기반 검색
+    @GetMapping(value = "/api/search")
+    public ResponseDto<?> findPost(@RequestParam(value = "content") String content){
+        List<PostResponseDto> findPost = postService.findPost(content);
+        return ResponseDto.success(findPost);
     }
 
 

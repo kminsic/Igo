@@ -34,7 +34,6 @@ public class PostService {
     private final TokenProvider tokenProvider;
     private final CommentRepository commentRepository;
 
-
     //전체 게시글 조회
     @Transactional
     public ResponseDto<?> getAllPosts() {
@@ -95,6 +94,7 @@ public class PostService {
                         .build());
 
     }
+    
 
 
     // 태그 저장
@@ -161,6 +161,7 @@ public class PostService {
                 }
             return RegionTagPosts;
         }
+
     //비용 태그별 정렬
     @Transactional
     public List<Post> getAllCostTags(String type) {
@@ -263,6 +264,48 @@ public class PostService {
         String thumnail = (matcher.find()) ? matcher.group(0) : "false";
         return thumnail;
     }
+
+    //포스트 검색
+    @Transactional
+    public List<PostResponseDto> findPost(String content){
+        List<Post> posts = postRepository.findByContent(content);
+        List<PostResponseDto> postResponseDtoList = new ArrayList<>();
+        if (posts.isEmpty()) return postResponseDtoList;
+        for (Post post : posts){
+            postResponseDtoList.add(this.convertEntityToDto(post));
+        }
+        return postResponseDtoList;
+    }
+
+    private PostResponseDto convertEntityToDto(Post post){
+        List<Comment> commentList = commentRepository.findAllByPost(post);
+        List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
+        for (Comment comment : commentList) {
+            commentResponseDtoList.add(
+                    CommentResponseDto.builder()
+                            .id(comment.getId())
+                            .nickname(comment.getMember().getNickname())
+                            .content(comment.getContent())
+                            .createdAt(comment.getCreatedAt())
+                            .modifiedAt(comment.getModifiedAt())
+                            .build()
+            );
+        }
+        return PostResponseDto.builder()
+                .id(post.getId())
+                .title(post.getTitle())
+                .content(post.getContent())
+                .profile(post.getMember().getProfileImage())
+                .nickname(post.getMember().getNickname())
+                .commentResponseDtoList(commentResponseDtoList)
+                .mapData(post.getMapData())
+                .tags(post.getTags())
+                .thumnail(post.getThumnail())
+                .createdAt(post.getCreatedAt())
+                .modifiedAt(post.getModifiedAt())
+                .build();
+    }
+
 
     @Transactional(readOnly = true)
     public Post isPresentPost(Long id) {

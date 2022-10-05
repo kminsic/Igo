@@ -9,11 +9,14 @@ import com.wak.igo.dto.response.CommentResponseDto;
 import com.wak.igo.dto.response.ResponseDto;
 import com.wak.igo.jwt.TokenProvider;
 import com.wak.igo.repository.CommentRepository;
+import com.wak.igo.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,6 +26,31 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final TokenProvider tokenProvider;
     private final PostService postService;
+    private final PostRepository postRepository;
+
+    //포스트 해당 코멘트 조회
+    @Transactional
+    public ResponseDto<?> searchpostComment(Long id) {
+
+        Post post = isPresentPost(id);
+        if (null == post) {
+            return ResponseDto.fail("NOT_FOUND", "게시글이 존재하지 않습니다.");
+        }
+        List<Comment> commentList = commentRepository.findAllByPost(post);
+        List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
+        for (Comment comment : commentList) {
+            commentResponseDtoList.add(
+                    CommentResponseDto.builder()
+                            .id(comment.getId())
+                            .nickname(comment.getMember().getNickname())
+                            .content(comment.getContent())
+                            .createdAt(comment.getCreatedAt())
+                            .modifiedAt(comment.getModifiedAt())
+                            .build()
+            );
+        }
+        return ResponseDto.success(commentResponseDtoList);
+    }
 
     // 댓글 작성
     @Transactional
@@ -30,6 +58,7 @@ public class CommentService {
         if (null == request.getHeader("RefreshToken")) {
             return ResponseDto.fail("MEMBER_NOT_FOUND",
                     "로그인이 필요합니다.");
+
         }
 
         Member member = validateMember(request);
@@ -117,7 +146,7 @@ public class CommentService {
             return ResponseDto.fail("NOT_FOUND", "존재하지 않는 댓글 id 입니다.");
         }
         if (!member.getId().equals(comment.getMember().getId())){
-            return ResponseDto.fail("BAD_REQUEST", "작성자만 수정할 수 있습니다.");
+            return ResponseDto.fail("BAD_REQUEST", "작성자만 삭제할 수 있습니다.");
         }
 
         commentRepository.delete(comment);
@@ -137,6 +166,12 @@ public class CommentService {
         }
         return tokenProvider.getMemberFromAuthentication().getMember();
     }
+    @Transactional(readOnly = true)
+    public Post isPresentPost(Long id) {
+        Optional<Post> optionalPost = postRepository.findById(id);
+        return optionalPost.orElse(null);
+    }
+
 
 }
 

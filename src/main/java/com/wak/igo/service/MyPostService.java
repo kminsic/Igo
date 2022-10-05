@@ -2,14 +2,14 @@ package com.wak.igo.service;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.wak.igo.domain.UserDetailsImpl;
-import com.wak.igo.dto.request.MyPostRequestDto;
-import com.wak.igo.dto.response.ResponseDto;
-import com.wak.igo.repository.MyPostRepository;
 import com.amazonaws.util.StringUtils;
 import com.wak.igo.domain.MyPost;
 import com.wak.igo.domain.State;
+import com.wak.igo.domain.UserDetailsImpl;
+import com.wak.igo.dto.request.MyPostRequestDto;
 import com.wak.igo.dto.response.MyPostResponseDto;
+import com.wak.igo.dto.response.ResponseDto;
+import com.wak.igo.repository.MyPostRepository;
 import com.wak.igo.repository.StateRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.tika.Tika;
@@ -17,9 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.awt.image.ImagingOpException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -42,7 +40,7 @@ public class MyPostService {
             ResponseDto.fail("MEMBER_NOT_FOUND",
                     "사용자를 찾을 수 없습니다.");
         }
-
+        System.out.println(multipartFile);
         // s3 이미지 저장
         if (multipartFile.isEmpty()) {
               imgUrl = null;

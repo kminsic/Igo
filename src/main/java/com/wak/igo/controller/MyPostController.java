@@ -17,7 +17,7 @@ import java.util.List;
 public class MyPostController {
     private final MyPostService myPostService;
 
-    @RequestMapping(value = "/api/mypost", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/mypost", method = RequestMethod.POST, consumes = {"multipart/form-data"})
     public ResponseDto<?> scheduleCreate(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                          @RequestPart(value = "images", required = false) MultipartFile multipartFile,
                                          @RequestPart(value = "content", required = false) MyPostRequestDto requestDto) throws IOException{  // @RequestPart 애너테이션을 이용해서 multipart/form-data 요청받음
