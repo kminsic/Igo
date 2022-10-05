@@ -89,6 +89,7 @@ public class PostService {
                         .commentResponseDtoList(commentResponseDtoList)
                         .profile(post.getMember().getProfileImage())
                         .nickname(post.getMember().getNickname())
+                        .searchPlace(post.getSearchPlace())
                         .createdAt(post.getCreatedAt())
                         .modifiedAt(post.getModifiedAt())
                         .build());
@@ -194,6 +195,7 @@ public class PostService {
                 .mapData(postRequestDto.getMapData())
                 .thumnail(thumnail)
                 .tags(postRequestDto.getTags())
+                .searchPlace(postRequestDto.getSearchPlace())
                 .heartNum(0)
                 .viewCount(0)
                 .reportNum(0)
@@ -209,6 +211,7 @@ public class PostService {
                         .reportNum(0)
                         .viewCount(0)
                         .heartNum(0)
+                        .searchPlace(postRequestDto.getSearchPlace())
                         .createdAt(post.getCreatedAt())
                         .modifiedAt(post.getModifiedAt())
                         .build());

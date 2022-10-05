@@ -32,6 +32,7 @@ public class PostResponseDto {
     private List<String> tags = new ArrayList<>();
     private Map<String, Object> mapData;
     private String thumnail;
+    private String searchPlace;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 

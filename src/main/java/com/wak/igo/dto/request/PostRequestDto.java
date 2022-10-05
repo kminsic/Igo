@@ -19,4 +19,5 @@ public class PostRequestDto {
     private String content;
     private List<String> tags = new ArrayList<>();
     private Map<String, Object> mapData;
+    private String searchPlace;
 }

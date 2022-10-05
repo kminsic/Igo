@@ -37,6 +37,7 @@ public class Post extends Timestamped {
     @OneToMany(mappedBy = "post" ,fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments =new ArrayList<>();
 
+    
     @JoinColumn(name = "member_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
@@ -52,6 +53,9 @@ public class Post extends Timestamped {
 
     @Column(nullable = false)
     private String thumnail;
+
+    @Column
+    private String searchPlace;
 
     // column json 설정
     @Type(type = "json")
