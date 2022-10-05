@@ -93,14 +93,14 @@ public class PostController {
 
     // 게시글 등록
     @PostMapping(value = "/api/post")
-    public ResponseDto<?> createPost(@RequestBody PostRequestDto postRequestDto, HttpServletRequest request
+    public ResponseDto<?> createPost(@RequestBody @Valid PostRequestDto postRequestDto, HttpServletRequest request
     ) throws IOException {
         return postService.createPost(postRequestDto, request);
     }
 
 
     // 게시글 수정
-    @RequestMapping(value = "/api/post/{id}", method = RequestMethod.PATCH)
+    @RequestMapping(value = "/api/post/{id}", method = RequestMethod.PUT)
     public ResponseDto<?> updatePost(@PathVariable Long id,
                                      @RequestBody @Valid PostRequestDto requestDto,
                                      HttpServletRequest request) throws IOException {
