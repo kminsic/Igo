@@ -28,23 +28,17 @@ public class MyPageController {
         return myPageService.getMember(request);
     }
     //좋아요 한 게시글 표시하기
-    @GetMapping("api/mypage/post")
+    @GetMapping("api/mypage/likepost")
     public ResponseDto<?> getHeartpost(HttpServletRequest request) {
         return myPageService.getHeartpost(request);
     }
     //회원정보 수정하기
-    @PutMapping (value = "/api/auth/member/mypage")
+    @PutMapping (value = "/api/mypage/profile")
     public ResponseDto<?> updateMember(HttpServletRequest request,
                                        @RequestPart("profileImage") MultipartFile file,
                                        @RequestPart("nickname") MemberResponseDto memberResponseDto
                                        ) throws IOException {
         return myPageService.updateMember(request,file,memberResponseDto);
-    }
-    //태그 수정하기
-    @PutMapping("api/auth/member/updatetag")
-    public ResponseDto<?> updateTag(HttpServletRequest request,@RequestBody MemberResponseDto memberResponseDto
-    ) throws IOException {
-        return myPageService.updateTag(request,memberResponseDto);
     }
 
 }
