@@ -7,7 +7,6 @@ import com.wak.igo.domain.UserDetailsImpl;
 import com.wak.igo.dto.request.InterestedTagDto;
 import com.wak.igo.dto.request.PostRequestDto;
 import com.wak.igo.dto.response.CommentResponseDto;
-import com.wak.igo.dto.response.MyPostResponseDto;
 import com.wak.igo.dto.response.PostResponseDto;
 import com.wak.igo.dto.response.ResponseDto;
 import com.wak.igo.jwt.TokenProvider;
@@ -86,7 +85,7 @@ public class PostService {
                         .viewCount(post.getViewCount())
                         .heartNum(post.getHeartNum())
                         .mapData(post.getMapData())
-                        .reportNum(0)
+                        .reportNum(post.getReportNum())
                         .tags(post.getTags())
                         .commentResponseDtoList(commentResponseDtoList)
                         .profile(post.getMember().getProfileImage())
@@ -201,6 +200,7 @@ public class PostService {
         postRepository.save(post);
         return ResponseDto.success(
                 PostResponseDto.builder()
+                        .id(post.getId())
                         .title(postRequestDto.getTitle())
                         .content(postRequestDto.getContent())
                         .mapData(postRequestDto.getMapData())
@@ -234,7 +234,7 @@ public class PostService {
         // 썸네일 추출
         String thumnail = getThumnail(requestDto);
         post.update(requestDto, thumnail);
-        return ResponseDto.success("update success");
+        return ResponseDto.success("게시물이 수정되었습니다.");
     }
 
     //게시글 삭제
