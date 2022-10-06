@@ -23,7 +23,7 @@ public class MyPageController {
     }
 
     // 회원정보 표시하기
-    @GetMapping("api/member/mypage")
+    @GetMapping("api/mypage")
     public ResponseDto<?> getMember(HttpServletRequest request) {
         return myPageService.getMember(request);
     }
