@@ -17,18 +17,18 @@ public class MyPageController {
     private final MyPageService myPageService;
 
     // 내가 쓴 post 불러오기
-    @GetMapping (value = "/api/member/post")
+    @GetMapping (value = "/api/mypage/post")
     public ResponseDto<?> getPost(HttpServletRequest request) {
         return myPageService.getPost(request);
     }
 
     // 회원정보 표시하기
-    @GetMapping("api/mypage")
+    @GetMapping("/api/mypage")
     public ResponseDto<?> getMember(HttpServletRequest request) {
         return myPageService.getMember(request);
     }
     //좋아요 한 게시글 표시하기
-    @GetMapping("api/mypage/likepost")
+    @GetMapping("/api/mypage/likepost")
     public ResponseDto<?> getHeartpost(HttpServletRequest request) {
         return myPageService.getHeartpost(request);
     }
