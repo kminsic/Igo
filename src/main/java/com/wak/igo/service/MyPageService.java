@@ -34,9 +34,7 @@ public class MyPageService {
     private final AmazonS3 amazonS3;
     private final TokenProvider tokenProvider;
     private final PostRepository postRepository;
-
     private final MemberRepository memberRepository;
-
     private final HeartRepository heartRepository;
 
     //회원정보 불러오기
@@ -102,7 +100,6 @@ public class MyPageService {
         if(null == member) {
         return ResponseDto.fail("INVALID TOKEN", "TOKEN이 유효하지않습니다");
     }
-
         List<String> tags = memberResponseDto.getInterested();
 //        member.tagUpdate(tags);
         member.tag(tags);
