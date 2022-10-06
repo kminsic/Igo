@@ -68,7 +68,7 @@ public class MyPostService {
         int done = (state==null) ? 0 : 1;
 
         MyPostResponseDto myPostResponseDto = MyPostResponseDto.builder()
-                .id(requestDto.getId())
+                .id(mypost.getId())
                 .title(requestDto.getTitle())
                 .time(requestDto.getTime())
                 .imgUrl(imgUrl)
