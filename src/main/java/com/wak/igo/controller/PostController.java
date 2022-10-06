@@ -96,7 +96,7 @@ public class PostController {
 
 
     // 게시글 수정
-    @RequestMapping(value = "/api/post/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/api/post/{id}", method = RequestMethod.PATCH)
     public ResponseDto<?> updatePost(@PathVariable Long id,
                                      @RequestBody @Valid PostRequestDto requestDto,
                                      HttpServletRequest request) throws IOException {
