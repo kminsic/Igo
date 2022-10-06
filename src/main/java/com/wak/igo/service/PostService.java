@@ -254,6 +254,7 @@ public class PostService {
             return ResponseDto.fail("글 삭제에 실패하였습니다. (NOT_EXIST)", "글 삭제에 실패하였습니다. (NOT_EXIST)");
         if (post.validateMember(updateMember))
             return ResponseDto.fail("작성자가 아닙니다.", "작성자가 아닙니다.");
+        commentRepository.deleteAllByPost(post);
         postRepository.delete(post);
         return ResponseDto.success("Success");
 

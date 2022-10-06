@@ -34,8 +34,8 @@ public class Post extends Timestamped {
     private String content;
 
 
-    @OneToMany(mappedBy = "post" ,fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> comments =new ArrayList<>();
+//    @OneToMany(mappedBy = "post" ,fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Comment> comments =new ArrayList<>();
 
     
     @JoinColumn(name = "member_id", nullable = false)
