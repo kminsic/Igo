@@ -3,6 +3,7 @@ package com.wak.igo.service;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.util.StringUtils;
+import com.wak.igo.domain.Member;
 import com.wak.igo.domain.MyPost;
 import com.wak.igo.domain.State;
 import com.wak.igo.domain.UserDetailsImpl;
@@ -41,6 +42,8 @@ public class MyPostService {
                     "사용자를 찾을 수 없습니다.");
         }
         System.out.println(multipartFile);
+        Member member = userDetails.getMember();
+
         // s3 이미지 저장
         if (multipartFile.isEmpty()) {
               imgUrl = null;
@@ -60,7 +63,21 @@ public class MyPostService {
                 .content(requestDto.getContent())
                 .build();
         myPostRepository.save(mypost);
-        return ResponseDto.success("나의 일정 작성 완료");
+
+        State state = myPostStateRepository.findMyPostStateByMyPost_Id(requestDto.getId()); // 일정 등록 상태 가져오기
+        int done = (state==null) ? 0 : 1;
+
+        MyPostResponseDto myPostResponseDto = MyPostResponseDto.builder()
+                .id(mypost.getId())
+                .title(requestDto.getTitle())
+                .time(requestDto.getTime())
+                .imgUrl(imgUrl)
+                .done(done)
+                .content(requestDto.getContent())
+                .createdAt(mypost.getCreatedAt())
+                .modifiedAt(mypost.getModifiedAt())
+                .build();
+        return ResponseDto.success(myPostResponseDto);
     }
 
     // 일정 수정
@@ -98,7 +115,21 @@ public class MyPostService {
         }
         mypost.update(requestDto, imgUrl);
         myPostRepository.save(mypost);
-        return ResponseDto.success("나의 일정 수정 완료");
+
+        State state = myPostStateRepository.findMyPostStateByMyPost_Id(requestDto.getId()); // 일정 등록 상태 가져오기
+        int done = (state==null) ? 0 : 1;
+
+        MyPostResponseDto myPostResponseDto = MyPostResponseDto.builder()
+                .id(requestDto.getId())
+                .title(requestDto.getTitle())
+                .time(requestDto.getTime())
+                .imgUrl(imgUrl)
+                .done(done)
+                .content(requestDto.getContent())
+                .createdAt(mypost.getCreatedAt())
+                .modifiedAt(mypost.getModifiedAt())
+                .build();
+        return ResponseDto.success(myPostResponseDto);
     }
 
     // 일정 삭제 (일정 등록 상태도 같이 삭제)
@@ -156,7 +187,18 @@ public class MyPostService {
                 .done(1)
                 .build();
         myPostStateRepository.save(state);
-        return ResponseDto.success("일정이 완료되었습니다.");
+
+        MyPostResponseDto myPostResponseDto = MyPostResponseDto.builder()
+                .id(myPost.getId())
+                .title(myPost.getTitle())
+                .time(myPost.getTime())
+                .imgUrl(myPost.getImgUrl())
+                .done(1)
+                .content(myPost.getContent())
+                .createdAt(myPost.getCreatedAt())
+                .modifiedAt(myPost.getModifiedAt())
+                .build();
+        return ResponseDto.success(myPostResponseDto);
     }
 
     // 회원이 완료된 일정을 취소할 때 실행
@@ -170,7 +212,18 @@ public class MyPostService {
 
         State state = myPostStateRepository.findMyPostStateByMyPost_Id(myPost.getId());
         myPostStateRepository.delete(state);
-        return ResponseDto.success("일정이 다시 등록되었습니다.");
+
+        MyPostResponseDto myPostResponseDto = MyPostResponseDto.builder()
+                .id(myPost.getId())
+                .title(myPost.getTitle())
+                .time(myPost.getTime())
+                .imgUrl(myPost.getImgUrl())
+                .done(0)
+                .content(myPost.getContent())
+                .createdAt(myPost.getCreatedAt())
+                .modifiedAt(myPost.getModifiedAt())
+                .build();
+        return ResponseDto.success(myPostResponseDto);
     }
 
     // s3에 이미지 업로드

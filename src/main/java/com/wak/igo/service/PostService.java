@@ -93,7 +93,6 @@ public class PostService {
                         .createdAt(post.getCreatedAt())
                         .modifiedAt(post.getModifiedAt())
                         .build());
-
     }
     
 
