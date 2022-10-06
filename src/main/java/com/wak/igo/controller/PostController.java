@@ -34,10 +34,6 @@ public class PostController {
         return postService.getAllPosts();
     }
 
-
-
-
-
     // 그룹 별 목록 조회(메인 페이지)
     @GetMapping("/api/post/group")
     public ResponseDto<?> getAllGroupPosts(@RequestParam String type) {
@@ -46,7 +42,7 @@ public class PostController {
 
 
     // 로그인 후 태그 설정
-    @RequestMapping(value = "/api/member/tag", method = RequestMethod.PUT)
+    @RequestMapping(value = "/api/member/tag", method = RequestMethod.PATCH)
     public ResponseDto<?> getTag(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody InterestedTagDto tagDto) {
         return postService.getTag(userDetails, tagDto);
     }
@@ -93,8 +89,8 @@ public class PostController {
 
     // 게시글 등록
     @PostMapping(value = "/api/post")
-    public ResponseDto<?> createPost(@RequestBody @Valid PostRequestDto postRequestDto, HttpServletRequest request
-    ) throws IOException {
+    public ResponseDto<?> createPost(@RequestBody @Valid PostRequestDto postRequestDto,
+                                     HttpServletRequest request) throws IOException {
         return postService.createPost(postRequestDto, request);
     }
 
