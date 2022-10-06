@@ -1,18 +1,13 @@
 package com.wak.igo.service;
 
-import com.wak.igo.domain.Comment;
-import com.wak.igo.domain.Member;
-import com.wak.igo.domain.Post;
-import com.wak.igo.domain.UserDetailsImpl;
+import com.wak.igo.domain.*;
 import com.wak.igo.dto.request.InterestedTagDto;
 import com.wak.igo.dto.request.PostRequestDto;
 import com.wak.igo.dto.response.CommentResponseDto;
 import com.wak.igo.dto.response.PostResponseDto;
 import com.wak.igo.dto.response.ResponseDto;
 import com.wak.igo.jwt.TokenProvider;
-import com.wak.igo.repository.CommentRepository;
-import com.wak.igo.repository.MemberRepository;
-import com.wak.igo.repository.PostRepository;
+import com.wak.igo.repository.*;
 import io.jsonwebtoken.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,6 +28,9 @@ public class PostService {
     private final MemberRepository memberRepository;
     private final TokenProvider tokenProvider;
     private final CommentRepository commentRepository;
+    private final ReportRepository reportRepository;
+    private final HeartRepository heartRepository;
+
 
     //전체 게시글 조회
     @Transactional
@@ -254,6 +252,8 @@ public class PostService {
         if (post.validateMember(updateMember))
             return ResponseDto.fail("작성자가 아닙니다.", "작성자가 아닙니다.");
         commentRepository.deleteAllByPost(post);
+        heartRepository.deleteAllByPost(post);
+        reportRepository.deleteAllByPost(post);
         postRepository.delete(post);
         return ResponseDto.success("Success");
 
