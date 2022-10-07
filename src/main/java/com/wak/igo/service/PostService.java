@@ -233,16 +233,9 @@ public class PostService {
             return ResponseDto.fail("작성자가 아닙니다.","작성자가 아닙니다.");
         // 썸네일 추출
         String thumnail = getThumnail(requestDto);
+
         post.update(requestDto, thumnail);
-        return ResponseDto.success(
-                PostResponseDto.builder()
-                        .title(requestDto.getTitle())
-                        .mapData(requestDto.getMapData())
-                        .content(requestDto.getContent())
-                        .tags(requestDto.getTags())
-                        .searchPlace(requestDto.getSearchPlace())
-                        .build()
-        );
+        return ResponseDto.success("success");
     }
 
     //게시글 삭제
@@ -273,6 +266,7 @@ public class PostService {
         Matcher matcher = pattern.matcher(getThumnail);
         String thumnail = (matcher.find()) ? matcher.group(0) : "false";
         return thumnail;
+
     }
 
     //포스트 검색
