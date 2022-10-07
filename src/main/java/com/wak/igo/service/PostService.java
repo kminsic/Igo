@@ -233,14 +233,15 @@ public class PostService {
             return ResponseDto.fail("작성자가 아닙니다.","작성자가 아닙니다.");
         // 썸네일 추출
 //        String thumnail = getThumnail(requestDto);
-        String getThumnail = requestDto.getContent();
-        if (requestDto.getContent() == null){
-            getThumnail = post.getContent();
+        String content = requestDto.getContent();
+        if (content == null){
+            content = post.getContent();
         }
+        String getThumnail = content;
         Pattern pattern = Pattern.compile("(https?://[^>\"']*)");
         Matcher matcher = pattern.matcher(getThumnail);
         String thumnail = (matcher.find()) ? matcher.group(0) : "false";
-        post.update(requestDto, thumnail);
+        post.update(requestDto, thumnail,content);
         return ResponseDto.success("success");
     }
 
