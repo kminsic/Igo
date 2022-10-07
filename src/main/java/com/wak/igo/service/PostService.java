@@ -233,7 +233,9 @@ public class PostService {
             return ResponseDto.fail("작성자가 아닙니다.","작성자가 아닙니다.");
         // 썸네일 추출
         String thumnail = getThumnail(requestDto);
-
+        if (thumnail == null){
+            thumnail = post.getThumnail();
+        }
         post.update(requestDto, thumnail);
         return ResponseDto.success("success");
     }
