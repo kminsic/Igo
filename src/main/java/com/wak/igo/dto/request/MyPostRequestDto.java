@@ -10,7 +10,6 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Builder
 public class MyPostRequestDto {
-    @NotNull
     private Long id;
     private String title;
     private String time;

@@ -47,7 +47,7 @@ public class Post extends Timestamped {
     @Column
     private Integer heartNum;
 
-    @Column(nullable = false)
+    @Column
     private String thumnail;
 
     @Column
