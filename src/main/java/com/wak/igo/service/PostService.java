@@ -241,7 +241,7 @@ public class PostService {
         Pattern pattern = Pattern.compile("(https?://[^>\"']*)");
         Matcher matcher = pattern.matcher(getThumnail);
         String thumnail = (matcher.find()) ? matcher.group(0) : "false";
-        post.update(requestDto, thumnail,content);
+        post.update(requestDto,thumnail,content);
         return ResponseDto.success("success");
     }
 
@@ -273,7 +273,6 @@ public class PostService {
         Matcher matcher = pattern.matcher(getThumnail);
         String thumnail = (matcher.find()) ? matcher.group(0) : "false";
         return thumnail;
-
     }
 
     //포스트 검색
@@ -316,7 +315,6 @@ public class PostService {
                 .modifiedAt(post.getModifiedAt())
                 .build();
     }
-
 
     @Transactional(readOnly = true)
     public Post isPresentPost(Long id) {
