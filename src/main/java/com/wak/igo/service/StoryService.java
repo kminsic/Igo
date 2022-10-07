@@ -70,7 +70,7 @@ public class StoryService {
                 .build();
 
         storyRepository.save(story);
-        return ResponseDto.success("파일 저장 완료");
+        return ResponseDto.success("스토리 등록 완료");
     }
 
     public String videoUrl(MultipartFile multipartFile) throws IOException{
