@@ -11,6 +11,8 @@ import java.time.LocalDateTime;
 public class StoryResponseDto {
     private Long id;
     private String video;
+    private String profileImage;
+    private String nickname;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 }

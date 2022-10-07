@@ -6,8 +6,10 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.wak.igo.domain.Story;
 import com.wak.igo.domain.UserDetailsImpl;
 import com.wak.igo.dto.request.StoryRequestDto;
+import com.wak.igo.dto.response.MemberResponseDto;
 import com.wak.igo.dto.response.ResponseDto;
 import com.wak.igo.dto.response.StoryResponseDto;
+import com.wak.igo.repository.MemberRepository;
 import com.wak.igo.repository.StoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.tika.Tika;
@@ -30,11 +32,12 @@ public class StoryService {
     private String bucket;
     private final AmazonS3 amazonS3;
     private final StoryRepository storyRepository;
+    private final MemberRepository memberRepository;
     private static final Tika tika = new Tika();
 
 
     //스토리 조회
-    public List<?> getStory(UserDetailsImpl userDetails){
+    public List<?> getStory(UserDetailsImpl userDetails, MemberResponseDto responseDto){
         List<Story> storys = storyRepository.findByMember(userDetails.getMember());
         List<StoryResponseDto> storyList = new ArrayList<>();
         for (Story story : storys) {
@@ -44,6 +47,8 @@ public class StoryService {
                     .video(story.getVideo())
                     .createdAt(story.getCreatedAt())
                     .modifiedAt(story.getModifiedAt())
+                    .profileImage(story.getMember().getProfileImage())
+                    .nickname(story.getMember().getNickname())
                     .build());
         }
         return storyList;
@@ -70,7 +75,7 @@ public class StoryService {
                 .build();
 
         storyRepository.save(story);
-        return ResponseDto.success("파일 저장 완료");
+        return ResponseDto.success("스토리 등록 완료");
     }
 
     public String videoUrl(MultipartFile multipartFile) throws IOException{
