@@ -231,11 +231,17 @@ public class PostService {
         if (post.validateMember(updateMember))
             return ResponseDto.fail("작성자가 아닙니다.","작성자가 아닙니다.");
         // 썸네일 추출
-        String thumnail = getThumnail(requestDto);
-        post.update(requestDto, thumnail);
-        return ResponseDto.success("게시물이 수정되었습니다.");
+        String content = requestDto.getContent();
+        if (content == null){
+            content = post.getContent();
+        }
+        String getThumnail = content;
+        Pattern pattern = Pattern.compile("(https?://[^>\"']*)");
+        Matcher matcher = pattern.matcher(getThumnail);
+        String thumnail = (matcher.find()) ? matcher.group(0) : "false";
+        post.update(requestDto,thumnail,content);
+        return ResponseDto.success("success");
     }
-
     //게시글 삭제
     @Transactional
     public ResponseDto<?> deletePost(Long id, HttpServletRequest request) {
