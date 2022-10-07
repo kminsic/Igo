@@ -84,6 +84,7 @@ public class Post extends Timestamped {
         this.tags = postRequestDto.getTags();
         this.mapData = postRequestDto.getMapData();
     }
+
     public boolean validateMember(Member member) {
         return !this.member.equals(member);
     }
