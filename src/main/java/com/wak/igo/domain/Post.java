@@ -77,9 +77,9 @@ public class Post extends Timestamped {
         this.heartNum--;
     }
 
-    public void update(PostRequestDto postRequestDto, String thumnail) {
+    public void update(PostRequestDto postRequestDto, String thumnail,String content) {
         this.title = postRequestDto.getTitle();
-        this.content = postRequestDto.getContent();
+        this.content = content;
         this.thumnail = thumnail;
         this.tags = postRequestDto.getTags();
         this.mapData = postRequestDto.getMapData();
