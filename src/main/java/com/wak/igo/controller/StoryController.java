@@ -2,6 +2,7 @@ package com.wak.igo.controller;
 
 import com.wak.igo.domain.UserDetailsImpl;
 import com.wak.igo.dto.request.StoryRequestDto;
+import com.wak.igo.dto.response.MemberResponseDto;
 import com.wak.igo.dto.response.ResponseDto;
 import com.wak.igo.service.StoryService;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +21,8 @@ public class StoryController {
 
 
     @RequestMapping(value = "/api/story", method = RequestMethod.GET)
-    public List<?> getStory(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return storyService.getStory(userDetails);
+    public List<?> getStory(@AuthenticationPrincipal UserDetailsImpl userDetails, MemberResponseDto responseDto) {
+        return storyService.getStory(userDetails, responseDto);
     }
 
     @RequestMapping(value = "/api/story", method = RequestMethod.POST, consumes = {"multipart/form-data"})
