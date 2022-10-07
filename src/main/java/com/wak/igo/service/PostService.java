@@ -230,8 +230,6 @@ public class PostService {
         }
         if (post.validateMember(updateMember))
             return ResponseDto.fail("작성자가 아닙니다.","작성자가 아닙니다.");
-
-
         // 썸네일 추출
         String thumnail = getThumnail(requestDto);
         post.update(requestDto, thumnail);
