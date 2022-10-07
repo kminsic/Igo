@@ -1,117 +1,106 @@
-//package com.wak.igo.service;
-//
-//import com.amazonaws.services.s3.AmazonS3Client;
-//import com.amazonaws.services.s3.model.CannedAccessControlList;
-//import com.amazonaws.services.s3.model.PutObjectRequest;
-//import lombok.RequiredArgsConstructor;
-//import lombok.extern.slf4j.Slf4j;
-//import org.springframework.beans.factory.annotation.Value;
-//import org.springframework.stereotype.Service;
-//import org.springframework.web.multipart.MultipartFile;
-//
-//import javax.annotation.PostConstruct;
-//import java.io.File;
-//import java.io.IOException;
-//import java.util.Optional;
-//import java.util.UUID;
-//
-//@Slf4j
-//@Service
-//@RequiredArgsConstructor
-//public class StoryService {
-//
-//    // local, development 등 현재 프로파일
-//    @Value("${spring.environment}")
-//    private String environment;
-//
-//    // 파일이 저장되는 경로
-//    @Value("${spring.file-dir}")
-//    private String basicDir;
-//    private String fileDir;
-//
-//    private final AmazonS3Client amazonS3Client;
-//
-//    /**
-//     * 서버가 시작할 때 프로파일에 맞는 파일 경로를 설정해줌
-//     */
-//    @PostConstruct
-//    private void init(){
-//        if(environment.equals("local")){
-//            this.fileDir = System.getProperty("user.dir") + this.basicDir;
-//        } else if(environment.equals("development")){
-//            this.fileDir = this.basicDir;
-//        }
-//    }
-//
-//    public String upload(MultipartFile multipartFile, String bucket, String dirName) throws IOException {
-//        File uploadFile = convert(multipartFile)  // 파일 변환할 수 없으면 에러
-//                .orElseThrow(() -> new IllegalArgumentException("error: MultipartFile -> File convert fail"));
-//
-//        return upload(uploadFile, bucket, dirName);
-//    }
-//
-//    // S3로 파일 업로드하기
-//    private String upload(File uploadFile, String bucket, String dirName) {
-//        String fileName = dirName + "/" + UUID.randomUUID() + uploadFile.getName();   // S3에 저장된 파일 이름
-//        String uploadImageUrl = putS3(uploadFile, bucket, fileName); // s3로 업로드
-//        removeNewFile(uploadFile);
-//        return uploadImageUrl;
-//    }
-//
-//    // S3로 업로드
-//    private String putS3(File uploadFile, String bucket, String fileName) {
-//        amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, uploadFile).withCannedAcl(CannedAccessControlList.PublicRead));
-//        return amazonS3Client.getUrl(bucket, fileName).toString();
-//    }
-//
-//    // 로컬에 저장된 이미지 지우기
-//    private void removeNewFile(File targetFile) {
-//        if (targetFile.delete()) {
-//            log.info("File delete success");
-//            return;
-//        }
-//        log.info("File delete fail");
-//    }
-//
-//    /**
-//     * @param multipartFile
-//     * 로컬에 파일 저장하기
-//     */
-//    private Optional<File> convert(MultipartFile multipartFile) throws IOException {
-//        if (multipartFile.isEmpty()) {
-//            return Optional.empty();
-//        }
-//
-//        String originalFilename = multipartFile.getOriginalFilename();
-//        String storeFileName = createStoreFileName(originalFilename);
-//
-//        //파일 업로드
-//        File file = new File(fileDir+storeFileName);
-//        multipartFile.transferTo(file);
-//
-//        return Optional.of(file);
-//    }
-//
-//    /**
-//     * @description 파일 이름이 이미 업로드된 파일들과 겹치지 않게 UUID를 사용한다.
-//     * @param originalFilename 원본 파일 이름
-//     * @return 파일 이름
-//     */
-//    private String createStoreFileName(String originalFilename) {
-//        String ext = extractExt(originalFilename);
-//        String uuid = UUID.randomUUID().toString();
-//        return uuid + "." + ext;
-//    }
-//
-//    /**
-//     * @description 사용자가 업로드한 파일에서 확장자를 추출한다.
-//     *
-//     * @param originalFilename 원본 파일 이름
-//     * @return 파일 확장자
-//     */
-//    private String extractExt(String originalFilename) {
-//        int pos = originalFilename.lastIndexOf(".");
-//        return originalFilename.substring(pos + 1);
-//    }
-//
-//}
+package com.wak.igo.service;
+
+
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.wak.igo.domain.Story;
+import com.wak.igo.domain.UserDetailsImpl;
+import com.wak.igo.dto.request.StoryRequestDto;
+import com.wak.igo.dto.response.ResponseDto;
+import com.wak.igo.dto.response.StoryResponseDto;
+import com.wak.igo.repository.StoryRepository;
+import lombok.RequiredArgsConstructor;
+import org.apache.tika.Tika;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
+
+@RequiredArgsConstructor
+@Service
+public class StoryService {
+
+    private String video;
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucket;
+    private final AmazonS3 amazonS3;
+    private final StoryRepository storyRepository;
+    private static final Tika tika = new Tika();
+
+
+    //스토리 조회
+    public List<?> getStory(UserDetailsImpl userDetails){
+        List<Story> storys = storyRepository.findByMember(userDetails.getMember());
+        List<StoryResponseDto> storyList = new ArrayList<>();
+        for (Story story : storys) {
+            storyList.add(
+                    StoryResponseDto.builder()
+                    .id(story.getId())
+                    .video(story.getVideo())
+                    .createdAt(story.getCreatedAt())
+                    .modifiedAt(story.getModifiedAt())
+                    .build());
+        }
+        return storyList;
+    }
+    //스토리 작성
+    public ResponseDto<?> createStory(UserDetailsImpl userDetails, MultipartFile multipartFile,StoryRequestDto requestDto) throws IOException  {
+        if (null == userDetails.getAuthorities()) {
+            ResponseDto.fail("MEMBER_NOT_FOUND",
+                    "사용자를 찾을 수 없습니다.");
+        }
+        System.out.println(multipartFile);
+        if (multipartFile.isEmpty()) {
+            video = null;
+        } else {
+            if (!validVideoFile(multipartFile)) {
+                throw new RuntimeException("올바른 파일 형식이 아닙니다.");
+            }
+            video = videoUrl(multipartFile);
+        }
+
+        Story story = Story.builder()
+                .id(requestDto.getMember())
+                .member(userDetails.getMember())
+                .video(video)
+                .build();
+
+        storyRepository.save(story);
+        return ResponseDto.success("파일 저장 완료");
+    }
+
+    public String videoUrl(MultipartFile multipartFile) throws IOException{
+        String s3FileName = UUID.randomUUID() + "-" + multipartFile.getOriginalFilename(); // 파일 이름 중복되지 않게 랜덤한 값으로 업로드
+
+        ObjectMetadata objMeta = new ObjectMetadata(); // ObjectMetadata를 통해 파일 사이즈를 ContentLength로 S3에 알려줌
+        objMeta.setContentLength(multipartFile.getInputStream().available());
+
+        amazonS3.putObject(bucket, s3FileName, multipartFile.getInputStream(), objMeta); // S3 api 메소드 인 putObject를 이용해 파일 stream을 열어서 s3에 파일 업로드
+
+        return amazonS3.getUrl(bucket, s3FileName).toString(); // S3에 업로드 된 사진 url 가져오기
+    }
+
+    public static boolean validVideoFile(MultipartFile multipartFile) {
+        try {
+            // 업로드를 허용하는 파일 타입
+            List<String> ValidTypeList = Arrays.asList("video/mp4", "video/ogg", "video/mpeg4-generic","video/webm");
+            //,"avi" ,"mpeg","ogv","webm","3gp","3g2","image/jpeg", "image/pjpeg", "image/png", "image/gif", "image/jpg",
+
+            // 입력 받은 파일을 “파일종류/파일포맷” 으로 구분 짓는다
+            String mimeType = tika.detect(multipartFile.getInputStream());
+
+            // mimeType이 validTypeList 중 하나라도 만족하면 true 아니면 false
+            boolean isValid = ValidTypeList.stream().anyMatch(ValidType -> ValidType.equalsIgnoreCase(mimeType));
+            return isValid;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+}
+
