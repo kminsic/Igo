@@ -211,7 +211,8 @@ public class PostService {
                         .searchPlace(postRequestDto.getSearchPlace())
                         .createdAt(post.getCreatedAt())
                         .modifiedAt(post.getModifiedAt())
-                        .build());
+                        .build()
+        );
     }
 
     //    게시글 수정
@@ -233,7 +234,15 @@ public class PostService {
         // 썸네일 추출
         String thumnail = getThumnail(requestDto);
         post.update(requestDto, thumnail);
-        return ResponseDto.success("게시물이 수정되었습니다.");
+        return ResponseDto.success(
+                PostResponseDto.builder()
+                        .title(requestDto.getTitle())
+                        .mapData(requestDto.getMapData())
+                        .content(requestDto.getContent())
+                        .tags(requestDto.getTags())
+                        .searchPlace(requestDto.getSearchPlace())
+                        .build()
+        );
     }
 
     //게시글 삭제
