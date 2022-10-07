@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.List;
 
 @RequiredArgsConstructor
-@Controller
+@RestController
 public class StoryController {
 
     private final StoryService storyService;
