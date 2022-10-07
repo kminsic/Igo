@@ -83,8 +83,8 @@ public class SecurityConfiguration {
     @Bean
     public UrlBasedCorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOriginPattern("http://localhost:3000");
-        configuration.addAllowedOriginPattern("https://localhost:3000");
+        configuration.addAllowedOriginPattern("http://eunjiroh.shop.s3-website.ap-northeast-2.amazonaws.com");
+        configuration.addAllowedOriginPattern("http://eunjiroh.shop.s3-website.ap-northeast-2.amazonaws.com");
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         configuration.addExposedHeader("Authorization");
