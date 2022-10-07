@@ -33,11 +33,6 @@ public class Post extends Timestamped {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
-
-//    @OneToMany(mappedBy = "post" ,fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<Comment> comments =new ArrayList<>();
-
-    
     @JoinColumn(name = "member_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
@@ -59,7 +54,7 @@ public class Post extends Timestamped {
 
     // column json 설정
     @Type(type = "json")
-    @Column(columnDefinition = "json", nullable = false)
+    @Column(columnDefinition = "json")
     private Map<String, Object> mapData;
 
 
