@@ -85,8 +85,8 @@ public class SecurityConfiguration {
         CorsConfiguration configuration = new CorsConfiguration();
 //배포용       configuration.addAllowedOriginPattern("http://eunjiroh.shop.s3-website.ap-northeast-2.amazonaws.com");
 //배포용        configuration.addAllowedOriginPattern("http://eunjiroh.shop.s3-website.ap-northeast-2.amazonaws.com");
-        configuration.addAllowedOriginPattern("http://localhost:3000/kakao/callback");
-        configuration.addAllowedOriginPattern("http://localhost:3000/kakao/callback");
+        configuration.addAllowedOriginPattern("http://localhost:3000");
+        configuration.addAllowedOriginPattern("http://localhost:3000");
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         configuration.addExposedHeader("Authorization");
