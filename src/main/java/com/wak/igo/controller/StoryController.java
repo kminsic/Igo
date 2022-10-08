@@ -23,7 +23,6 @@ public class StoryController {
 
     private final StoryService storyService;
 
-
     @RequestMapping(value = "/api/story", method = RequestMethod.GET)
     public List<?> getStory(@AuthenticationPrincipal UserDetailsImpl userDetails, MemberResponseDto responseDto) {
         return storyService.getStory(userDetails, responseDto);
