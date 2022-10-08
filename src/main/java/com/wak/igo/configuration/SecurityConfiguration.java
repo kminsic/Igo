@@ -83,8 +83,10 @@ public class SecurityConfiguration {
     @Bean
     public UrlBasedCorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOriginPattern("http://eunjiroh.shop.s3-website.ap-northeast-2.amazonaws.com");
-        configuration.addAllowedOriginPattern("http://eunjiroh.shop.s3-website.ap-northeast-2.amazonaws.com");
+//배포용       configuration.addAllowedOriginPattern("http://eunjiroh.shop.s3-website.ap-northeast-2.amazonaws.com");
+//배포용        configuration.addAllowedOriginPattern("http://eunjiroh.shop.s3-website.ap-northeast-2.amazonaws.com");
+        configuration.addAllowedOriginPattern("http://localhost:3000/kakao/callback");
+        configuration.addAllowedOriginPattern("http://localhost:3000/kakao/callback");
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         configuration.addExposedHeader("Authorization");
