@@ -85,8 +85,8 @@ public class SecurityConfiguration {
         CorsConfiguration configuration = new CorsConfiguration();
 //배포용       configuration.addAllowedOriginPattern("http://eunjiroh.shop.s3-website.ap-northeast-2.amazonaws.com");
 //배포용        configuration.addAllowedOriginPattern("http://eunjiroh.shop.s3-website.ap-northeast-2.amazonaws.com");
-        configuration.addAllowedOriginPattern("http://54.221.153.19:3000");
-        configuration.addAllowedOriginPattern("http://54.221.153.19:3000");
+        configuration.addAllowedOriginPattern("http://eunjiroh.shop");
+        configuration.addAllowedOriginPattern("http://eunjiroh.shop");
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         configuration.addExposedHeader("Authorization");
