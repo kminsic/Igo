@@ -30,11 +30,11 @@ jobs:
           java-version: 11
           distribution: 'temurin'
           
-      - name: make application-aws.properties
+      - name: make application.properties
         run: |
           cd ./src/main/resources
-          touch ./application-aws.properties
-          echo "${{ secrets.PROPERTIES_AWS }}" > ./application-aws.properties
+          touch ./application.properties
+          echo "${{ secrets.PROPERTIES }}" > ./application.properties
         shell: bash
 
       - name: Grant execute permission for gradlew
