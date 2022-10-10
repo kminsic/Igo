@@ -30,13 +30,12 @@ jobs:
           java-version: 11
           distribution: 'temurin'
           
-      - uses: actions/checkout@v2
-      - run: touch ./src/main/resources/application.properties
-      - run: echo "${{secrets.PROPERTIES}}" > ./src/main/resources/application.properties
-      - uses: actions/upload-artifact@v2
-        with:
-          name: application.properties
-          path: ./src/main/resources/application.properties    
+      - name: make application-aws.properties
+        run: |
+          cd ./src/main/resources
+          touch ./application-aws.properties
+          echo "${{ secrets.PROPERTIES_AWS }}" > ./application-aws.properties
+        shell: bash
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
