@@ -73,7 +73,8 @@ public class KakaoUserService {
 //        body.add("redirect_url", "http://localhost:8080/kakao/callback"); // localhost redirect_url
 //        body.add("redirect_url", "http://localhost:3000/kakao/callback");// 프론트 엔드  redirect_url
 //        body.add("redirect_uri", "http://eunjiroh.shop.s3-website.ap-northeast-2.amazonaws.com/kakaoloading");     // 프론트엔드 배포 client_id
-        body.add("redirect_uri", "http://eunjiroh.shop/kakaoloading");     // 프론트엔드 배포 client_id
+//        body.add("redirect_uri", "http://eunjiroh.shop/kakaoloading");     // 프론트엔드 배포 client_id
+        body.add("redirect_uri", "http://3.88.14.18/kakaoloading");     // 프론트엔드 배포 client_id
         body.add("code", code);
 
         // HTTP 요청 보내기
