@@ -41,8 +41,6 @@ public class MyPostService {
             ResponseDto.fail("MEMBER_NOT_FOUND",
                     "사용자를 찾을 수 없습니다.");
         }
-        System.out.println(multipartFile);
-        Member member = userDetails.getMember();
 
         // s3 이미지 저장
         if (multipartFile.isEmpty()) {
