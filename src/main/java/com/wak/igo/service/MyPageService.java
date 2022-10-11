@@ -81,7 +81,6 @@ public class MyPageService {
                         .profileImage(imageUrl(multipartFile))
                         .build()
         );
-
     }
     //태그수정
     @Transactional
