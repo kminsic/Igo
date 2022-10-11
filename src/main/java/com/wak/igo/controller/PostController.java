@@ -27,7 +27,6 @@ public class PostController {
 
     private final PostService postService;
 
-
     // 전체 목록 조회(메인 페이지)
     @GetMapping("/api/post")
     public ResponseDto<?> getAllPosts( ) throws IOException {
@@ -78,8 +77,6 @@ public class PostController {
         List<PostResponseDto> findPost = postService.findPost(content);
         return ResponseDto.success(findPost);
     }
-
-
 
     // 게시글 상세 페이지(Post ID)
     @GetMapping("/api/detail/{id}")

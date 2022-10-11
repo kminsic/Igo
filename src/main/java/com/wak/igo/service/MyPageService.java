@@ -73,10 +73,6 @@ public class MyPageService {
             return ResponseDto.fail("INVALID TOKEN", "TOKEN이 유효하지않습니다");
         }
 
-        member.setNickname(memberResponseDto.getNickname());
-        member.setProfileImage(multipartFile.getOriginalFilename());
-        memberRepository.save(member);
-
         member.profileUpdate(memberResponseDto,imageUrl(multipartFile));
         memberRepository.save(member);
         return ResponseDto.success(
@@ -85,7 +81,6 @@ public class MyPageService {
                         .profileImage(imageUrl(multipartFile))
                         .build()
         );
-
     }
     //태그수정
     @Transactional
@@ -189,7 +184,6 @@ public class MyPageService {
         return tokenProvider.getMemberFromAuthentication().getMember();
     }
 
-
     public String imageUrl(MultipartFile multipartFile) throws IOException{
         String s3FileName = UUID.randomUUID() + "-" + multipartFile.getOriginalFilename(); // 파일 이름 중복되지 않게 랜덤한 값으로 업로드
 
@@ -200,8 +194,5 @@ public class MyPageService {
 
         return amazonS3.getUrl(bucket, s3FileName).toString(); // S3에 업로드 된 사진 url 가져오기
     }
-
-
-
 
 }

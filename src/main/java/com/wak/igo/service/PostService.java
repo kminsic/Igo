@@ -218,17 +218,20 @@ public class PostService {
     @Transactional
     public ResponseDto<?> updatePost(
             Long id, PostRequestDto requestDto,HttpServletRequest request) throws IOException {
-        ResponseDto<?> chkResponse = validateCheck(request);
-        if (!chkResponse.isSuccess())
-            return chkResponse;
-        Member member = (Member) chkResponse.getData();
+//        ResponseDto<?> chkResponse = validateCheck(request);
+//        if (!chkResponse.isSuccess())
+//            return chkResponse;
+//        Member member = (Member) chkResponse.getData();
+        Member member = validateMember(request);
+        if (null == member){
+            return ResponseDto.fail("INVALID TOKEN", "TOKEN이 유효하지않습니다");
+        }
         // 유저 테이블에서 유저객체 가져오기
-        Member updateMember = memberRepository.findByNickname(member.getNickname()).get();
         Post post = isPresentPost(id);
         if (null == post) {
             return ResponseDto.fail("NOT_FOUND", "게시글이 존재하지 않습니다.");
         }
-        if (post.validateMember(updateMember))
+        if (!member.getId().equals(post.getMember().getId()))
             return ResponseDto.fail("작성자가 아닙니다.","작성자가 아닙니다.");
         // 썸네일 추출
         String content = requestDto.getContent();
