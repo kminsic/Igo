@@ -75,15 +75,16 @@ public class StoryService {
                 .build();
         storyRepository.save(story);
 
-        StoryResponseDto.builder()
+
+        return ResponseDto.success(
+                StoryResponseDto.builder()
                 .id(story.getId())
                 .video(story.getVideo())
                 .createdAt(story.getCreatedAt())
                 .modifiedAt(story.getModifiedAt())
                 .profileImage(story.getMember().getProfileImage())
                 .nickname(story.getMember().getNickname())
-                .build();
-        return ResponseDto.success("스토리 등록 완료");
+                .build());
     }
 
     public String videoUrl(MultipartFile multipartFile) throws IOException{
