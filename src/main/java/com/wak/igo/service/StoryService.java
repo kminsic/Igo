@@ -73,8 +73,16 @@ public class StoryService {
                 .member(userDetails.getMember())
                 .video(video)
                 .build();
-
         storyRepository.save(story);
+
+        StoryResponseDto.builder()
+                .id(story.getId())
+                .video(story.getVideo())
+                .createdAt(story.getCreatedAt())
+                .modifiedAt(story.getModifiedAt())
+                .profileImage(story.getMember().getProfileImage())
+                .nickname(story.getMember().getNickname())
+                .build();
         return ResponseDto.success("스토리 등록 완료");
     }
 
