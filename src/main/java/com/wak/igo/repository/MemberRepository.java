@@ -1,7 +1,6 @@
 package com.wak.igo.repository;
 
 import com.wak.igo.domain.Member;
-import com.wak.igo.dto.response.MemberResponseDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
@@ -12,6 +11,6 @@ import java.util.Optional;
 public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByMemberId(String memberId);
     Optional<Member> findByNickname(String nickname);
+    boolean findAllByNickname(String nickname);
 
-    Member findAllByNickname(String nickname);
 }

@@ -66,6 +66,7 @@ public class PostService {
             commentResponseDtoList.add(
                     CommentResponseDto.builder()
                             .id(comment.getId())
+                            .profile(comment.getMember().getProfileImage())
                             .nickname(comment.getMember().getNickname())
                             .content(comment.getContent())
                             .createdAt(comment.getCreatedAt())
