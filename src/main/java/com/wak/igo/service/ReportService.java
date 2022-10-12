@@ -46,7 +46,7 @@ public class ReportService {
             if (49 >= reportRepository.findAllByPostId(post.get().getId()).size())
                 postRepository.deleteById(id);
             //삭제 후 flush로 신고 게시글 업데이트
-                reportRepository.flush();
+            reportRepository.flush();
                 return ResponseDto.success("삭제된 게시글 입니다.");}
             else
             { Report report = Report.builder()

@@ -15,6 +15,7 @@ import com.wak.igo.repository.MemberRepository;
 import com.wak.igo.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -61,7 +62,8 @@ public class MyPageService {
     }
     //회원정보 업데이트
     @Transactional
-    public ResponseDto<?> updateMember(HttpServletRequest request, MultipartFile multipartFile, MemberResponseDto memberResponseDto) throws IOException {
+    public ResponseDto<?> updateMember(HttpServletRequest request, MultipartFile multipartFile,
+                                       MemberResponseDto memberResponseDto) throws IOException {
         // 리프레쉬 토큰 확인
         if (null == request.getHeader("RefreshToken")) {
             return ResponseDto.fail("MEMBER_NOT_FOUND",
@@ -72,7 +74,10 @@ public class MyPageService {
         if (null == member) {
             return ResponseDto.fail("INVALID TOKEN", "TOKEN이 유효하지않습니다");
         }
-
+        //닉네임 검증
+//        if (memberRepository.findAllByNickname(memberResponseDto.getNickname())){
+//            return ResponseDto.fail("SAME NICKNAME", "동일한 닉네임이 존재합니다");
+//        }
         member.profileUpdate(memberResponseDto,imageUrl(multipartFile));
         memberRepository.save(member);
         return ResponseDto.success(
