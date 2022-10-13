@@ -15,7 +15,7 @@ public class HeartController {
 
     private final HeartService heartService;
 
-    //좋아요 누르기
+    //1번 누르면 좋아요, 2번 누르면 좋아요 취소 
     @PostMapping("/api/heart/{id}")
     public ResponseDto<?> addHeartPost(@PathVariable Long id, HttpServletRequest request) {
         return heartService.addHeartPost(id, request);
