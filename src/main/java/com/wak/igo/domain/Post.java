@@ -60,6 +60,7 @@ public class Post extends Timestamped {
     private Map<String, Object> mapData;
 
 
+    @Column(nullable = false)
     @Convert(converter = StringListConverter.class)
     private List<String> tags = new ArrayList<>();
 

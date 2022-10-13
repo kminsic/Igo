@@ -2,6 +2,7 @@ package com.wak.igo.repository;
 
 import com.wak.igo.domain.Member;
 import com.wak.igo.domain.Post;
+import org.springframework.core.metrics.StartupStep;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
