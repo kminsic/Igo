@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -37,19 +38,37 @@ public class StoryService {
 
 
     //스토리 조회
-    public List<?> getStory(UserDetailsImpl userDetails, MemberResponseDto responseDto){
-        List<Story> storys = storyRepository.findByMember(userDetails.getMember());
+//    public List<?> getStory(UserDetailsImpl userDetails, MemberResponseDto responseDto){
+//        List<Story> storys = storyRepository.findByMember(userDetails.getMember());
+//        List<StoryResponseDto> storyList = new ArrayList<>();
+//        for (Story story : storys) {
+//            storyList.add(
+//                    StoryResponseDto.builder()
+//                    .id(story.getId())
+//                    .video(story.getVideo())
+//                    .createdAt(story.getCreatedAt())
+//                    .modifiedAt(story.getModifiedAt())
+//                    .profileImage(story.getMember().getProfileImage())
+//                    .nickname(story.getMember().getNickname())
+//                    .build());
+//        }
+//        return storyList;
+//    }
+
+    @Transactional
+    public List<?> getAllStorys() {
+        List<Story> storys = storyRepository.findAllByOrderByCreatedAtDesc();
         List<StoryResponseDto> storyList = new ArrayList<>();
         for (Story story : storys) {
             storyList.add(
                     StoryResponseDto.builder()
-                    .id(story.getId())
-                    .video(story.getVideo())
-                    .createdAt(story.getCreatedAt())
-                    .modifiedAt(story.getModifiedAt())
-                    .profileImage(story.getMember().getProfileImage())
-                    .nickname(story.getMember().getNickname())
-                    .build());
+                            .id(story.getId())
+                            .video(story.getVideo())
+                            .createdAt(story.getCreatedAt())
+                            .modifiedAt(story.getModifiedAt())
+                            .profileImage(story.getMember().getProfileImage())
+                            .nickname(story.getMember().getNickname())
+                            .build());
         }
         return storyList;
     }
