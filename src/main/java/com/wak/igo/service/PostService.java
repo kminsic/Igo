@@ -153,10 +153,12 @@ public class PostService {
             List<Post> RegionTagPosts = new ArrayList<>();
             List<Post> posts = postRepository.findAll();
             for (Post post : posts) {
-                String tagPost = post.getTags().get(1);
+                String tagPost = post.getTags().toString();
+                System.out.println(tagPost);
                     if (tagPost.equals(type)) {
                         RegionTagPosts.add(post);
                     }
+                System.out.println(RegionTagPosts);
                 }
             return RegionTagPosts;
         }
