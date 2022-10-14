@@ -54,8 +54,8 @@ public class MyPageService {
         memberResponseDtoList.add(
                 MemberResponseDto.builder()
                         .nickname(member.getNickname())
-                        .interested(member.getInterested())
                         .profileImage(member.getProfileImage())
+                        .interested(member.getInterested())
                         .build()
         );
         return ResponseDto.success(memberResponseDtoList);
