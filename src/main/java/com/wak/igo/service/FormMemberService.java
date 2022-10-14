@@ -5,6 +5,7 @@ import com.wak.igo.domain.UserDetailsImpl;
 import com.wak.igo.dto.request.LoginRequestDto;
 import com.wak.igo.dto.request.MemberRequestDto;
 import com.wak.igo.dto.request.TokenDto;
+import com.wak.igo.dto.response.MemberResponseDto;
 import com.wak.igo.dto.response.ResponseDto;
 import com.wak.igo.jwt.TokenProvider;
 import com.wak.igo.repository.MemberRepository;
@@ -71,7 +72,13 @@ public class FormMemberService {
         response.addHeader("Authorization", "BEARER" + " " + tokenDto.getAccessToken());
         response.addHeader("RefreshToken", tokenDto.getRefreshToken());
         response.addHeader("Access-Token-Expire-Time", tokenDto.getAccessTokenExpiresIn().toString());
-        return ResponseDto.success(userDetails.getUsername() + " 로그인에 성공했습니다");
+//        return ResponseDto.success(userDetails.getUsername() + " 로그인에 성공했습니다");
+        return ResponseDto.success(
+                MemberResponseDto.builder()
+                        .nickname(member.getNickname())
+                        .profileImage(member.getProfileImage())
+                        .interested(member.getInterested())
+                        .build());
     }
 
     @Transactional(readOnly = true)
