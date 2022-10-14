@@ -54,10 +54,11 @@ public class MyPageService {
         memberResponseDtoList.add(
                 MemberResponseDto.builder()
                         .nickname(member.getNickname())
-                        .profileImage(member.getProfileImage())
                         .interested(member.getInterested())
+                        .profileImage(member.getProfileImage())
                         .build()
         );
+        System.out.println(member.getProfileImage());
         return ResponseDto.success(memberResponseDtoList);
     }
     //회원정보 업데이트
