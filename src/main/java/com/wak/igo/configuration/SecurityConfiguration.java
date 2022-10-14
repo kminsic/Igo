@@ -71,6 +71,9 @@ public class SecurityConfiguration {
                 .antMatchers("/naver/callback").permitAll()
                 .antMatchers("/api/**").permitAll()
                 .antMatchers("/api").permitAll()
+                .antMatchers("/subcribe").permitAll()
+                .antMatchers("/").permitAll()
+
                 .anyRequest().authenticated()
 //                .anyRequest().permitAll()
 
@@ -87,6 +90,9 @@ public class SecurityConfiguration {
 //        configuration.addAllowedOriginPattern("http://eunjiroh.shop");
 //        configuration.addAllowedOriginPattern("http://3.88.14.18");
         configuration.addAllowedOriginPattern("http://localhost:3000");
+        configuration.addAllowedOriginPattern("http://localhost:8080");
+        configuration.addAllowedOriginPattern("/");
+        configuration.addAllowedOriginPattern("*");
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         configuration.addExposedHeader("Authorization");
