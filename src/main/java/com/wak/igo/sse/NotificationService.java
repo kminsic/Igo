@@ -2,6 +2,7 @@ package com.wak.igo.sse;
 
 import com.wak.igo.domain.Member;
 import com.wak.igo.domain.Post;
+import com.wak.igo.domain.UserDetailsImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -27,20 +28,20 @@ public class NotificationService {
         this.notificationRepository = notificationRepository;
     }
 
-    public SseEmitter subscribe(Member loginMember, String lastEventId) {
-        Long userId = loginMember.getId();
-        String id = userId + "_" + System.currentTimeMillis();
+    public SseEmitter subscribe(UserDetailsImpl loginMember, String lastEventId) {
+        Long memberId = loginMember.getId();
+        String id = memberId + "_" + System.currentTimeMillis();
         SseEmitter emitter = emitterRepository.save(id, new SseEmitter(DEFAULT_TIMEOUT));
 
         emitter.onCompletion(() -> emitterRepository.deleteById(id));
         emitter.onTimeout(() -> emitterRepository.deleteById(id));
 
         // 503 에러를 방지하기 위한 더미 이벤트 전송
-        sendToClient(emitter, id, "EventStream Created. [userId=" + userId + "]");
+        sendToClient(emitter, id, "EventStream Created. [userId=" + memberId + "]");
 
         // 클라이언트가 미수신한 Event 목록이 존재할 경우 전송하여 Event 유실을 예방
         if (!lastEventId.isEmpty()) {
-            Map<String, Object> events = emitterRepository.findAllEventCacheStartWithId(String.valueOf(userId));
+            Map<String, Object> events = emitterRepository.findAllEventCacheStartWithId(String.valueOf(memberId));
             events.entrySet().stream()
                     .filter(entry -> lastEventId.compareTo(entry.getKey()) < 0)
                     .forEach(entry -> sendToClient(emitter, entry.getKey(), entry.getValue()));
@@ -84,7 +85,7 @@ public class NotificationService {
     }
 
     @Transactional
-    public NotificationsResponse findAllById(Member loginMember) {
+    public NotificationsResponse findAllById(UserDetailsImpl loginMember) {
         List<NotificationResponse> responses = notificationRepository.findAllByReceiverId(loginMember.getId()).stream()
                 .map(NotificationResponse::from)
                 .collect(Collectors.toList());

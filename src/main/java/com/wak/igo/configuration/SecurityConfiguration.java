@@ -71,6 +71,9 @@ public class SecurityConfiguration {
                 .antMatchers("/naver/callback").permitAll()
                 .antMatchers("/api/**").permitAll()
                 .antMatchers("/api").permitAll()
+                .antMatchers("/").permitAll()
+                .antMatchers("/notification/*").permitAll()
+                .antMatchers("/subscribe/*").permitAll()
                 .anyRequest().authenticated()
 //                .anyRequest().permitAll()
 
