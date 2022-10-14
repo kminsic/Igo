@@ -58,7 +58,6 @@ public class MyPageService {
                         .profileImage(member.getProfileImage())
                         .build()
         );
-        System.out.println(member.getProfileImage());
         return ResponseDto.success(memberResponseDtoList);
     }
     //회원정보 업데이트
