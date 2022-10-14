@@ -1,5 +1,6 @@
 package com.wak.igo.sse;
 
+import com.wak.igo.domain.Comment;
 import com.wak.igo.domain.Member;
 import com.wak.igo.domain.Post;
 import com.wak.igo.domain.UserDetailsImpl;
@@ -28,20 +29,19 @@ public class NotificationService {
         this.notificationRepository = notificationRepository;
     }
 
-    public SseEmitter subscribe(UserDetailsImpl loginMember, String lastEventId) {
-        Long memberId = loginMember.getId();
-        String id = memberId + "_" + System.currentTimeMillis();
+    public SseEmitter subscribe(Long memberid, String lastEventId) {
+        String id = memberid + "_" + System.currentTimeMillis();
         SseEmitter emitter = emitterRepository.save(id, new SseEmitter(DEFAULT_TIMEOUT));
 
         emitter.onCompletion(() -> emitterRepository.deleteById(id));
         emitter.onTimeout(() -> emitterRepository.deleteById(id));
 
         // 503 에러를 방지하기 위한 더미 이벤트 전송
-        sendToClient(emitter, id, "EventStream Created. [userId=" + memberId + "]");
+        sendToClient(emitter, id, "EventStream Created. [userId=" + memberid + "]");
 
         // 클라이언트가 미수신한 Event 목록이 존재할 경우 전송하여 Event 유실을 예방
         if (!lastEventId.isEmpty()) {
-            Map<String, Object> events = emitterRepository.findAllEventCacheStartWithId(String.valueOf(memberId));
+            Map<String, Object> events = emitterRepository.findAllEventCacheStartWithId(String.valueOf(memberid));
             events.entrySet().stream()
                     .filter(entry -> lastEventId.compareTo(entry.getKey()) < 0)
                     .forEach(entry -> sendToClient(emitter, entry.getKey(), entry.getValue()));
@@ -63,30 +63,34 @@ public class NotificationService {
     }
 
     @Transactional
-    public void send(Member receiver, Post review, String content) {
-        Notification notification = createNotification(receiver, review, content);
+    public void send(Member receiver, Post post, String content) {
+//    public void send(Member receiver, String content) {
+        Notification notification = createNotification(receiver,post,content);
         String id = String.valueOf(receiver.getId());
         notificationRepository.save(notification);
         Map<String, SseEmitter> sseEmitters = emitterRepository.findAllStartWithById(id);
         sseEmitters.forEach(
                 (key, emitter) -> {
                     emitterRepository.saveEventCache(key, notification);
+                    sendToClient(emitter, key, NotificationResponse.from(notification));
                 }
         );
     }
 
-    private Notification createNotification(Member receiver, Post review, String content) {
+    private Notification createNotification(Member receiver, Post post, String content) {
+//    private Notification createNotification(Member receiver, String content) {
         return Notification.builder()
                 .receiver(receiver)
                 .content(content)
-                .url("/reviews/" + review.getId())
+                .url("/api/detail/" + post.getId())
                 .isRead(false)
                 .build();
     }
 
     @Transactional
-    public NotificationsResponse findAllById(UserDetailsImpl loginMember) {
-        List<NotificationResponse> responses = notificationRepository.findAllByReceiverId(loginMember.getId()).stream()
+//    public NotificationsResponse findAllById(UserDetailsImpl loginMember) {
+    public NotificationsResponse findAllById(Long loginMember) {
+        List<NotificationResponse> responses = notificationRepository.findAllByReceiverId(loginMember).stream()
                 .map(NotificationResponse::from)
                 .collect(Collectors.toList());
         long unreadCount = responses.stream()

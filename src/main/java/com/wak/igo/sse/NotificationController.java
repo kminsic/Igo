@@ -6,6 +6,7 @@ import com.wak.igo.domain.UserDetailsImpl;
 import com.wak.igo.service.UserDetailsServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -21,17 +22,17 @@ public class NotificationController {
     /**
      * @title 로그인 한 유저 sse 연결
      */
-    @GetMapping(value = "/subscribe", produces = "text/event-stream")
-    public SseEmitter subscribe( UserDetailsImpl loginMember,
+    @GetMapping(value = "/subscribe/{id}", produces = "text/event-stream")
+    public SseEmitter subscribe(@PathVariable Long id,
                                 @RequestParam(value = "lastEventId", required = false, defaultValue = "") String lastEventId) {
-        return notificationService.subscribe(loginMember, lastEventId);
+        return notificationService.subscribe(id, lastEventId);
     }
 
     /**
      * @title 로그인 한 유저의 모든 알림 조회
      */
-    @GetMapping("/notifications")
-    public ResponseEntity<NotificationsResponse> notifications(UserDetailsImpl loginMember) {
+    @GetMapping("/notifications/{id}")
+    public ResponseEntity<NotificationsResponse> notifications(@AuthenticationPrincipal Long loginMember) {
         return ResponseEntity.ok().body(notificationService.findAllById(loginMember));
     }
 

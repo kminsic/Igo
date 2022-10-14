@@ -21,6 +21,7 @@ public class Notification extends BaseEntity {
 //    @JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "fk_notification_to_review"))
 //    private Review review;
 
+
     private String content;
 
     private String url;

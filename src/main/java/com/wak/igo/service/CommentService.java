@@ -4,12 +4,14 @@ package com.wak.igo.service;
 import com.wak.igo.domain.Comment;
 import com.wak.igo.domain.Member;
 import com.wak.igo.domain.Post;
+import com.wak.igo.domain.UserDetailsImpl;
 import com.wak.igo.dto.request.CommentRequestDto;
 import com.wak.igo.dto.response.CommentResponseDto;
 import com.wak.igo.dto.response.ResponseDto;
 import com.wak.igo.jwt.TokenProvider;
 import com.wak.igo.repository.CommentRepository;
 import com.wak.igo.repository.PostRepository;
+import com.wak.igo.sse.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +29,8 @@ public class CommentService {
     private final TokenProvider tokenProvider;
     private final PostService postService;
     private final PostRepository postRepository;
+    private final NotificationService notificationService;
+
 
     //포스트 해당 코멘트 조회
     @Transactional
@@ -54,22 +58,19 @@ public class CommentService {
 
     // 댓글 작성
     @Transactional
-    public ResponseDto<?> createComment(CommentRequestDto requestDto, HttpServletRequest request) {
-        if (null == request.getHeader("RefreshToken")) {
-            return ResponseDto.fail("MEMBER_NOT_FOUND",
-                    "로그인이 필요합니다.");
-
+    public ResponseDto<?> createComment(CommentRequestDto requestDto, UserDetailsImpl userDetails) {
+        if (null == userDetails.getAuthorities()) {
+            ResponseDto.fail("MEMBER_NOT_FOUND",
+                    "사용자를 찾을 수 없습니다.");
         }
 
-        Member member = validateMember(request);
-        if (null == member) {
-            return ResponseDto.fail("INVALID_TOKEN", "Token이 유효하지 않습니다.");
-        }
+        Member member = userDetails.getMember();
 
         Post post = postService.isPresentPost(requestDto.getPostId());
         if (null == post) {
             return ResponseDto.fail("NOT_FOUND", "존재하지 않는 게시글 id 입니다.");
         }
+        Member postMember = post.getMember();
 
         Comment comment = Comment.builder()
                 .member(member)
@@ -77,6 +78,8 @@ public class CommentService {
                 .content(requestDto.getContent())
                 .build();
         commentRepository.save(comment);
+        //댓글을 작성했을때 포스트 작성 멤버에게 전송
+        notificationService.send(postMember,post,"새로운 댓글이 달렸습니다!");
         return ResponseDto.success(
                 CommentResponseDto.builder()
                         .id(comment.getId())
@@ -85,6 +88,7 @@ public class CommentService {
                         .createdAt(comment.getCreatedAt())
                         .modifiedAt(comment.getModifiedAt())
                         .build()
+
         );
     }
 
