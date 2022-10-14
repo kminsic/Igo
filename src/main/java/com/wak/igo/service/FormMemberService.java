@@ -72,7 +72,6 @@ public class FormMemberService {
         response.addHeader("Authorization", "BEARER" + " " + tokenDto.getAccessToken());
         response.addHeader("RefreshToken", tokenDto.getRefreshToken());
         response.addHeader("Access-Token-Expire-Time", tokenDto.getAccessTokenExpiresIn().toString());
-//        return ResponseDto.success(userDetails.getUsername() + " 로그인에 성공했습니다");
         return ResponseDto.success(
                 MemberResponseDto.builder()
                         .nickname(member.getNickname())

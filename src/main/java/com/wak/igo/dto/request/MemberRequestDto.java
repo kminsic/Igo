@@ -26,7 +26,7 @@ public class MemberRequestDto {
 
     @NotBlank
     @Size(min = 4, max = 18)
-    @Pattern(regexp = "[a-zA-Z\\d]*${3,18}", message = "4~18자의 영,숫자로 입력하셔야 합니다.")
+    @Pattern(regexp = "[a-zA-Z\\d]*${4,18}", message = "4~18자의 영,숫자로 입력하셔야 합니다.")
     private String password;
 
     @NotBlank
