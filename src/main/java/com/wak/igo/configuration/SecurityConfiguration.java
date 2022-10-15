@@ -73,7 +73,7 @@ public class SecurityConfiguration {
                 .antMatchers("/api").permitAll()
                 .antMatchers("/subcribe").permitAll()
                 .antMatchers("/").permitAll()
-
+                .antMatchers("/refresh").permitAll()
                 .anyRequest().authenticated()
 //                .anyRequest().permitAll()
 

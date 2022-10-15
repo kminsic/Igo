@@ -6,6 +6,7 @@ import com.wak.igo.dto.request.LoginRequestDto;
 import com.wak.igo.dto.request.MemberRequestDto;
 import com.wak.igo.dto.response.ResponseDto;
 import com.wak.igo.service.FormMemberService;
+import com.wak.igo.jwt.TokenProvider;
 import com.wak.igo.service.KakaoUserService;
 import com.wak.igo.service.NaverUserService;
 import io.jsonwebtoken.io.IOException;
@@ -14,6 +15,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
@@ -27,6 +29,7 @@ public class LoginController {
     private final FormMemberService formMemberService;
     private final KakaoUserService kakaoUserService;
     private final NaverUserService naverUserService;
+    private final TokenProvider tokenProvider;
 
 
     //회원가입
@@ -61,5 +64,10 @@ public class LoginController {
     //
 
 
+
+    @RequestMapping(value = "/refresh", method = RequestMethod.GET)
+    public void validate(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        tokenProvider.validateRefreshToken(request, response);
+    }
 
 }
