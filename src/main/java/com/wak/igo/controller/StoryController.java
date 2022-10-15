@@ -2,7 +2,6 @@ package com.wak.igo.controller;
 
 import com.wak.igo.domain.UserDetailsImpl;
 import com.wak.igo.dto.request.StoryRequestDto;
-import com.wak.igo.dto.response.MemberResponseDto;
 import com.wak.igo.dto.response.ResponseDto;
 import com.wak.igo.service.StoryService;
 import lombok.RequiredArgsConstructor;
@@ -32,9 +31,6 @@ public class StoryController {
     @RequestMapping(value = "/api/story", method = RequestMethod.POST, consumes = {"multipart/form-data"})
     public ResponseDto<?> createStory(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                       @RequestPart(value = "videos", required = false) MultipartFile multipartFile, StoryRequestDto requestDto) throws IOException, java.io.IOException {
-//                                      @Valid @PathVariable("storyid") StoryRequestDto id)
-
-        // @RequestPart 애너테이션을 이용해서 multipart/form-data 요청받음
         return storyService.createStory(userDetails, multipartFile,requestDto);
     }
 }
