@@ -1,9 +1,7 @@
 package com.wak.igo.sse;
 
-import com.wak.igo.domain.Comment;
 import com.wak.igo.domain.Member;
 import com.wak.igo.domain.Post;
-import com.wak.igo.domain.UserDetailsImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -14,6 +12,7 @@ import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -61,11 +60,27 @@ public class NotificationService {
             log.error("SSE 연결 오류!", exception);
         }
     }
-
+    //포스트 댓글 알림
     @Transactional
     public void send(Member receiver, Post post, String content) {
 //    public void send(Member receiver, String content) {
         Notification notification = createNotification(receiver,post,content);
+        String id = String.valueOf(receiver.getId());
+        notificationRepository.save(notification);
+        Map<String, SseEmitter> sseEmitters = emitterRepository.findAllStartWithById(id);
+        sseEmitters.forEach(
+                (key, emitter) -> {
+                    emitterRepository.saveEventCache(key, notification);
+                    sendToClient(emitter, key, NotificationResponse.from(notification));
+                }
+        );
+    }
+
+    //좋아요 알림
+    @Transactional
+    public void sendHeart(Member receiver, Optional<Post> post, String content) {
+//    public void send(Member receiver, String content) {
+        Notification notification = createNotificationH(receiver,post,content);
         String id = String.valueOf(receiver.getId());
         notificationRepository.save(notification);
         Map<String, SseEmitter> sseEmitters = emitterRepository.findAllStartWithById(id);
@@ -83,6 +98,16 @@ public class NotificationService {
                 .receiver(receiver)
                 .content(content)
                 .url("/api/detail/" + post.getId())
+                .isRead(false)
+                .build();
+    }
+
+    private Notification createNotificationH(Member receiver, Optional<Post> post, String content) {
+//    private Notification createNotification(Member receiver, String content) {
+        return Notification.builder()
+                .receiver(receiver)
+                .content(content)
+                .url("/api/detail/" + post.get().getId())
                 .isRead(false)
                 .build();
     }

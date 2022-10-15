@@ -75,6 +75,8 @@ public class SecurityConfiguration {
                 .antMatchers("/index.html/*").permitAll()
                 .antMatchers("/notification/*").permitAll()
                 .antMatchers("/subscribe/*").permitAll()
+                .antMatchers("/refresh").permitAll()
+
                 .anyRequest().authenticated()
 //                .anyRequest().permitAll()
 

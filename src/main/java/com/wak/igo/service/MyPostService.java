@@ -3,7 +3,6 @@ package com.wak.igo.service;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.util.StringUtils;
-import com.wak.igo.domain.Member;
 import com.wak.igo.domain.MyPost;
 import com.wak.igo.domain.State;
 import com.wak.igo.domain.UserDetailsImpl;

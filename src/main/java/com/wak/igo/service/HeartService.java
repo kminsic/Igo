@@ -5,12 +5,10 @@ import com.wak.igo.domain.Heart;
 import com.wak.igo.domain.Member;
 import com.wak.igo.domain.Post;
 import com.wak.igo.dto.response.HeartResponseDto;
-import com.wak.igo.dto.response.PostResponseDto;
 import com.wak.igo.dto.response.ResponseDto;
 import com.wak.igo.jwt.TokenProvider;
 import com.wak.igo.repository.HeartRepository;
 import com.wak.igo.repository.PostRepository;
-import com.wak.igo.sse.NotificationRepository;
 import com.wak.igo.sse.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -40,15 +38,15 @@ public class HeartService {
             return chkResponse;
 
         Member member = (Member) chkResponse.getData();
-//        Member postMember = post.get().getMember();
+
         Optional<Post> post = postRepository.findById(id);
 
+        Member postMember = post.get().getMember();
 
         if (post.isEmpty()) {
             return ResponseDto.fail("해당 게시글이 존재하지 않습니다.", "해당 게시글이 존재하지 않습니다.)");
         }
         Optional<Heart> heart = heartRepository.findByMemberIdAndPostId(member.getId(), post.get().getId());
-//        notificationService.send(postMember,post,"새로운 좋아요가 왔어요 따듯하네요!");
 
         if (heart.isEmpty()) {
             heartRepository.save(Heart.builder()
@@ -57,10 +55,12 @@ public class HeartService {
                     .build());
 
             post.get().addHeart();
+            notificationService.sendHeart(postMember,post,"새로운 좋아요가 왔어요 따듯하네요!");
             return ResponseDto.success(
                     HeartResponseDto.builder()
                             .heartNum(post.get().getHeartNum())
                             .build());
+
         }
         else {
             heartRepository.delete(heart.get());
