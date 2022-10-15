@@ -3,6 +3,7 @@ package com.wak.igo.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.wak.igo.dto.response.MemberResponseDto;
 import lombok.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
@@ -22,14 +23,14 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String memberId;
 
     @Column(nullable = false)
     @JsonIgnore
     private String password;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String nickname;
 
     @Column
@@ -41,11 +42,13 @@ public class Member {
     @Transactional
     public void profileUpdate(MemberResponseDto memberResponseDto, String imgUrl) {
         this.nickname = memberResponseDto.getNickname();
-
         this.profileImage = imgUrl;
 
     }
     public void tag(List<String> interested) {
         this.interested = interested;
+    }
+    public boolean validatePassword(PasswordEncoder passwordEncoder, String password) {
+        return passwordEncoder.matches(password, this.password);
     }
 }

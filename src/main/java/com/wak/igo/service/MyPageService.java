@@ -54,6 +54,7 @@ public class MyPageService {
         memberResponseDtoList.add(
                 MemberResponseDto.builder()
                         .nickname(member.getNickname())
+                        .interested(member.getInterested())
                         .profileImage(member.getProfileImage())
                         .build()
         );
@@ -61,7 +62,8 @@ public class MyPageService {
     }
     //회원정보 업데이트
     @Transactional
-    public ResponseDto<?> updateMember(HttpServletRequest request, MultipartFile multipartFile, MemberResponseDto memberResponseDto) throws IOException {
+    public ResponseDto<?> updateMember(HttpServletRequest request, MultipartFile multipartFile,
+                                       MemberResponseDto memberResponseDto) throws IOException {
         // 리프레쉬 토큰 확인
         if (null == request.getHeader("RefreshToken")) {
             return ResponseDto.fail("MEMBER_NOT_FOUND",
@@ -72,7 +74,10 @@ public class MyPageService {
         if (null == member) {
             return ResponseDto.fail("INVALID TOKEN", "TOKEN이 유효하지않습니다");
         }
-
+        //닉네임 검증
+//        if (memberRepository.findAllByNickname(memberResponseDto.getNickname())){
+//            return ResponseDto.fail("SAME NICKNAME", "동일한 닉네임이 존재합니다");
+//        }
         member.profileUpdate(memberResponseDto,imageUrl(multipartFile));
         memberRepository.save(member);
         return ResponseDto.success(
@@ -126,6 +131,8 @@ public class MyPageService {
                     PostResponseDto.builder()
                             .id(post.getId())
                             .title(post.getTitle())
+                            .nickname(post.getMember().getNickname())
+                            .heartNum(post.getHeartNum())
                             .content(post.getContent())
                             .thumnail(post.getThumnail())
                             .createdAt(post.getCreatedAt())
@@ -167,6 +174,8 @@ public class MyPageService {
                     PostResponseDto.builder()
                             .id(post.getId())
                             .title(post.getTitle())
+                            .nickname(post.getMember().getNickname())
+                            .heartNum(post.getHeartNum())
                             .content(post.getContent())
                             .thumnail(post.getThumnail())
                             .build()

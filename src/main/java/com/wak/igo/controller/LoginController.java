@@ -63,8 +63,6 @@ public class LoginController {
     }
     //
 
-
-
     @RequestMapping(value = "/refresh", method = RequestMethod.GET)
     public void validate(HttpServletRequest request, HttpServletResponse response) throws IOException {
         tokenProvider.validateRefreshToken(request, response);

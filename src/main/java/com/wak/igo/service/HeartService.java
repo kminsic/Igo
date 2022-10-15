@@ -5,7 +5,6 @@ import com.wak.igo.domain.Heart;
 import com.wak.igo.domain.Member;
 import com.wak.igo.domain.Post;
 import com.wak.igo.dto.response.HeartResponseDto;
-import com.wak.igo.dto.response.PostResponseDto;
 import com.wak.igo.dto.response.ResponseDto;
 import com.wak.igo.jwt.TokenProvider;
 import com.wak.igo.repository.HeartRepository;
