@@ -16,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 //JSON으로 응답할 때 null 값은 제외
-@JsonInclude(JsonInclude.Include.NON_NULL)
+//@JsonInclude(JsonInclude.Include.NON_NULL)
 public class MemberResponseDto {
     private String nickname;
     private String profileImage;

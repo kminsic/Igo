@@ -42,7 +42,6 @@ public class Member {
     @Transactional
     public void profileUpdate(MemberResponseDto memberResponseDto, String imgUrl) {
         this.nickname = memberResponseDto.getNickname();
-
         this.profileImage = imgUrl;
 
     }
