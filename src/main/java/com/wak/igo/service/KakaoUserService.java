@@ -67,8 +67,8 @@ public class KakaoUserService {
         // HTTP Body 생성
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
-        body.add("client_id", "fdb42734830cbb186c8221bf3acdd6c6");        // localhost client_id
-//        body.add("client_id", "3d365192ea8ab4f32c7f9c1d7c5688e1");          // 프론트엔드 client_id
+//        body.add("client_id", "fdb42734830cbb186c8221bf3acdd6c6");        // localhost client_id
+        body.add("client_id", "3d365192ea8ab4f32c7f9c1d7c5688e1");          // 프론트엔드 client_id
         body.add("client_secret", "FuvfQecT3uPmfM3wlzF5VxRJU7Iz654F");
         body.add("redirect_url", "http://localhost:8080/kakao/callback"); // localhost redirect_url
 //        body.add("redirect_url", "http://localhost:3000/kakao/callback");// 프론트 엔드  redirect_url

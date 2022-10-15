@@ -6,7 +6,6 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.wak.igo.domain.Story;
 import com.wak.igo.domain.UserDetailsImpl;
 import com.wak.igo.dto.request.StoryRequestDto;
-import com.wak.igo.dto.response.MemberResponseDto;
 import com.wak.igo.dto.response.ResponseDto;
 import com.wak.igo.dto.response.StoryResponseDto;
 import com.wak.igo.repository.MemberRepository;
@@ -15,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -37,24 +37,27 @@ public class StoryService {
 
 
     //스토리 조회
-    public List<?> getStory(UserDetailsImpl userDetails, MemberResponseDto responseDto){
-        List<Story> storys = storyRepository.findByMember(userDetails.getMember());
+    @Transactional
+    public List<?> getAllStorys() {
+        List<Story> storys = storyRepository.findAllByOrderByCreatedAtDesc();
         List<StoryResponseDto> storyList = new ArrayList<>();
         for (Story story : storys) {
             storyList.add(
                     StoryResponseDto.builder()
-                    .id(story.getId())
-                    .video(story.getVideo())
-                    .createdAt(story.getCreatedAt())
-                    .modifiedAt(story.getModifiedAt())
-                    .profileImage(story.getMember().getProfileImage())
-                    .nickname(story.getMember().getNickname())
-                    .build());
+                            .id(story.getId())
+                            .video(story.getVideo())
+                            .createdAt(story.getCreatedAt())
+                            .modifiedAt(story.getModifiedAt())
+                            .profileImage(story.getMember().getProfileImage())
+                            .nickname(story.getMember().getNickname())
+                            .build());
         }
         return storyList;
     }
+
     //스토리 작성
-    public ResponseDto<?> createStory(UserDetailsImpl userDetails, MultipartFile multipartFile,StoryRequestDto requestDto) throws IOException  {
+    @Transactional
+    public ResponseDto<?> createStory(UserDetailsImpl userDetails, MultipartFile multipartFile, StoryRequestDto requestDto) throws IOException {
         if (null == userDetails.getAuthorities()) {
             ResponseDto.fail("MEMBER_NOT_FOUND",
                     "사용자를 찾을 수 없습니다.");
@@ -87,7 +90,7 @@ public class StoryService {
                 .build());
     }
 
-    public String videoUrl(MultipartFile multipartFile) throws IOException{
+    public String videoUrl(MultipartFile multipartFile) throws IOException {
         String s3FileName = UUID.randomUUID() + "-" + multipartFile.getOriginalFilename(); // 파일 이름 중복되지 않게 랜덤한 값으로 업로드
 
         ObjectMetadata objMeta = new ObjectMetadata(); // ObjectMetadata를 통해 파일 사이즈를 ContentLength로 S3에 알려줌
@@ -101,7 +104,7 @@ public class StoryService {
     public static boolean validVideoFile(MultipartFile multipartFile) {
         try {
             // 업로드를 허용하는 파일 타입
-            List<String> ValidTypeList = Arrays.asList("video/quicktime","video/mp4", "video/ogg", "video/mpeg4-generic","video/webm","mp4","avi" ,"mpeg","ogv","webm","3gp","3g2");
+            List<String> ValidTypeList = Arrays.asList("video/quicktime", "video/mp4", "video/ogg", "video/mpeg4-generic", "video/webm", "mp4", "avi", "mpeg", "ogv", "webm", "3gp", "3g2");
             //,"avi" ,"mpeg","ogv","webm","3gp","3g2","image/jpeg", "image/pjpeg", "image/png", "image/gif", "image/jpg",
 
             // 입력 받은 파일을 “파일종류/파일포맷” 으로 구분 짓는다
@@ -116,4 +119,5 @@ public class StoryService {
         }
     }
 }
+
 

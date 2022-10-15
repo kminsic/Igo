@@ -75,6 +75,8 @@ public class SecurityConfiguration {
                 .antMatchers("/index.html/*").permitAll()
                 .antMatchers("/notification/*").permitAll()
                 .antMatchers("/subscribe/*").permitAll()
+                .antMatchers("/subcribe").permitAll()
+                .antMatchers("/").permitAll()
                 .antMatchers("/refresh").permitAll()
 
                 .anyRequest().authenticated()
@@ -93,6 +95,9 @@ public class SecurityConfiguration {
 //        configuration.addAllowedOriginPattern("http://eunjiroh.shop");
 //        configuration.addAllowedOriginPattern("http://3.88.14.18");
         configuration.addAllowedOriginPattern("http://localhost:3000");
+        configuration.addAllowedOriginPattern("http://localhost:8080");
+        configuration.addAllowedOriginPattern("/");
+        configuration.addAllowedOriginPattern("*");
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         configuration.addExposedHeader("Authorization");

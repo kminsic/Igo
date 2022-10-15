@@ -1,6 +1,9 @@
 package com.wak.igo.service;
 
-import com.wak.igo.domain.*;
+import com.wak.igo.domain.Comment;
+import com.wak.igo.domain.Member;
+import com.wak.igo.domain.Post;
+import com.wak.igo.domain.UserDetailsImpl;
 import com.wak.igo.dto.request.InterestedTagDto;
 import com.wak.igo.dto.request.PostRequestDto;
 import com.wak.igo.dto.response.CommentResponseDto;
@@ -16,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
-
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -93,7 +95,6 @@ public class PostService {
                         .modifiedAt(post.getModifiedAt())
                         .build());
     }
-    
 
 
     // 태그 저장
@@ -140,37 +141,39 @@ public class PostService {
         List<Post> posts = postRepository.findAll();
         for (Post post : posts) {
             String tagPost = post.getTags().get(0);
+            System.out.println(tagPost);
             if (tagPost.equals(type)) {
                 InterestTagPosts.add(post);
+                System.out.println(InterestTagPosts);
             }
         }
         return InterestTagPosts;
     }
+
     //지역 태그별 정렬
     @Transactional
     public List<Post> getAllRegionTags(String type) {
-
-            List<Post> RegionTagPosts = new ArrayList<>();
-            List<Post> posts = postRepository.findAll();
-            for (Post post : posts) {
-                String tagPost = post.getTags().get(1);
-                    if (tagPost.equals(type)) {
-                        RegionTagPosts.add(post);
-                    }
-                }
-            return RegionTagPosts;
+        List<Post> RegionTagPosts = new ArrayList<>();
+        List<Post> posts = postRepository.findAll();
+        for (Post post : posts) {
+            String tagPost = post.getTags().get(1);
+            if (tagPost.equals(type)) {
+                RegionTagPosts.add(post);
+            }
         }
+        return RegionTagPosts;
+    }
 
     //비용 태그별 정렬
     @Transactional
     public List<Post> getAllCostTags(String type) {
 
-            List<Post> CostTagPosts = new ArrayList<>();
-            List<Post> posts = postRepository.findAll();
-            for (Post post : posts) {
-                String tagPost = post.getTags().get(2);
-                if (tagPost.equals(type)) {
-                    CostTagPosts.add(post);
+        List<Post> CostTagPosts = new ArrayList<>();
+        List<Post> posts = postRepository.findAll();
+        for (Post post : posts) {
+            String tagPost = post.getTags().get(2);
+            if (tagPost.equals(type)) {
+                CostTagPosts.add(post);
             }
         }
         return CostTagPosts;
@@ -180,7 +183,7 @@ public class PostService {
     @Transactional
     public ResponseDto<?> createPost(PostRequestDto postRequestDto, HttpServletRequest request) throws IOException {
         Member member = validateMember(request);
-        if (null == member){
+        if (null == member) {
             return ResponseDto.fail("INVALID TOKEN", "TOKEN이 유효하지않습니다");
         }
         // 썸네일 추출
@@ -218,13 +221,13 @@ public class PostService {
     //    게시글 수정
     @Transactional
     public ResponseDto<?> updatePost(
-            Long id, PostRequestDto requestDto,HttpServletRequest request) throws IOException {
+            Long id, PostRequestDto requestDto, HttpServletRequest request) throws IOException {
 //        ResponseDto<?> chkResponse = validateCheck(request);
 //        if (!chkResponse.isSuccess())
 //            return chkResponse;
 //        Member member = (Member) chkResponse.getData();
         Member member = validateMember(request);
-        if (null == member){
+        if (null == member) {
             return ResponseDto.fail("INVALID TOKEN", "TOKEN이 유효하지않습니다");
         }
         // 유저 테이블에서 유저객체 가져오기
@@ -233,19 +236,20 @@ public class PostService {
             return ResponseDto.fail("NOT_FOUND", "게시글이 존재하지 않습니다.");
         }
         if (!member.getId().equals(post.getMember().getId()))
-            return ResponseDto.fail("작성자가 아닙니다.","작성자가 아닙니다.");
+            return ResponseDto.fail("작성자가 아닙니다.", "작성자가 아닙니다.");
         // 썸네일 추출
         String content = requestDto.getContent();
-        if (content == null){
+        if (content == null) {
             content = post.getContent();
         }
         String getThumnail = content;
         Pattern pattern = Pattern.compile("(https?://[^>\"']*)");
         Matcher matcher = pattern.matcher(getThumnail);
         String thumnail = (matcher.find()) ? matcher.group(0) : "false";
-        post.update(requestDto,thumnail,content);
+        post.update(requestDto, thumnail, content);
         return ResponseDto.success("success");
     }
+
     //게시글 삭제
     @Transactional
     public ResponseDto<?> deletePost(Long id, HttpServletRequest request) {
@@ -278,17 +282,17 @@ public class PostService {
 
     //포스트 검색
     @Transactional
-    public List<PostResponseDto> findPost(String content){
+    public List<PostResponseDto> findPost(String content) {
         List<Post> posts = postRepository.findByContent(content);
         List<PostResponseDto> postResponseDtoList = new ArrayList<>();
         if (posts.isEmpty()) return postResponseDtoList;
-        for (Post post : posts){
+        for (Post post : posts) {
             postResponseDtoList.add(this.convertEntityToDto(post));
         }
         return postResponseDtoList;
     }
 
-    private PostResponseDto convertEntityToDto(Post post){
+    private PostResponseDto convertEntityToDto(Post post) {
         List<Comment> commentList = commentRepository.findAllByPost(post);
         List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
         for (Comment comment : commentList) {
@@ -331,16 +335,17 @@ public class PostService {
         }
         return tokenProvider.getMemberFromAuthentication().getMember();
     }
+
     private ResponseDto<?> validateCheck(HttpServletRequest request) {
         // RefreshToken 및 Authorization 유효성 검사
         if (null == request.getHeader("RefreshToken")
                 || null == request.getHeader("Authorization")) {
-            return ResponseDto.fail("로그인이 필요합니다.","로그인이 필요합니다.");
+            return ResponseDto.fail("로그인이 필요합니다.", "로그인이 필요합니다.");
         }
         Member member = validateMember(request);
         // token 정보 유효성 검사
         if (null == member) {
-            return ResponseDto.fail("Token이 유효하지 않습니다.","Token이 유효하지 않습니다.");
+            return ResponseDto.fail("Token이 유효하지 않습니다.", "Token이 유효하지 않습니다.");
         }
         return ResponseDto.success(member);
     }
