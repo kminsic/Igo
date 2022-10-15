@@ -38,6 +38,9 @@ dependencies {
     //mysql
     runtimeOnly 'mysql:mysql-connector-java'
 
+    // flyway (data migration)
+    compileOnly 'org.flywaydb:flyway-mysql'
+
     //h2
     implementation 'com.h2database:h2'
 
