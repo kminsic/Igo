@@ -1,9 +1,7 @@
 package com.wak.igo.sse;
 
 
-import com.wak.igo.domain.Member;
 import com.wak.igo.domain.UserDetailsImpl;
-import com.wak.igo.service.UserDetailsServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -22,24 +20,24 @@ public class NotificationController {
     /**
      * @title 로그인 한 유저 sse 연결
      */
-    @GetMapping(value = "/subscribe/{id}", produces = "text/event-stream")
-    public SseEmitter subscribe(@PathVariable Long id,
+    @GetMapping(value = "/api/member/subscribe", produces = "text/event-stream")
+    public SseEmitter subscribe(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                 @RequestParam(value = "lastEventId", required = false, defaultValue = "") String lastEventId) {
-        return notificationService.subscribe(id, lastEventId);
+        return notificationService.subscribe(userDetails.getId(), lastEventId);
     }
 
     /**
      * @title 로그인 한 유저의 모든 알림 조회
      */
-    @GetMapping("/notifications/{id}")
-    public ResponseEntity<NotificationsResponse> notifications(@AuthenticationPrincipal Long loginMember) {
-        return ResponseEntity.ok().body(notificationService.findAllById(loginMember));
+    @GetMapping("/api/member/notifications")
+    public ResponseEntity<NotificationsResponse> notifications(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseEntity.ok().body(notificationService.findAllById(userDetails.getMember().getId()));
     }
 
     /**
      * @title 알림 읽음 상태 변경
      */
-    @PatchMapping("/notifications/{id}")
+    @PatchMapping("/api/member/notifications/{id}")
     public ResponseEntity<Void> readNotification(@PathVariable Long id) {
         notificationService.readNotification(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

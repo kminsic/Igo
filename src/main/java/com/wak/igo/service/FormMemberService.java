@@ -1,6 +1,7 @@
 package com.wak.igo.service;
 
 import com.wak.igo.domain.Member;
+import com.wak.igo.domain.MyPost;
 import com.wak.igo.domain.UserDetailsImpl;
 import com.wak.igo.dto.request.LoginRequestDto;
 import com.wak.igo.dto.request.MemberRequestDto;
@@ -9,6 +10,7 @@ import com.wak.igo.dto.response.MemberResponseDto;
 import com.wak.igo.dto.response.ResponseDto;
 import com.wak.igo.jwt.TokenProvider;
 import com.wak.igo.repository.MemberRepository;
+import com.wak.igo.sse.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,6 +22,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletResponse;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.Temporal;
+import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -29,6 +40,8 @@ public class FormMemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
+    private final NotificationService notificationService;
+    private final MyPostService myPostService;
 
     @Transactional
     public ResponseDto<?> createMember(MemberRequestDto requestDto) {
@@ -55,7 +68,7 @@ public class FormMemberService {
     }
 
     @Transactional
-    public ResponseDto<?> login(LoginRequestDto requestDto, HttpServletResponse response) {
+    public ResponseDto<?> login(LoginRequestDto requestDto, HttpServletResponse response) throws ParseException {
         Member member = isPresentMember(requestDto.getMemberId());
         if (null == member) {
             return ResponseDto.fail("MEMBER_NOT_FOUND", "사용자를 찾을 수 없습니다.");
@@ -69,15 +82,33 @@ public class FormMemberService {
 
         UserDetailsImpl userDetails1 = (UserDetailsImpl) authentication.getPrincipal(); // UserDetails를 구현한 현재 사용자 정보 가져오기
         TokenDto tokenDto = tokenProvider.generateTokenDto(userDetails1);
+
+
         response.addHeader("Authorization", "BEARER" + " " + tokenDto.getAccessToken());
         response.addHeader("RefreshToken", tokenDto.getRefreshToken());
         response.addHeader("Access-Token-Expire-Time", tokenDto.getAccessTokenExpiresIn().toString());
+
+        Optional<MyPost> myPost = myPostService.findMypost(member.getId());
+
+        //날짜 계산을 위해 시간변환
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate startDate = LocalDate.parse(myPost.get().getTime(), dateTimeFormatter);
+        LocalDate now = LocalDate.now();
+        LocalDateTime date1 = startDate.atStartOfDay();
+        LocalDateTime date2 = now.atStartOfDay();
+        int betweenDays = (int) Duration.between(date2, date1).toDays();
+        if (betweenDays == 3){
+            notificationService.sendMypost(member,myPost,"만들어 놓은 일정이 3일 남았습니다!");
+        }
         return ResponseDto.success(
                 MemberResponseDto.builder()
                         .nickname(member.getNickname())
                         .profileImage(member.getProfileImage())
                         .interested(member.getInterested())
                         .build());
+
+
+
     }
 
     @Transactional(readOnly = true)
@@ -85,5 +116,9 @@ public class FormMemberService {
         Optional<Member> optionalMember = memberRepository.findByMemberId(membername);
         return optionalMember.orElse(null);
     }
+
+
+
+
 }
 

@@ -3,6 +3,7 @@ package com.wak.igo.service;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.util.StringUtils;
+import com.wak.igo.domain.Member;
 import com.wak.igo.domain.MyPost;
 import com.wak.igo.domain.State;
 import com.wak.igo.domain.UserDetailsImpl;
@@ -18,10 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Service
@@ -250,5 +248,10 @@ public class MyPostService {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public Optional<MyPost> findMypost(Long member){
+        Optional<MyPost> myPost = myPostRepository.findById(member);
+        return myPost;
     }
 }

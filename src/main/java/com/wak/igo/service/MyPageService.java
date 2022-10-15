@@ -4,6 +4,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.wak.igo.domain.Heart;
 import com.wak.igo.domain.Member;
+import com.wak.igo.domain.MyPost;
 import com.wak.igo.domain.Post;
 import com.wak.igo.dto.HeartDto;
 import com.wak.igo.dto.response.MemberResponseDto;
@@ -12,6 +13,7 @@ import com.wak.igo.dto.response.ResponseDto;
 import com.wak.igo.jwt.TokenProvider;
 import com.wak.igo.repository.HeartRepository;
 import com.wak.igo.repository.MemberRepository;
+import com.wak.igo.repository.MyPostRepository;
 import com.wak.igo.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -204,5 +206,7 @@ public class MyPageService {
 
         return amazonS3.getUrl(bucket, s3FileName).toString(); // S3에 업로드 된 사진 url 가져오기
     }
+
+
 
 }

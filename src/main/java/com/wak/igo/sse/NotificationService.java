@@ -1,6 +1,7 @@
 package com.wak.igo.sse;
 
 import com.wak.igo.domain.Member;
+import com.wak.igo.domain.MyPost;
 import com.wak.igo.domain.Post;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,11 +61,12 @@ public class NotificationService {
             log.error("SSE 연결 오류!", exception);
         }
     }
+
     //포스트 댓글 알림
     @Transactional
     public void send(Member receiver, Post post, String content) {
 //    public void send(Member receiver, String content) {
-        Notification notification = createNotification(receiver,post,content);
+        Notification notification = createNotification(receiver, post, content);
         String id = String.valueOf(receiver.getId());
         notificationRepository.save(notification);
         Map<String, SseEmitter> sseEmitters = emitterRepository.findAllStartWithById(id);
@@ -80,7 +82,7 @@ public class NotificationService {
     @Transactional
     public void sendHeart(Member receiver, Optional<Post> post, String content) {
 //    public void send(Member receiver, String content) {
-        Notification notification = createNotificationH(receiver,post,content);
+        Notification notification = createNotificationH(receiver, post, content);
         String id = String.valueOf(receiver.getId());
         notificationRepository.save(notification);
         Map<String, SseEmitter> sseEmitters = emitterRepository.findAllStartWithById(id);
@@ -92,6 +94,23 @@ public class NotificationService {
         );
     }
 
+    //마이포스트 알림
+    @Transactional
+    public void sendMypost(Member receiver, Optional<MyPost> myPost, String content) {
+//    public void send(Member receiver, String content) {
+        Notification notification = createNotificationM(receiver, myPost, content);
+        String id = String.valueOf(receiver.getId());
+        notificationRepository.save(notification);
+        Map<String, SseEmitter> sseEmitters = emitterRepository.findAllStartWithById(id);
+        sseEmitters.forEach(
+                (key, emitter) -> {
+                    emitterRepository.saveEventCache(key, notification);
+                    sendToClient(emitter, key, NotificationResponse.from(notification));
+                }
+        );
+    }
+
+    //댓글
     private Notification createNotification(Member receiver, Post post, String content) {
 //    private Notification createNotification(Member receiver, String content) {
         return Notification.builder()
@@ -102,12 +121,24 @@ public class NotificationService {
                 .build();
     }
 
+    //좋아요
     private Notification createNotificationH(Member receiver, Optional<Post> post, String content) {
 //    private Notification createNotification(Member receiver, String content) {
         return Notification.builder()
                 .receiver(receiver)
                 .content(content)
                 .url("/api/detail/" + post.get().getId())
+                .isRead(false)
+                .build();
+    }
+
+    //마이포스트
+    private Notification createNotificationM(Member receiver, Optional<MyPost> myPost, String content) {
+//    private Notification createNotification(Member receiver, String content) {
+        return Notification.builder()
+                .receiver(receiver)
+                .content(content)
+                .url("/api/mypage" )
                 .isRead(false)
                 .build();
     }
@@ -121,7 +152,6 @@ public class NotificationService {
         long unreadCount = responses.stream()
                 .filter(notification -> !notification.isRead())
                 .count();
-
         return NotificationsResponse.of(responses, unreadCount);
     }
 
