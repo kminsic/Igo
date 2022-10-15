@@ -62,11 +62,11 @@ public class LoginController {
     public ResponseDto<?> logout(@AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
         return kakaoUserService.logout(userDetails);
     }
-    //
 
+    // 액세스 토큰 재발급
     @RequestMapping(value = "/refresh", method = RequestMethod.GET)
-    public void validate(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        tokenProvider.validateRefreshToken(request, response);
+    public ResponseDto<?> validate(HttpServletRequest request) throws IOException {
+        return ResponseDto.success(tokenProvider.validateRefreshToken(request));
     }
 
 }

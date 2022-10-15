@@ -27,7 +27,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 @Slf4j
 @Component
@@ -109,7 +108,7 @@ public class TokenProvider {
     }
 
     @Transactional(readOnly = true) // 1. 해당 트랜잭션 내에서 데이터를 읽기만 함 2. Hibernate를 사용하는 경우 속도향상 효과 3. 의도치않게 데이터를 변경하는 것을 막아줌
-    public void validateRefreshToken(HttpServletRequest request, HttpServletResponse response) {
+    public String validateRefreshToken(HttpServletRequest request) {
         try {
             String refreshToken = request.getHeader("RefreshToken");
             RefreshToken token = refreshTokenRepository.findByKeyValue(refreshToken);
@@ -124,14 +123,14 @@ public class TokenProvider {
                     .setExpiration(accessTokenExpiresIn)                        // payload "exp" : 만료시간 설정
                     .signWith(key, SignatureAlgorithm.HS256)                    // header "alg" : "HS512"
                     .compact();
-            response.addHeader("Authorization", BEARER_PREFIX + accessToken);
-            response.addHeader("RefreshToken", token.getKeyValue());
+            return BEARER_PREFIX + accessToken;
 
         } catch (ExpiredJwtException e) {
             log.info("만료된 JWT token 입니다.");
         } catch (NullPointerException e) {
             log.info("로그인이 필요합니다.");
         }
+        return null;
 
     }
 
