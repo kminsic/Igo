@@ -63,8 +63,6 @@ public class MyPageService {
                         .interested(member.getInterested())
                         .build()
         );
-        //테스트용
-        notificationService.sendTest(member,"알림 보내드립니다");
         return ResponseDto.success(memberResponseDtoList);
     }
     //회원정보 업데이트
