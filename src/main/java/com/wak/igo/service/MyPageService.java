@@ -42,7 +42,7 @@ public class MyPageService {
     private final NotificationService notificationService;
 
     //회원정보 불러오기
-    @Transactional(readOnly = true)
+    @Transactional//(readOnly = true)
     public ResponseDto<?> getMember(HttpServletRequest request) {
         // 리프레쉬 토큰 확인
         if (null == request.getHeader("RefreshToken")) {
