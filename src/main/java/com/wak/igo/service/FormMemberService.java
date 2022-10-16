@@ -91,15 +91,15 @@ public class FormMemberService {
         Optional<MyPost> myPost = myPostService.findMypost(member.getId());
 
         //날짜 계산을 위해 시간변환
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate startDate = LocalDate.parse(myPost.get().getTime(), dateTimeFormatter);
-        LocalDate now = LocalDate.now();
-        LocalDateTime date1 = startDate.atStartOfDay();
-        LocalDateTime date2 = now.atStartOfDay();
-        int betweenDays = (int) Duration.between(date2, date1).toDays();
-        if (betweenDays == 3){
-            notificationService.sendMypost(member,myPost,"만들어 놓은 일정이 3일 남았습니다!");
-        }
+//        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//        LocalDate startDate = LocalDate.parse(myPost.get().getTime(), dateTimeFormatter);
+//        LocalDate now = LocalDate.now();
+//        LocalDateTime date1 = startDate.atStartOfDay();
+//        LocalDateTime date2 = now.atStartOfDay();
+//        int betweenDays = (int) Duration.between(date2, date1).toDays();
+//        if (betweenDays == 3){
+//            notificationService.sendMypost(member,myPost,"작성한 일정이 3일 남았습니다!");
+//        }
         return ResponseDto.success(
                 MemberResponseDto.builder()
                         .nickname(member.getNickname())
