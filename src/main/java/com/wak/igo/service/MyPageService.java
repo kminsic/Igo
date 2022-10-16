@@ -15,6 +15,7 @@ import com.wak.igo.repository.HeartRepository;
 import com.wak.igo.repository.MemberRepository;
 import com.wak.igo.repository.MyPostRepository;
 import com.wak.igo.repository.PostRepository;
+import com.wak.igo.sse.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -38,6 +39,7 @@ public class MyPageService {
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
     private final HeartRepository heartRepository;
+    private final NotificationService notificationService;
 
     //회원정보 불러오기
     @Transactional(readOnly = true)
@@ -61,6 +63,8 @@ public class MyPageService {
                         .interested(member.getInterested())
                         .build()
         );
+        //테스트용
+        notificationService.sendTest(member,"알림 보내드립니다");
         return ResponseDto.success(memberResponseDtoList);
     }
     //회원정보 업데이트

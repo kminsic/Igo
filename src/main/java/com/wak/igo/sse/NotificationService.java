@@ -143,6 +143,33 @@ public class NotificationService {
                 .build();
     }
 
+    //test용
+    private Notification createNotificationtest(Member receiver, String content) {
+//    private Notification createNotification(Member receiver, String content) {
+        return Notification.builder()
+                .receiver(receiver)
+                .content(content)
+                .url("/api/mypage" )
+                .isRead(false)
+                .build();
+    }
+
+    //마이포스트 알림
+    @Transactional
+    public void sendTest(Member receiver, String content) {
+//    public void send(Member receiver, String content) {
+        Notification notification = createNotificationtest(receiver, content);
+        String id = String.valueOf(receiver.getId());
+        notificationRepository.save(notification);
+        Map<String, SseEmitter> sseEmitters = emitterRepository.findAllStartWithById(id);
+        sseEmitters.forEach(
+                (key, emitter) -> {
+                    emitterRepository.saveEventCache(key, notification);
+                    sendToClient(emitter, key, NotificationResponse.from(notification));
+                }
+        );
+    }
+
     @Transactional
 //    public NotificationsResponse findAllById(UserDetailsImpl loginMember) {
     public NotificationsResponse findAllById(Long loginMember) {

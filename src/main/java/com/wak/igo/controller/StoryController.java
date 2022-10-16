@@ -33,5 +33,6 @@ public class StoryController {
                                       @RequestPart(value = "videos", required = false) MultipartFile multipartFile, StoryRequestDto requestDto) throws IOException, java.io.IOException {
         return storyService.createStory(userDetails, multipartFile,requestDto);
     }
+
 }
 
