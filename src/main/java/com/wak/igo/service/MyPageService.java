@@ -80,7 +80,7 @@ public class MyPageService {
         }
 
         if(sameNick(memberResponseDto.getNickname())){
-            throw new Exception("이미 사용중인 아이디 입니다.");
+            return ResponseDto.fail("SAME NICKNAME", "중복된 닉네임 입니다");
         }else {
              memberResponseDto.getNickname();
         }
