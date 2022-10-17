@@ -68,5 +68,4 @@ public class LoginController {
     public ResponseDto<?> validate(HttpServletRequest request) throws IOException {
         return ResponseDto.success(tokenProvider.validateRefreshToken(request));
     }
-
 }
