@@ -39,7 +39,7 @@ public class MyPageController {
     public ResponseDto<?> updateMember(HttpServletRequest request,
                                        @RequestPart("profileImage") MultipartFile file,
                                        @RequestPart("nickname") MemberResponseDto memberResponseDto
-                                       ) throws IOException {
+                                       ) throws Exception {
         return myPageService.updateMember(request,file,memberResponseDto);
     }
 

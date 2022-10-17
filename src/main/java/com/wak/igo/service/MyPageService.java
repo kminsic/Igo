@@ -4,7 +4,6 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.wak.igo.domain.Heart;
 import com.wak.igo.domain.Member;
-import com.wak.igo.domain.MyPost;
 import com.wak.igo.domain.Post;
 import com.wak.igo.dto.HeartDto;
 import com.wak.igo.dto.response.MemberResponseDto;
@@ -13,11 +12,11 @@ import com.wak.igo.dto.response.ResponseDto;
 import com.wak.igo.jwt.TokenProvider;
 import com.wak.igo.repository.HeartRepository;
 import com.wak.igo.repository.MemberRepository;
-import com.wak.igo.repository.MyPostRepository;
 import com.wak.igo.repository.PostRepository;
 import com.wak.igo.sse.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -68,7 +67,7 @@ public class MyPageService {
     //회원정보 업데이트
     @Transactional
     public ResponseDto<?> updateMember(HttpServletRequest request, MultipartFile multipartFile,
-                                       MemberResponseDto memberResponseDto) throws IOException {
+                                       MemberResponseDto memberResponseDto) throws Exception {
         // 리프레쉬 토큰 확인
         if (null == request.getHeader("RefreshToken")) {
             return ResponseDto.fail("MEMBER_NOT_FOUND",
@@ -79,10 +78,12 @@ public class MyPageService {
         if (null == member) {
             return ResponseDto.fail("INVALID TOKEN", "TOKEN이 유효하지않습니다");
         }
-        //닉네임 검증
-//        if (memberRepository.findAllByNickname(memberResponseDto.getNickname())){
-//            return ResponseDto.fail("SAME NICKNAME", "동일한 닉네임이 존재합니다");
-//        }
+
+        if(sameNick(memberResponseDto.getNickname())){
+            throw new Exception("이미 사용중인 아이디 입니다.");
+        }else {
+             memberResponseDto.getNickname();
+        }
         member.profileUpdate(memberResponseDto,imageUrl(multipartFile));
         memberRepository.save(member);
         return ResponseDto.success(
@@ -207,6 +208,11 @@ public class MyPageService {
         amazonS3.putObject(bucket, s3FileName, multipartFile.getInputStream(), objMeta); // S3 api 메소드 인 putObject를 이용해 파일 stream을 열어서 s3에 파일 업로드
 
         return amazonS3.getUrl(bucket, s3FileName).toString(); // S3에 업로드 된 사진 url 가져오기
+    }
+
+    @Transactional(readOnly = true)
+    public boolean sameNick(String nickname){
+        return memberRepository.existsByNickname(nickname);
     }
 
 

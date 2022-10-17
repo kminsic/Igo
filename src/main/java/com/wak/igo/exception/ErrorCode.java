@@ -39,6 +39,7 @@ public enum ErrorCode {
     /* 500 SERVER_ERROR */
     FAIL_ENCODING(HttpStatus.INTERNAL_SERVER_ERROR, "IO 에러로 이미지 URL 인코딩을 실패했습니다."),
 
+
     //sse
     NOT_EXIST_NOTIFICATION(HttpStatus.NOT_FOUND,"존재하지 않는 알림입니다.");
 
