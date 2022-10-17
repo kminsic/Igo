@@ -3,11 +3,13 @@ package com.wak.igo.service;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.wak.igo.domain.Member;
 import com.wak.igo.domain.Story;
 import com.wak.igo.domain.UserDetailsImpl;
 import com.wak.igo.dto.request.StoryRequestDto;
 import com.wak.igo.dto.response.ResponseDto;
 import com.wak.igo.dto.response.StoryResponseDto;
+import com.wak.igo.jwt.TokenProvider;
 import com.wak.igo.repository.MemberRepository;
 import com.wak.igo.repository.StoryRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,11 +19,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Service
@@ -33,6 +33,7 @@ public class StoryService {
     private final AmazonS3 amazonS3;
     private final StoryRepository storyRepository;
     private final MemberRepository memberRepository;
+    private final TokenProvider tokenProvider;
     private static final Tika tika = new Tika();
 
 
@@ -90,6 +91,23 @@ public class StoryService {
                 .build());
     }
 
+    //스토리 삭제
+    @Transactional
+    public ResponseDto<?> deleteStory(Long id, HttpServletRequest request) {
+        Member member = validateMember(request);
+        if (null == member) {
+            return ResponseDto.fail("INVALID TOKEN", "TOKEN이 유효하지않습니다");}
+        Story story = isPresentStory(id);
+        if (null == story) {
+            return ResponseDto.fail("NOT_FOUND", "스토리가 존재하지 않습니다.");}
+        if (!member.getId().equals(story.getMember().getId()))
+            return ResponseDto.fail("작성자가 아닙니다.", "작성자가 아닙니다.");
+
+        storyRepository.deleteAllByStory(story);
+        return ResponseDto.success("삭제 완료");
+    }
+
+
     public String videoUrl(MultipartFile multipartFile) throws IOException {
         String s3FileName = UUID.randomUUID() + "-" + multipartFile.getOriginalFilename(); // 파일 이름 중복되지 않게 랜덤한 값으로 업로드
 
@@ -117,6 +135,18 @@ public class StoryService {
             e.printStackTrace();
             return false;
         }
+    }
+    @Transactional(readOnly = true)
+    public Story isPresentStory(Long id) {
+        Optional<Story> optionalStory = storyRepository.findById(id);
+        return optionalStory.orElse(null);
+    }
+    @Transactional
+    public Member validateMember(HttpServletRequest request) {
+        if (!tokenProvider.validateToken(request.getHeader("RefreshToken"))) {
+            return null;
+        }
+        return tokenProvider.getMemberFromAuthentication().getMember();
     }
 }
 
