@@ -207,4 +207,8 @@ public class NotificationService {
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 알림입니다."));
         notification.read();
     }
+    @Transactional
+    public void deleteNotification(Long id) {
+        notificationRepository.deleteById(id);
+    }
 }

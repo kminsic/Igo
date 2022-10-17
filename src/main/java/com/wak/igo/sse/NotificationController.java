@@ -2,6 +2,7 @@ package com.wak.igo.sse;
 
 
 import com.wak.igo.domain.UserDetailsImpl;
+import com.wak.igo.dto.response.ResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -41,5 +42,13 @@ public class NotificationController {
     public ResponseEntity<Void> readNotification(@PathVariable Long id) {
         notificationService.readNotification(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+    /**
+     * @title 알림 삭제
+     */
+    @DeleteMapping("/api/member/notifications/{id}")
+    public ResponseDto<?> deleteNotification(@PathVariable Long id) {
+        notificationService.deleteNotification(id);
+        return ResponseDto.success("알림이 삭제 되었습니다!");
     }
 }
