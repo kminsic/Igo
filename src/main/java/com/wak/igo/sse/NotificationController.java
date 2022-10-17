@@ -49,6 +49,6 @@ public class NotificationController {
     @DeleteMapping("/api/member/notifications/{id}")
     public ResponseDto<?> deleteNotification(@PathVariable Long id) {
         notificationService.deleteNotification(id);
-        return ResponseDto.success("알림이 삭제 되었습니다!");
+        return ResponseDto.success(id);
     }
 }
