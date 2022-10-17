@@ -53,15 +53,14 @@ public class HeartService {
                     .post(post.get())
                     .member(member)
                     .build());
-
             post.get().addHeart();
             notificationService.sendHeart(postMember,post,"새로운 좋아요가 왔어요 따듯하네요!");
             return ResponseDto.success(
                     HeartResponseDto.builder()
                             .heartNum(post.get().getHeartNum())
                             .build());
-
         }
+
         else {
             heartRepository.delete(heart.get());
             post.get().removeHeart();

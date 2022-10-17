@@ -130,7 +130,7 @@ public class NotificationService {
         return Notification.builder()
                 .receiver(receiver)
                 .content(content)
-                .url("/api/detail/" + post.getId())
+                .url("/postdetail/" + post.getId())
                 .isRead(false)
                 .build();
     }
@@ -141,7 +141,7 @@ public class NotificationService {
         return Notification.builder()
                 .receiver(receiver)
                 .content(content)
-                .url("/api/detail/" + post.get().getId())
+                .url("/postdetail/" + post.get().getId())
                 .isRead(false)
                 .build();
     }

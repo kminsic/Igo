@@ -90,7 +90,7 @@ public class FormMemberService {
 
         Optional<MyPost> myPost = myPostService.findMypost(member.getId());
 
-        //날짜 계산을 위해 시간변환
+//        //날짜 계산을 위해 시간변환
 //        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 //        LocalDate startDate = LocalDate.parse(myPost.get().getTime(), dateTimeFormatter);
 //        LocalDate now = LocalDate.now();
