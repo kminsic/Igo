@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 public enum ErrorCode {
 
+
+
     /* 400 BAD_REQUEST : 잘못된 요청 */
     WRONG_OBJECT(HttpStatus.BAD_REQUEST, "객체 변환이 되지 않습니다. 옳은 형식을 보내주세요."),
     INVALID_FIELD(HttpStatus.BAD_REQUEST, "인자 형식이 맞지 않습니다."),
@@ -19,6 +21,11 @@ public enum ErrorCode {
 
     /* 401 UNAUTHORIZED : 잘못된 요청 */
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "유효한 인증 자격 증명이 없습니다."),
+
+    //문자열 체크
+    NOT_VALIDCONTENT(HttpStatus.BAD_REQUEST,"유효하지 않는 내용입니다."),
+    NOT_VALIDURL(HttpStatus.BAD_REQUEST,"요효하지 않는 URL 입니다."),
+
 
     /* 404 NOT_FOUND : Resource 를 찾을 수 없음 */
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 유저 정보를 찾을 수 없습니다"),
@@ -30,9 +37,17 @@ public enum ErrorCode {
     ALREADY_HEARTED(HttpStatus.CONFLICT, "이미 좋아요 된 포스트 입니다."),
 
     /* 500 SERVER_ERROR */
-    FAIL_ENCODING(HttpStatus.INTERNAL_SERVER_ERROR, "IO 에러로 이미지 URL 인코딩을 실패했습니다.");
+    FAIL_ENCODING(HttpStatus.INTERNAL_SERVER_ERROR, "IO 에러로 이미지 URL 인코딩을 실패했습니다."),
+
+    //sse
+    NOT_EXIST_NOTIFICATION(HttpStatus.NOT_FOUND,"존재하지 않는 알림입니다.");
+
+
+
+
 
     private final HttpStatus httpStatus;
     private final String detail;
+
 
 }

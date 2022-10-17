@@ -71,10 +71,14 @@ public class SecurityConfiguration {
                 .antMatchers("/naver/callback").permitAll()
                 .antMatchers("/api/**").permitAll()
                 .antMatchers("/api").permitAll()
+                .antMatchers("/*").permitAll()
+                .antMatchers("/index.html/*").permitAll()
+                .antMatchers("/notification/*").permitAll()
+                .antMatchers("/subscribe/*").permitAll()
                 .antMatchers("/subcribe").permitAll()
                 .antMatchers("/").permitAll()
                 .antMatchers("/refresh").permitAll()
-                
+
                 .anyRequest().authenticated()
 //                .anyRequest().permitAll()
 

@@ -46,6 +46,7 @@ public class NaverUserService {
         Authentication authentication = forceLogin(naverUser); // 강제 로그인
         UserDetailsImpl userDetails = naverUsersAuthorizationInput(authentication, response); // 로그인 인증정보로 jwt 토큰 생성, header에 Jwt 토큰 추가.
         MemberResponseDto memberInfo = memberInfo(userDetails); // 회원정보 가져오기
+
         return ResponseDto.success(memberInfo);
     }
 

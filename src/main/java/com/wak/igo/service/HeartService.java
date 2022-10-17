@@ -9,6 +9,7 @@ import com.wak.igo.dto.response.ResponseDto;
 import com.wak.igo.jwt.TokenProvider;
 import com.wak.igo.repository.HeartRepository;
 import com.wak.igo.repository.PostRepository;
+import com.wak.igo.sse.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +24,7 @@ public class HeartService {
     private final TokenProvider tokenProvider;
     private final PostRepository postRepository;
     private final HeartRepository heartRepository;
-
+    private final NotificationService notificationService;
 
 
 
@@ -40,6 +41,8 @@ public class HeartService {
 
         Optional<Post> post = postRepository.findById(id);
 
+        Member postMember = post.get().getMember();
+
         if (post.isEmpty()) {
             return ResponseDto.fail("해당 게시글이 존재하지 않습니다.", "해당 게시글이 존재하지 않습니다.)");
         }
@@ -50,13 +53,14 @@ public class HeartService {
                     .post(post.get())
                     .member(member)
                     .build());
-
             post.get().addHeart();
+            notificationService.sendHeart(postMember,post,"새로운 좋아요가 왔어요 따듯하네요!");
             return ResponseDto.success(
                     HeartResponseDto.builder()
                             .heartNum(post.get().getHeartNum())
                             .build());
         }
+
         else {
             heartRepository.delete(heart.get());
             post.get().removeHeart();

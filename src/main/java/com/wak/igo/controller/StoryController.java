@@ -38,5 +38,6 @@ public class StoryController {
     public ResponseDto<?> deleteStory(@PathVariable Long id, HttpServletRequest request) {
         return storyService.deleteStory(id,request);
     }
+
 }
 

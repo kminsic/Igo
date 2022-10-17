@@ -4,6 +4,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.wak.igo.domain.Heart;
 import com.wak.igo.domain.Member;
+import com.wak.igo.domain.MyPost;
 import com.wak.igo.domain.Post;
 import com.wak.igo.dto.HeartDto;
 import com.wak.igo.dto.response.MemberResponseDto;
@@ -12,7 +13,9 @@ import com.wak.igo.dto.response.ResponseDto;
 import com.wak.igo.jwt.TokenProvider;
 import com.wak.igo.repository.HeartRepository;
 import com.wak.igo.repository.MemberRepository;
+import com.wak.igo.repository.MyPostRepository;
 import com.wak.igo.repository.PostRepository;
+import com.wak.igo.sse.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -36,9 +39,10 @@ public class MyPageService {
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
     private final HeartRepository heartRepository;
+    private final NotificationService notificationService;
 
     //회원정보 불러오기
-    @Transactional(readOnly = true)
+    @Transactional//(readOnly = true)
     public ResponseDto<?> getMember(HttpServletRequest request) {
         // 리프레쉬 토큰 확인
         if (null == request.getHeader("RefreshToken")) {
@@ -56,6 +60,7 @@ public class MyPageService {
                         .nickname(member.getNickname())
                         .interested(member.getInterested())
                         .profileImage(member.getProfileImage())
+                        .interested(member.getInterested())
                         .build()
         );
         return ResponseDto.success(memberResponseDtoList);
@@ -203,5 +208,7 @@ public class MyPageService {
 
         return amazonS3.getUrl(bucket, s3FileName).toString(); // S3에 업로드 된 사진 url 가져오기
     }
+
+
 
 }

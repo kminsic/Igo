@@ -1,9 +1,11 @@
 package com.wak.igo.controller;
 
+import com.wak.igo.domain.UserDetailsImpl;
 import com.wak.igo.dto.request.CommentRequestDto;
 import com.wak.igo.dto.response.ResponseDto;
 import com.wak.igo.service.CommentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,8 +27,8 @@ public class CommentController {
     // 댓글 작성
     @PostMapping("/api/comments")
     public ResponseDto<?> createComment(@RequestBody CommentRequestDto requestDto,
-                                        HttpServletRequest request) {
-        return commentService.createComment(requestDto, request);
+                                        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return commentService.createComment(requestDto, userDetails);
     }
 
     // 댓글 수정
