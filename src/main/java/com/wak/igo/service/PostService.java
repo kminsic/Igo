@@ -159,6 +159,7 @@ public class PostService {
             String tagPost = post.getTags().get(1);
             if (tagPost.equals(type)) {
                 RegionTagPosts.add(post);
+
             }
         }
         return RegionTagPosts;
@@ -222,19 +223,13 @@ public class PostService {
     @Transactional
     public ResponseDto<?> updatePost(
             Long id, PostRequestDto requestDto, HttpServletRequest request) throws IOException {
-//        ResponseDto<?> chkResponse = validateCheck(request);
-//        if (!chkResponse.isSuccess())
-//            return chkResponse;
-//        Member member = (Member) chkResponse.getData();
         Member member = validateMember(request);
         if (null == member) {
-            return ResponseDto.fail("INVALID TOKEN", "TOKEN이 유효하지않습니다");
-        }
+            return ResponseDto.fail("INVALID TOKEN", "TOKEN이 유효하지않습니다");}
         // 유저 테이블에서 유저객체 가져오기
         Post post = isPresentPost(id);
         if (null == post) {
-            return ResponseDto.fail("NOT_FOUND", "게시글이 존재하지 않습니다.");
-        }
+            return ResponseDto.fail("NOT_FOUND", "게시글이 존재하지 않습니다.");}
         if (!member.getId().equals(post.getMember().getId()))
             return ResponseDto.fail("작성자가 아닙니다.", "작성자가 아닙니다.");
         // 썸네일 추출
@@ -247,7 +242,7 @@ public class PostService {
         Matcher matcher = pattern.matcher(getThumnail);
         String thumnail = (matcher.find()) ? matcher.group(0) : "false";
         post.update(requestDto, thumnail, content);
-        return ResponseDto.success("success");
+        return ResponseDto.success("수정 완료");
     }
 
     //게시글 삭제
@@ -267,7 +262,7 @@ public class PostService {
         heartRepository.deleteAllByPost(post);
         reportRepository.deleteAllByPost(post);
         postRepository.delete(post);
-        return ResponseDto.success("Success");
+        return ResponseDto.success("삭제 완료");
 
     }
 

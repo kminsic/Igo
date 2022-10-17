@@ -103,7 +103,7 @@ public class StoryService {
         if (!member.getId().equals(story.getMember().getId()))
             return ResponseDto.fail("작성자가 아닙니다.", "작성자가 아닙니다.");
 
-        storyRepository.deleteAllByStory(story);
+        storyRepository.delete(story);
         return ResponseDto.success("삭제 완료");
     }
 
