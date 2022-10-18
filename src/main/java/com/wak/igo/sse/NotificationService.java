@@ -6,12 +6,14 @@ import com.wak.igo.domain.Post;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -25,6 +27,8 @@ public class NotificationService {
 
     private final EmitterRepository emitterRepository;
     private final NotificationRepository notificationRepository;
+    private final Logger LOGGER = LoggerFactory.getLogger(NotificationService.class.getName());
+
 
     public NotificationService(EmitterRepository emitterRepository, NotificationRepository notificationRepository) {
         this.emitterRepository = emitterRepository;
@@ -154,4 +158,21 @@ public class NotificationService {
     public void deleteNotification(Long id) {
         notificationRepository.deleteById(id);
     }
+    @Scheduled(cron = "* 0/30 * * * *")
+    public void scheduleNotification(){
+        findNotification();
+    }
+    @Transactional
+    public void findNotification() {
+        List<Notification> notification = notificationRepository.findAll();
+        List<Notification> notificationList = new ArrayList<>();
+        for (Notification notification1 : notification) {
+            if (notification1.isRead()==true) {
+                 notificationList.add(notification1);
+                 notificationRepository.deleteById(notification1.getId());
+            }
+        }LOGGER.info("안녕..알림들..");
+    }
+
+
 }
