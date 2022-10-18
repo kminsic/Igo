@@ -10,6 +10,7 @@ import com.wak.igo.dto.response.MemberResponseDto;
 import com.wak.igo.dto.response.ResponseDto;
 import com.wak.igo.jwt.TokenProvider;
 import com.wak.igo.repository.MemberRepository;
+import com.wak.igo.repository.MyPostRepository;
 import com.wak.igo.sse.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +28,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -37,7 +39,7 @@ public class FormMemberService {
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
     private final NotificationService notificationService;
-    private final MyPostService myPostService;
+    private final MyPostRepository myPostRepository;
 
     @Transactional
     public ResponseDto<?> createMember(MemberRequestDto requestDto) {
@@ -83,20 +85,21 @@ public class FormMemberService {
         response.addHeader("Authorization", "BEARER" + " " + tokenDto.getAccessToken());
         response.addHeader("RefreshToken", tokenDto.getRefreshToken());
         response.addHeader("Access-Token-Expire-Time", tokenDto.getAccessTokenExpiresIn().toString());
-
-        Optional<MyPost> myPost = myPostService.findMypost(member.getId());
-        if(myPost.isPresent()){
+        List<MyPost> myPost = myPostRepository.findAllByMemberId(member.getId());
+        for (MyPost myPost1: myPost) {
             //날짜 계산을 위해 시간변환
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            LocalDate startDate = LocalDate.parse(myPost.get().getTime(), dateTimeFormatter);
+            LocalDate startDate = LocalDate.parse(myPost1.getTime(), dateTimeFormatter);
             LocalDate now = LocalDate.now();
             LocalDateTime date1 = startDate.atStartOfDay();
             LocalDateTime date2 = now.atStartOfDay();
             int betweenDays = (int) Duration.between(date2, date1).toDays();
-            if (betweenDays <= 3){
-                notificationService.sendMypost(member,myPost,"작성한 일정이 얼마남지 않았습니다!");
+            System.out.println(betweenDays);
+            if (betweenDays <= 3) {
+                notificationService.sendMypost(member, myPost, "작성한 일정이 얼마남지 않았습니다!");
             }
         }
+
         return ResponseDto.success(
                 MemberResponseDto.builder()
                         .nickname(member.getNickname())
