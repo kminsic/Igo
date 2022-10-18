@@ -32,6 +32,7 @@ public class PostService {
     private final CommentRepository commentRepository;
     private final ReportRepository reportRepository;
     private final HeartRepository heartRepository;
+    private final CommentService commentService;
 
 
     //전체 게시글 조회
@@ -61,21 +62,6 @@ public class PostService {
         if (null == post) {
             return ResponseDto.fail("NOT_FOUND", "게시글이 존재하지 않습니다.");
         }
-
-        List<Comment> commentList = commentRepository.findAllByPost(post);
-        List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
-        for (Comment comment : commentList) {
-            commentResponseDtoList.add(
-                    CommentResponseDto.builder()
-                            .id(comment.getId())
-                            .profile(comment.getMember().getProfileImage())
-                            .nickname(comment.getMember().getNickname())
-                            .content(comment.getContent())
-                            .createdAt(comment.getCreatedAt())
-                            .modifiedAt(comment.getModifiedAt())
-                            .build()
-            );
-        }
         post.add_viewCount();
         return ResponseDto.success(
                 PostResponseDto.builder()
@@ -87,7 +73,7 @@ public class PostService {
                         .mapData(post.getMapData())
                         .reportNum(post.getReportNum())
                         .tags(post.getTags())
-                        .commentResponseDtoList(commentResponseDtoList)
+                        .commentResponseDtoList(commentService.findComment(post))
                         .profile(post.getMember().getProfileImage())
                         .nickname(post.getMember().getNickname())
                         .searchPlace(post.getSearchPlace())
@@ -141,10 +127,8 @@ public class PostService {
         List<Post> posts = postRepository.findAll();
         for (Post post : posts) {
             String tagPost = post.getTags().get(0);
-            System.out.println(tagPost);
             if (tagPost.equals(type)) {
                 InterestTagPosts.add(post);
-                System.out.println(InterestTagPosts);
             }
         }
         return InterestTagPosts;

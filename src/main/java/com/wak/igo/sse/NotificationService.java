@@ -158,7 +158,7 @@ public class NotificationService {
     public void deleteNotification(Long id) {
         notificationRepository.deleteById(id);
     }
-    @Scheduled(cron = "* 0/30 * * * *")
+    @Scheduled(cron = "0 30 * * * *")
     public void scheduleNotification(){
         findNotification();
     }
@@ -171,7 +171,8 @@ public class NotificationService {
                  notificationList.add(notification1);
                  notificationRepository.deleteById(notification1.getId());
             }
-        }LOGGER.info("안녕..알림들..");
+        }
+        LOGGER.info("안녕..알림들..");
     }
 
 

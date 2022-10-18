@@ -39,9 +39,9 @@ public class NotificationController {
      * @title 알림 읽음 상태 변경
      */
     @PatchMapping("/api/member/notifications/{id}")
-    public ResponseEntity<Void> readNotification(@PathVariable Long id) {
+    public ResponseDto<?> readNotification(@PathVariable Long id) {
         notificationService.readNotification(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseDto.success("success");
     }
     /**
      * @title 알림 삭제

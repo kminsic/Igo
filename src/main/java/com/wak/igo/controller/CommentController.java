@@ -9,8 +9,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-
 @Validated
 @RequiredArgsConstructor
 @RestController
@@ -34,14 +32,14 @@ public class CommentController {
     // 댓글 수정
     @RequestMapping(value = "/api/comment/{id}", method = RequestMethod.PUT)
     public ResponseDto<?> updateComment(@PathVariable Long id, @RequestBody CommentRequestDto requestDto,
-                                        HttpServletRequest request) {
-        return commentService.updateComment(id, requestDto, request);
+                                        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return commentService.updateComment(id, requestDto, userDetails);
     }
 
     // 댓글 삭제
     @RequestMapping(value = "/api/comment/{id}", method = RequestMethod.DELETE)
     public ResponseDto<?> deleteComment(@PathVariable Long id,
-                                        HttpServletRequest request) {
-        return commentService.deleteComment(id, request);
+                                        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return commentService.deleteComment(id, userDetails);
     }
 }

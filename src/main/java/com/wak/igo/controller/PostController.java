@@ -85,7 +85,6 @@ public class PostController {
         return postService.createPost(postRequestDto, request);
     }
 
-
     // 게시글 수정
     @RequestMapping(value = "/api/post/{id}", method = RequestMethod.PATCH)
     public ResponseDto<?> updatePost(@PathVariable Long id,

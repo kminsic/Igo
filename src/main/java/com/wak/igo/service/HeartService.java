@@ -78,7 +78,6 @@ public class HeartService {
         if (null == member) {
             return ResponseDto.fail("Token이 유효하지 않습니다.","Token이 유효하지 않습니다.");
         }
-        System.out.println(member.getNickname());
         return ResponseDto.success(member);
     }
 
