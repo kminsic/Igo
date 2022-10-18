@@ -123,7 +123,7 @@ public class NotificationService {
         return Notification.builder()
                 .receiver(receiver)
                 .content(content)
-                .url("/myinfo" )
+                .url("/myplan")
                 .isRead(false)
                 .build();
     }
