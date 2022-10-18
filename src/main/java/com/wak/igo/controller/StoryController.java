@@ -23,7 +23,7 @@ public class StoryController {
     private final StoryService storyService;
 
     //스토리 조회
-    @RequestMapping(value = "/api/story", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/storys", method = RequestMethod.GET)
     public List<?> getAllStorys() throws IOException {
         return storyService.getAllStorys();
     }
