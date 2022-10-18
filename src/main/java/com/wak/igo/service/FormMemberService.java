@@ -1,8 +1,6 @@
 package com.wak.igo.service;
 
-import com.wak.igo.domain.Member;
-import com.wak.igo.domain.MyPost;
-import com.wak.igo.domain.UserDetailsImpl;
+import com.wak.igo.domain.*;
 import com.wak.igo.dto.request.LoginRequestDto;
 import com.wak.igo.dto.request.MemberRequestDto;
 import com.wak.igo.dto.request.TokenDto;
@@ -10,7 +8,11 @@ import com.wak.igo.dto.response.MemberResponseDto;
 import com.wak.igo.dto.response.ResponseDto;
 import com.wak.igo.jwt.TokenProvider;
 import com.wak.igo.repository.MemberRepository;
+import com.wak.igo.repository.PostRepository;
+import com.wak.igo.repository.RefreshTokenRepository;
+import com.wak.igo.repository.StoryRepository;
 import com.wak.igo.sse.NotificationService;
+import io.jsonwebtoken.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,16 +24,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletResponse;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.Temporal;
-import java.util.Date;
-import java.util.NoSuchElementException;
+
 import java.util.Optional;
 
 @Service
@@ -39,11 +36,15 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class FormMemberService {
     private final MemberRepository memberRepository;
+    private final PostRepository postRepository;
+    private final StoryRepository storyRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
     private final NotificationService notificationService;
     private final MyPostService myPostService;
 
+    //일반 회원가입
     @Transactional
     public ResponseDto<?> createMember(MemberRequestDto requestDto) {
         if (null != isPresentMember(requestDto.getMemberId())) {  //아이디 중복여부 확인
@@ -68,8 +69,9 @@ public class FormMemberService {
         return ResponseDto.success("회원가입에 성공했습니다");
     }
 
+    //로그인(Form Login)
     @Transactional
-    public ResponseDto<?> login(LoginRequestDto requestDto, HttpServletResponse response) throws ParseException {
+    public ResponseDto<?> login(LoginRequestDto requestDto, HttpServletResponse response) {
         Member member = isPresentMember(requestDto.getMemberId());
         if (null == member) {
             return ResponseDto.fail("MEMBER_NOT_FOUND", "사용자를 찾을 수 없습니다.");
@@ -90,7 +92,7 @@ public class FormMemberService {
         response.addHeader("Access-Token-Expire-Time", tokenDto.getAccessTokenExpiresIn().toString());
 
         Optional<MyPost> myPost = myPostService.findMypost(member.getId());
-        if(myPost.isPresent()){
+        if (myPost.isPresent()) {
             //날짜 계산을 위해 시간변환
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDate startDate = LocalDate.parse(myPost.get().getTime(), dateTimeFormatter);
@@ -98,8 +100,8 @@ public class FormMemberService {
             LocalDateTime date1 = startDate.atStartOfDay();
             LocalDateTime date2 = now.atStartOfDay();
             int betweenDays = (int) Duration.between(date2, date1).toDays();
-            if (betweenDays == 3){
-                notificationService.sendMypost(member,myPost,"작성한 일정이 얼마남지 않았습니다!");
+            if (betweenDays == 3) {
+                notificationService.sendMypost(member, myPost, "작성한 일정이 얼마남지 않았습니다!");
             }
         }
         return ResponseDto.success(
@@ -110,14 +112,30 @@ public class FormMemberService {
                         .build());
     }
 
+    //회원 탈퇴
+    @Transactional
+    public ResponseDto<?> withdrawal(Long id, UserDetailsImpl userDetails)throws IOException {
+        if (null == userDetails.getAuthorities()) {
+            ResponseDto.fail("MEMBER_NOT_FOUND",
+                    "사용자를 찾을 수 없습니다.");
+        }
+        Member member = memberRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException(" 가입되지 않은 회원입니다."));
+        if (!userDetails.getId().equals(member.getId()))
+            return ResponseDto.fail("작성자가 아닙니다.", "작성자가 아닙니다.");;
+
+        postRepository.deleteAllByMember(member);
+        storyRepository.deleteAllByMember(member);
+        refreshTokenRepository.deleteAllByMember(member);
+        memberRepository.delete(member);
+
+        return ResponseDto.success("탈퇴 완료");
+}
+
     @Transactional(readOnly = true)
     public Member isPresentMember(String membername) {
         Optional<Member> optionalMember = memberRepository.findByMemberId(membername);
         return optionalMember.orElse(null);
     }
-
-
-
-
 }
 

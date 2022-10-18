@@ -21,7 +21,7 @@ import javax.validation.Valid;
 import java.text.ParseException;
 
 // https://kauth.kakao.com/oauth/authorize?client_id=3d365192ea8ab4f32c7f9c1d7c5688e1&redirect_uri=http://localhost:3000/kakaoloading&response_type=code
-// 카카오 로그인 url - https://kauth.kakao.com/oauth/authorize?client_id=fdb42734830cbb186c8221bf3acdd6c6&redirect_uri=http://localhost:8080/kakao/callback&response_type=code
+    // 카카오 로그인 url - https://kauth.kakao.com/oauth/authorize?client_id=fdb42734830cbb186c8221bf3acdd6c6&redirect_uri=http://localhost:8080/kakao/callback&response_type=code
 // 네이버 로그인 url - https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=DmLVvurxVnPCqlnSp0XZ&state=STATE_STRING&redirect_uri=http://localhost:8080/naver/callback
 @RequiredArgsConstructor
 @RestController
@@ -41,7 +41,7 @@ public class LoginController {
 
     // 로그인
     @RequestMapping (value = "/api/member/login", method = RequestMethod.POST)
-    public ResponseDto<?> login(@RequestBody  LoginRequestDto requestDto, HttpServletResponse response) throws IOException, ParseException {
+    public ResponseDto<?> login(@RequestBody  LoginRequestDto requestDto, HttpServletResponse response) throws ParseException {
         return formMemberService.login( requestDto , response);
     }
 
@@ -68,4 +68,10 @@ public class LoginController {
     public ResponseDto<?> validate(HttpServletRequest request) throws IOException {
         return ResponseDto.success(tokenProvider.validateRefreshToken(request));
     }
+    //회원탈퇴
+    @DeleteMapping("/api/member/withdrawal/{id}")
+    public ResponseDto<?> withdrawal(@PathVariable Long id,  @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException{
+        return formMemberService.withdrawal(id, userDetails);
+    }
+
 }
