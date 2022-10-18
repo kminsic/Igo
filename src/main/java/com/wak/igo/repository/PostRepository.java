@@ -21,5 +21,5 @@ public interface PostRepository  extends JpaRepository<Post,Long> {
     List<Post> findByViewCountLessThanEqual(int viewCount, PageRequest pageRequest);
     List<Post> findByHeartNumLessThanEqual(int heartNum, PageRequest pageRequest);
 
-    Post findByMemberId(Long id);
+   Post findByMemberId(Long id);
 }

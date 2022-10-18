@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -40,7 +41,7 @@ public class HeartService {
         Member member = (Member) chkResponse.getData();
 
         Optional<Post> post = postRepository.findById(id);
-        Post postNotification = postRepository.findByMemberId(id);
+        Post postNotification = postRepository.findByMemberId(member.getId());
         Member postMember = post.get().getMember();
 
         if (post.isEmpty()) {
