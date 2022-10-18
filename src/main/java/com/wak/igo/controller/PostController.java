@@ -33,7 +33,7 @@ public class PostController {
     public ResponseDto<?> getAllGroupPosts(@RequestParam String type) {
         return postService.getAllGroupPosts(type);
     }
-    
+
     // 로그인 후 태그 설정
     @RequestMapping(value = "/api/member/tag", method = RequestMethod.PATCH)
     public ResponseDto<?> getTag(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody InterestedTagDto tagDto) {

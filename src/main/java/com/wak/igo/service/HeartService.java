@@ -54,7 +54,7 @@ public class HeartService {
                     .member(member)
                     .build());
             post.get().addHeart();
-            notificationService.sendHeart(postMember,post,"새로운 좋아요가 왔어요 따듯하네요!");
+            notificationService.sendHeart(postMember,post,"새로운 좋아요가 왔어요!");
             return ResponseDto.success(
                     HeartResponseDto.builder()
                             .heartNum(post.get().getHeartNum())
