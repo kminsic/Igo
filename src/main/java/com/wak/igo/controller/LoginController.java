@@ -40,25 +40,28 @@ public class LoginController {
     }
 
     // 로그인
-    @RequestMapping (value = "/api/member/login", method = RequestMethod.POST)
-    public ResponseDto<?> login(@RequestBody  LoginRequestDto requestDto, HttpServletResponse response) throws ParseException {
+    @PostMapping ("/api/member/login")
+    public ResponseDto<?> login(@RequestBody  LoginRequestDto requestDto, HttpServletResponse response)
+            throws IOException{
         return formMemberService.login( requestDto , response);
     }
 
     // 카카오 로그인
-    @RequestMapping(value = "/kakao/callback", method = RequestMethod.GET)
-    public ResponseDto<?> kakaologin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
+    @GetMapping("/kakao/callback")
+    public ResponseDto<?> kakaologin(@RequestParam String code, HttpServletResponse response)
+            throws JsonProcessingException {
         return kakaoUserService.kakaologin(code, response);
     }
 
     // 네이버 로그인
-    @GetMapping(value = "/naver/callback")
-    public ResponseDto<?> naverlogin(@RequestParam String code, @RequestParam String state, HttpServletResponse response) throws JsonProcessingException {
+    @GetMapping( "/naver/callback")
+    public ResponseDto<?> naverlogin(@RequestParam String code, @RequestParam String state, HttpServletResponse response)
+            throws JsonProcessingException {
         return naverUserService.naverlogin(code, state, response);
     }
 
     // 로그아웃
-    @PostMapping(value = "/api/member/logout")
+    @PostMapping( "/api/member/logout")
     public ResponseDto<?> logout(@AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
         return kakaoUserService.logout(userDetails);
     }

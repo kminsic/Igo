@@ -110,8 +110,7 @@ public class TokenProvider {
     @Transactional(readOnly = true) // 1. 해당 트랜잭션 내에서 데이터를 읽기만 함 2. Hibernate를 사용하는 경우 속도향상 효과 3. 의도치않게 데이터를 변경하는 것을 막아줌
     public String validateRefreshToken(HttpServletRequest request) {
         try {
-            String refreshToken = request.getHeader("RefreshToken");
-            RefreshToken token = refreshTokenRepository.findByKeyValue(refreshToken);
+            RefreshToken token = refreshTokenRepository.findByKeyValue(request.getHeader("RefreshToken"));
 
             long now = (new Date().getTime());
 
