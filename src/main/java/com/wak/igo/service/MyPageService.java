@@ -33,12 +33,14 @@ public class MyPageService {
     @Transactional(readOnly = true)
     public ResponseDto<?> getMember(UserDetailsImpl userDetails) {
         Member member = userDetailsService.findByIdMember(userDetails.getId());
-        return ResponseDto.success(MemberResponseDto.builder()
+        List<MemberResponseDto> memberResponseDtoList = new ArrayList<>();
+        memberResponseDtoList.add(MemberResponseDto.builder()
                 .nickname(member.getNickname())
                 .interested(member.getInterested())
                 .profileImage(member.getProfileImage())
                 .interested(member.getInterested())
                 .build());
+        return ResponseDto.success(memberResponseDtoList);
     }
     //회원정보 업데이트
     @Transactional
