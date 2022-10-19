@@ -6,15 +6,16 @@ import com.wak.igo.domain.Post;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -26,6 +27,8 @@ public class NotificationService {
 
     private final EmitterRepository emitterRepository;
     private final NotificationRepository notificationRepository;
+    private final Logger LOGGER = LoggerFactory.getLogger(NotificationService.class.getName());
+
 
     public NotificationService(EmitterRepository emitterRepository, NotificationRepository notificationRepository) {
         this.emitterRepository = emitterRepository;
@@ -39,8 +42,6 @@ public class NotificationService {
         emitter.onCompletion(() -> emitterRepository.deleteById(id));
         emitter.onTimeout(() -> emitterRepository.deleteById(id));
 
-//        // 503 에러를 방지하기 위한 더미 이벤트 전송
-//        sendToClient(emitter, id, "EventStream Created. [userId=" + memberid + "]");
         sendDummyAlert(emitter, id);
         // 클라이언트가 미수신한 Event 목록이 존재할 경우 전송하여 Event 유실을 예방
         if (!lastEventId.isEmpty()) {
@@ -49,7 +50,6 @@ public class NotificationService {
                     .filter(entry -> lastEventId.compareTo(entry.getKey()) < 0)
                     .forEach(entry -> sendToClient(emitter, entry.getKey(), entry.getValue()));
         }
-
         return emitter;
     }
 
@@ -92,26 +92,10 @@ public class NotificationService {
         );
     }
 
-    //좋아요 알림
-    @Transactional
-    public void sendHeart(Member receiver, Optional<Post> post, String content) {
-//    public void send(Member receiver, String content) {
-        Notification notification = createNotificationH(receiver, post, content);
-        String id = String.valueOf(receiver.getId());
-        notificationRepository.save(notification);
-        Map<String, SseEmitter> sseEmitters = emitterRepository.findAllStartWithById(id);
-        sseEmitters.forEach(
-                (key, emitter) -> {
-                    emitterRepository.saveEventCache(key, notification);
-                    sendToClient(emitter, key, NotificationResponse.from(notification));
-                }
-        );
-    }
 
     //마이포스트 알림
     @Transactional
-    public void sendMypost(Member receiver, Optional<MyPost> myPost, String content) {
-//    public void send(Member receiver, String content) {
+    public void sendMypost(Member receiver, List<MyPost> myPost, String content) {
         Notification notification = createNotificationM(receiver, myPost, content);
         String id = String.valueOf(receiver.getId());
         notificationRepository.save(notification);
@@ -124,9 +108,7 @@ public class NotificationService {
         );
     }
 
-    //댓글
     private Notification createNotification(Member receiver, Post post, String content) {
-//    private Notification createNotification(Member receiver, String content) {
         return Notification.builder()
                 .receiver(receiver)
                 .content(content)
@@ -135,59 +117,24 @@ public class NotificationService {
                 .build();
     }
 
-    //좋아요
-    private Notification createNotificationH(Member receiver, Optional<Post> post, String content) {
-//    private Notification createNotification(Member receiver, String content) {
-        return Notification.builder()
-                .receiver(receiver)
-                .content(content)
-                .url("/postdetail/" + post.get().getId())
-                .isRead(false)
-                .build();
-    }
 
     //마이포스트
-    private Notification createNotificationM(Member receiver, Optional<MyPost> myPost, String content) {
-//    private Notification createNotification(Member receiver, String content) {
+    private Notification createNotificationM(Member receiver, List<MyPost> myPost, String content) {
         return Notification.builder()
                 .receiver(receiver)
                 .content(content)
-                .url("/api/mypage" )
+                .url("/myplan")
                 .isRead(false)
                 .build();
     }
 
-    //test용
-    private Notification createNotificationtest(Member receiver, String content) {
-//    private Notification createNotification(Member receiver, String content) {
-        return Notification.builder()
-                .receiver(receiver)
-                .content(content)
-                .url("/api/mypage" )
-                .isRead(false)
-                .build();
-    }
 
     // Emitter 지우기
     public void deleteById(String id) {
         CLIENTS.remove(id);
     }
 
-    //마이포스트 알림
-    @Transactional
-    public void sendTest(Member receiver, String content) {
-//    public void send(Member receiver, String content) {
-        Notification notification = createNotificationtest(receiver, content);
-        String id = String.valueOf(receiver.getId());
-        notificationRepository.save(notification);
-        Map<String, SseEmitter> sseEmitters = emitterRepository.findAllStartWithById(id);
-        sseEmitters.forEach(
-                (key, emitter) -> {
-                    emitterRepository.saveEventCache(key, notification);
-                    sendToClient(emitter, key, NotificationResponse.from(notification));
-                }
-        );
-    }
+
 
     @Transactional
 //    public NotificationsResponse findAllById(UserDetailsImpl loginMember) {
@@ -211,4 +158,23 @@ public class NotificationService {
     public void deleteNotification(Long id) {
         notificationRepository.deleteById(id);
     }
+
+    @Scheduled(cron = "* 30 * * * *")
+    public void scheduleNotification(){
+        findNotification();
+    }
+    @Transactional
+    public void findNotification() {
+        List<Notification> notification = notificationRepository.findAll();
+        List<Notification> notificationList = new ArrayList<>();
+        for (Notification notification1 : notification) {
+            if (notification1.isRead()==true) {
+                 notificationList.add(notification1);
+                 notificationRepository.deleteById(notification1.getId());
+            }
+        }
+        LOGGER.info("안녕..알림들..");
+    }
+
+
 }

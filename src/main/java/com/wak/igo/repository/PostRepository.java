@@ -21,4 +21,5 @@ public interface PostRepository  extends JpaRepository<Post,Long> {
     List<Post> findByViewCountLessThanEqual(int viewCount, PageRequest pageRequest);
     List<Post> findByHeartNumLessThanEqual(int heartNum, PageRequest pageRequest);
     void deleteAllByMember(Member member);
+   Post findByMemberId(Long id);
 }

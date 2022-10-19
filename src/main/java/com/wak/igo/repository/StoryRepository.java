@@ -1,8 +1,7 @@
 package com.wak.igo.repository;
 
 import com.wak.igo.domain.Member;
-import com.wak.igo.domain.MyPost;
-import com.wak.igo.domain.Post;
+
 import com.wak.igo.domain.Story;
 import org.springframework.data.jpa.repository.JpaRepository;
 

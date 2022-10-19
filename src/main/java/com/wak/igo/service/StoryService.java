@@ -60,7 +60,6 @@ public class StoryService {
             ResponseDto.fail("MEMBER_NOT_FOUND",
                     "사용자를 찾을 수 없습니다.");
         }
-        System.out.println(multipartFile);
         if (multipartFile.isEmpty()) {
             video = null;
         } else {

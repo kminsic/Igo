@@ -37,7 +37,6 @@ public class PostController {
         return postService.getAllGroupPosts(type);
     }
 
-
     // 로그인 후 태그 설정
     @PatchMapping(value = "/api/member/tag")
     public ResponseDto<?> getTag(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody InterestedTagDto tagDto) {
@@ -88,7 +87,6 @@ public class PostController {
                                      @AuthenticationPrincipal UserDetailsImpl userDetails)  {
         return postService.createPost(postRequestDto, userDetails);
     }
-
 
     // 게시글 수정
     @RequestMapping(value = "/api/post/{id}", method = RequestMethod.PATCH)

@@ -24,7 +24,6 @@ public class MyPostController {
         return myPostService.createSchedule(userDetails, multipartFile, requestDto);
     }
 
-
     @RequestMapping(value = "/api/mypost", method = RequestMethod.PATCH)
     public ResponseDto<?> scheduleUpdate(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                          @RequestPart(value = "images", required = false) MultipartFile multipartFile, @RequestPart(value = "content", required = false) MyPostRequestDto requestDto) throws IOException{

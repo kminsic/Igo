@@ -22,8 +22,7 @@ public class StoryController {
 
     //스토리 조회
     @GetMapping(value = "/api/storys")
-    public List<?> getAllStorys() {
-        return storyService.getAllStorys();
+    public List<?> getAllStorys() {return storyService.getAllStorys();
     }
     //스토리 생성
     @PostMapping(value = "/api/story",consumes = {"multipart/form-data"})
