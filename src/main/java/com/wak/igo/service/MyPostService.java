@@ -32,7 +32,8 @@ public class MyPostService {
     private static final Tika tika = new Tika();
 
     // 일정 추가
-    public ResponseDto<?> createSchedule(UserDetailsImpl userDetails, MultipartFile multipartFile, MyPostRequestDto requestDto) throws IOException{
+    public ResponseDto<?> createSchedule(UserDetailsImpl userDetails, MultipartFile multipartFile,
+                                         MyPostRequestDto requestDto) throws IOException{
         if (null == userDetails.getAuthorities()) {
             ResponseDto.fail("MEMBER_NOT_FOUND",
                     "사용자를 찾을 수 없습니다.");
@@ -75,7 +76,8 @@ public class MyPostService {
     }
 
     // 일정 수정
-    public ResponseDto<?> updateSchedule(UserDetailsImpl userDetails, MultipartFile multipartFile, MyPostRequestDto requestDto) throws IOException {
+    public ResponseDto<?> updateSchedule(UserDetailsImpl userDetails, MultipartFile multipartFile,
+                                         MyPostRequestDto requestDto) throws IOException {
         if (null == userDetails.getAuthorities()) {
             ResponseDto.fail("MEMBER_NOT_FOUND",
                     "사용자를 찾을 수 없습니다.");

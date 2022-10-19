@@ -38,19 +38,20 @@ public class PostController {
     }
 
     // 로그인 후 태그 설정
-    @PatchMapping(value = "/api/member/tag")
-    public ResponseDto<?> getTag(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody InterestedTagDto tagDto) {
+    @PatchMapping("/api/member/tag")
+    public ResponseDto<?> getTag(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                 @RequestBody InterestedTagDto tagDto) {
         return postService.getTag(userDetails, tagDto);
     }
 
     // 태그 기반 회원별 메인 게시글
-    @GetMapping(value = "/api/member/posts")
+    @GetMapping("/api/member/posts")
     public ResponseDto<?> getTagPost(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         List<Post> tagPosts = postService.getTagPost(userDetails);
         return ResponseDto.success(tagPosts);
     }
     //관심사태그 조회
-    @GetMapping(value = "/api/posts/interest")
+    @GetMapping("/api/post/interest")
     public ResponseDto<?> getAllInterestTags(@RequestParam String type) {
         List<Post> InterestTagPosts = postService.getAllInterestTags(type);
         return ResponseDto.success(InterestTagPosts);
