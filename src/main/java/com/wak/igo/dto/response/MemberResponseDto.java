@@ -15,6 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MemberResponseDto {
+    private Long id;
     private String nickname;
     private String profileImage;
     private List<String> interested;
