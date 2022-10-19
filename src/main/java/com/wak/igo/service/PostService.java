@@ -1,22 +1,17 @@
 package com.wak.igo.service;
 
-import com.wak.igo.domain.Comment;
-import com.wak.igo.domain.Member;
-import com.wak.igo.domain.Post;
-import com.wak.igo.domain.UserDetailsImpl;
+import com.wak.igo.domain.*;
 import com.wak.igo.dto.request.InterestedTagDto;
 import com.wak.igo.dto.request.PostRequestDto;
 import com.wak.igo.dto.response.CommentResponseDto;
 import com.wak.igo.dto.response.PostResponseDto;
 import com.wak.igo.dto.response.ResponseDto;
-import com.wak.igo.jwt.TokenProvider;
 import com.wak.igo.repository.*;
 import io.jsonwebtoken.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +23,6 @@ import java.util.regex.Pattern;
 public class PostService {
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
-    private final TokenProvider tokenProvider;
     private final CommentRepository commentRepository;
     private final ReportRepository reportRepository;
     private final HeartRepository heartRepository;
@@ -182,16 +176,16 @@ public class PostService {
 
     //게시글 생성
     @Transactional
-    public ResponseDto<?> createPost(PostRequestDto postRequestDto, HttpServletRequest request) throws IOException {
-        Member member = validateMember(request);
-        if (null == member) {
-            return ResponseDto.fail("INVALID TOKEN", "TOKEN이 유효하지않습니다");
+    public ResponseDto<?> createPost(PostRequestDto postRequestDto, UserDetailsImpl userDetails  ) throws IOException {
+        if (null == userDetails.getAuthorities()) {
+            ResponseDto.fail("MEMBER_NOT_FOUND",
+                    "사용자를 찾을 수 없습니다.");
         }
         // 썸네일 추출
         String thumnail = getThumnail(postRequestDto);
 
         Post post = Post.builder()
-                .member(member)
+                .member(userDetails.getMember())
                 .title(postRequestDto.getTitle())
                 .content(postRequestDto.getContent())
                 .mapData(postRequestDto.getMapData())
@@ -222,15 +216,16 @@ public class PostService {
     //    게시글 수정
     @Transactional
     public ResponseDto<?> updatePost(
-            Long id, PostRequestDto requestDto, HttpServletRequest request) throws IOException {
-        Member member = validateMember(request);
-        if (null == member) {
-            return ResponseDto.fail("INVALID TOKEN", "TOKEN이 유효하지않습니다");}
+            Long id, PostRequestDto requestDto, UserDetailsImpl userDetails  ) throws IOException {
+        if (null == userDetails.getAuthorities()) {
+            ResponseDto.fail("MEMBER_NOT_FOUND",
+                    "사용자를 찾을 수 없습니다.");
+        }
         // 유저 테이블에서 유저객체 가져오기
         Post post = isPresentPost(id);
         if (null == post) {
             return ResponseDto.fail("NOT_FOUND", "게시글이 존재하지 않습니다.");}
-        if (!member.getId().equals(post.getMember().getId()))
+        if (!userDetails.getId().equals(post.getMember().getId()))
             return ResponseDto.fail("작성자가 아닙니다.", "작성자가 아닙니다.");
         // 썸네일 추출
         String content = requestDto.getContent();
@@ -247,17 +242,17 @@ public class PostService {
 
     //게시글 삭제
     @Transactional
-    public ResponseDto<?> deletePost(Long id, HttpServletRequest request) {
-        ResponseDto<?> chkResponse = validateCheck(request);
-        if (!chkResponse.isSuccess())
-            return chkResponse;
-        Member member = (Member) chkResponse.getData();
-        Member updateMember = memberRepository.findByNickname(member.getNickname()).get();
-        Post post = isPresentPost(id);
-        if (post == null)
-            return ResponseDto.fail("글 삭제에 실패하였습니다. (NOT_EXIST)", "글 삭제에 실패하였습니다. (NOT_EXIST)");
-        if (post.validateMember(updateMember))
-            return ResponseDto.fail("작성자가 아닙니다.", "작성자가 아닙니다.");
+    public ResponseDto<?> deletePost(Long id, UserDetailsImpl userDetails  ) throws IOException {
+        if (null == userDetails.getAuthorities()) {
+            ResponseDto.fail("MEMBER_NOT_FOUND",
+                    "사용자를 찾을 수 없습니다.");
+        }
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("삭제할 게시글이 없습니다."));
+
+        if (!userDetails.getId().equals(post.getMember().getId()))
+            return ResponseDto.fail("작성자가 아닙니다.", "작성자가 아닙니다.");;
+
         commentRepository.deleteAllByPost(post);
         heartRepository.deleteAllByPost(post);
         reportRepository.deleteAllByPost(post);
@@ -321,28 +316,6 @@ public class PostService {
     public Post isPresentPost(Long id) {
         Optional<Post> optionalPost = postRepository.findById(id);
         return optionalPost.orElse(null);
-    }
-
-    @Transactional
-    public Member validateMember(HttpServletRequest request) {
-        if (!tokenProvider.validateToken(request.getHeader("RefreshToken"))) {
-            return null;
-        }
-        return tokenProvider.getMemberFromAuthentication().getMember();
-    }
-
-    private ResponseDto<?> validateCheck(HttpServletRequest request) {
-        // RefreshToken 및 Authorization 유효성 검사
-        if (null == request.getHeader("RefreshToken")
-                || null == request.getHeader("Authorization")) {
-            return ResponseDto.fail("로그인이 필요합니다.", "로그인이 필요합니다.");
-        }
-        Member member = validateMember(request);
-        // token 정보 유효성 검사
-        if (null == member) {
-            return ResponseDto.fail("Token이 유효하지 않습니다.", "Token이 유효하지 않습니다.");
-        }
-        return ResponseDto.success(member);
     }
 }
 

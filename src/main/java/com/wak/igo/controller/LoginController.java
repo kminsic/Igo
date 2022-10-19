@@ -52,19 +52,19 @@ public class LoginController {
     }
 
     // 네이버 로그인
-    @RequestMapping(value = "/naver/callback", method = RequestMethod.GET)
+    @GetMapping(value = "/naver/callback")
     public ResponseDto<?> naverlogin(@RequestParam String code, @RequestParam String state, HttpServletResponse response) throws JsonProcessingException {
         return naverUserService.naverlogin(code, state, response);
     }
 
     // 로그아웃
-    @RequestMapping(value = "/api/member/logout", method = RequestMethod.POST)
+    @PostMapping(value = "/api/member/logout")
     public ResponseDto<?> logout(@AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
         return kakaoUserService.logout(userDetails);
     }
 
     // 액세스 토큰 재발급
-    @RequestMapping(value = "/refresh", method = RequestMethod.GET)
+    @GetMapping(value = "/refresh")
     public ResponseDto<?> validate(HttpServletRequest request) throws IOException {
         return ResponseDto.success(tokenProvider.validateRefreshToken(request));
     }

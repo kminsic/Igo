@@ -11,9 +11,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import io.jsonwebtoken.io.IOException;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -23,20 +21,20 @@ public class StoryController {
     private final StoryService storyService;
 
     //스토리 조회
-    @RequestMapping(value = "/api/story", method = RequestMethod.GET)
-    public List<?> getAllStorys() throws IOException {
+    @GetMapping(value = "/api/storys")
+    public List<?> getAllStorys() {
         return storyService.getAllStorys();
     }
     //스토리 생성
-    @RequestMapping(value = "/api/story", method = RequestMethod.POST, consumes = {"multipart/form-data"})
+    @PostMapping(value = "/api/story",consumes = {"multipart/form-data"})
     public ResponseDto<?> createStory(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                      @RequestPart(value = "videos", required = false) MultipartFile multipartFile, StoryRequestDto requestDto) throws IOException, java.io.IOException {
+                                      @RequestPart(value = "videos", required = false) MultipartFile multipartFile, StoryRequestDto requestDto) throws java.io.IOException {
         return storyService.createStory(userDetails, multipartFile,requestDto);
     }
     // 스토리 삭제
     @DeleteMapping("/api/story/{id}")
-    public ResponseDto<?> deleteStory(@PathVariable Long id, HttpServletRequest request) {
-        return storyService.deleteStory(id,request);
+    public ResponseDto<?> deleteStory(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return storyService.deleteStory(id,userDetails);
     }
 
 }
