@@ -31,10 +31,10 @@ public class ReportService {
 
         Optional<Post> post = postRepository.findById(id);
         if (post.isEmpty())
-            return ResponseDto.fail("해당 게시글이 존재하지 않습니다.", "해당 게시글이 존재하지 않습니다.");
+            return ResponseDto.fail("BAD_REQUEST", "해당 게시글이 존재하지 않습니다.");
 
         if(!reportRepository.findByMemberIdAndPostId(userDetails.getId(),post.get().getId()).isEmpty()) {
-            return ResponseDto.fail("이미 신고한 글 입니다.", "이미 신고한 글 입니다.");}
+            return ResponseDto.fail("BAD_REQUEST", "이미 신고한 글 입니다.");}
 
         Optional<Report> reportPost = reportRepository.findByMemberIdAndPostId(userDetails.getId(), post.get().getId());
 

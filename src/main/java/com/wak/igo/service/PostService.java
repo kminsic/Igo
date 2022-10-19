@@ -45,7 +45,7 @@ public class PostService {
         } else if (type.equals("heart")) {
             return ResponseDto.success(postRepository.findAllByOrderByHeartNumDesc());
         } else
-            return ResponseDto.fail("잘못된 URL 입니다.", "잘못된 접근입니다");
+            return ResponseDto.fail("BAD_REQUEST", "잘못된 접근입니다");
     }
 
     //상세 페이지 조회
@@ -210,7 +210,7 @@ public class PostService {
         if (null == post) {
             return ResponseDto.fail("NOT_FOUND", "게시글이 존재하지 않습니다.");}
         if (!userDetails.getId().equals(post.getMember().getId()))
-            return ResponseDto.fail("작성자가 아닙니다.", "작성자가 아닙니다.");
+            return ResponseDto.fail("BAD_REQUEST", "작성자가 아닙니다.");
         // 썸네일 추출
         String content = requestDto.getContent();
         if (content == null) {

@@ -125,7 +125,7 @@ public class FormMemberService {
         Member member = memberRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException(" 가입되지 않은 회원입니다."));
         if (!userDetails.getId().equals(member.getId()))
-            return ResponseDto.fail("작성자가 아닙니다.", "작성자가 아닙니다.");;
+            return ResponseDto.fail("본인이 아닙니다.", "본인이 아닙니다.");;
 
         myPostRepository.deleteAllByMember(member);
         reportRepository.deleteAllByMember(member);

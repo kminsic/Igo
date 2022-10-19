@@ -98,7 +98,7 @@ public class StoryService {
         if (null == story) {
             return ResponseDto.fail("NOT_FOUND", "스토리가 존재하지 않습니다.");}
         if (!userDetails.getId().equals(story.getMember().getId()))
-            return ResponseDto.fail("작성자가 아닙니다.", "작성자가 아닙니다.");
+            return ResponseDto.fail("BAD_REQUEST", "작성자가 아닙니다.");
 
         storyRepository.delete(story);
         return ResponseDto.success("삭제 완료");

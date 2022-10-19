@@ -34,7 +34,7 @@ public class HeartService {
         Member postMember = post.get().getMember();
         Post postNotification = postRepository.findByMemberId(userDetails.getId());
         if (post.isEmpty()) {
-            return ResponseDto.fail("해당 게시글이 존재하지 않습니다.", "해당 게시글이 존재하지 않습니다.)");
+            return ResponseDto.fail("BAD_REQUEST", "해당 게시글이 존재하지 않습니다.)");
         }
 
         Optional<Heart> heart = heartRepository.findByMemberIdAndPostId(userDetails.getId(), post.get().getId());
