@@ -35,6 +35,7 @@ public class MyPageService {
         Member member = userDetailsService.findByIdMember(userDetails.getId());
         List<MemberResponseDto> memberResponseDtoList = new ArrayList<>();
         memberResponseDtoList.add(MemberResponseDto.builder()
+                .id(member.getId())
                 .nickname(member.getNickname())
                 .interested(member.getInterested())
                 .profileImage(member.getProfileImage())
