@@ -33,35 +33,38 @@ public class PostController {
 
     // 그룹 별 목록 조회(메인 페이지)
     @GetMapping("/api/posts/group")
-    public ResponseDto<?> getAllGroupPosts(@RequestParam String type) {
-        return postService.getAllGroupPosts(type);
+    public ResponseDto<?> getAllGroupPosts(@RequestParam String type, @RequestParam int page) {
+        return postService.getAllGroupPosts(type, page);
     }
 
-    // 로그인 후 태그 설정
+    // 로그인 후 관심사 태그 설정
     @PatchMapping("/api/member/tag")
     public ResponseDto<?> getTag(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                  @RequestBody InterestedTagDto tagDto) {
         return postService.getTag(userDetails, tagDto);
     }
 
-    // 태그 기반 회원별 메인 게시글
+    // 태그 기반 메인 게시글 가져오기 (회원별 메인페이지 구성)
     @GetMapping("/api/member/posts")
     public ResponseDto<?> getTagPost(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         List<Post> tagPosts = postService.getTagPost(userDetails);
         return ResponseDto.success(tagPosts);
     }
+
     //관심사태그 조회
     @GetMapping("/api/post/interest")
     public ResponseDto<?> getAllInterestTags(@RequestParam String type) {
         List<Post> InterestTagPosts = postService.getAllInterestTags(type);
         return ResponseDto.success(InterestTagPosts);
     }
+
     //지역태그 조회
     @GetMapping(value = "/api/posts/region")
     public ResponseDto<?> getAllRegionTags(@RequestParam String type) {
         List<Post> RegionTagPosts = postService.getAllRegionTags(type);
         return ResponseDto.success(RegionTagPosts);
     }
+
     //비용태그 조회
     @GetMapping(value = "/api/posts/cost")
     public ResponseDto<?> getAllCostTags(@RequestParam String type) {
@@ -69,7 +72,7 @@ public class PostController {
         return ResponseDto.success(CostTagPosts);
     }
 
-    //title content 기반 검색
+    //title, content 기반 검색
     @GetMapping(value = "/api/search")
     public ResponseDto<?> findPost(@RequestParam(value = "content") String content){
         List<PostResponseDto> findPost = postService.findPost(content);

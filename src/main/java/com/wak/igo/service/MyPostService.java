@@ -31,7 +31,7 @@ public class MyPostService {
     private final StateRepository myPostStateRepository;
     private static final Tika tika = new Tika();
 
-    // 일정 추가
+    // 개인 일정 작성
     public ResponseDto<?> createSchedule(UserDetailsImpl userDetails, MultipartFile multipartFile,
                                          MyPostRequestDto requestDto) throws IOException{
         if (null == userDetails.getAuthorities()) {
@@ -149,7 +149,7 @@ public class MyPostService {
         return ResponseDto.success("나의 일정 삭제 완료");
     }
 
-    // 회원 별 일정 목록 가져오기
+    // 회원별 일정 목록 가져오기
     public List<?> getSchedule(UserDetailsImpl userDetails){
         List<MyPost> schedules = myPostRepository.findByMember(userDetails.getMember());
         List<MyPostResponseDto> scheduleList = new ArrayList<>();
@@ -234,6 +234,7 @@ public class MyPostService {
         return amazonS3.getUrl(bucket, s3FileName).toString(); // S3에 업로드 된 사진 url 가져오기
     }
 
+    // 업로드 이미지 파일 유효성 검사
     public static boolean validImgFile(MultipartFile multipartFile) {
         try {
             // 업로드를 허용하는 파일 타입

@@ -40,6 +40,7 @@ public class KakaoUserService {
     private final MemberRepository memberRepository;
     private final TokenProvider tokenProvider;
 
+    // 로그아웃
     public ResponseDto<?> logout(UserDetailsImpl userDetails){
         if (null == userDetails.getAuthorities()) {
             ResponseDto.fail("MEMBER_NOT_FOUND",
@@ -48,10 +49,11 @@ public class KakaoUserService {
         return tokenProvider.deleteRefreshToken(userDetails.getMember());
     }
 
+    // 로그인 전체 로직
     public ResponseDto<?> kakaologin(String code, HttpServletResponse response) throws JsonProcessingException {
-        String accessToken = getAccessToken(code);  // 인가 코드로 전체 response 요청해서 access token를 받아온다.
-        MemberInfo kakaoUserInfo = getkakaoUserInfo(accessToken);  // access token 으로 api 요청해서 회원정보를 받아온다.
-        Member kakaoUser = registerKakaoUserIfNeeded(kakaoUserInfo); // DB에 회원이 존재하지 않으면 회원정보를 저장한다(회원가입)
+        String accessToken = getAccessToken(code);  // 인가 코드로 전체 response 요청해서 access token를 받아옴
+        MemberInfo kakaoUserInfo = getkakaoUserInfo(accessToken);  // access token 으로 api 요청해서 회원정보를 받아옴
+        Member kakaoUser = registerKakaoUserIfNeeded(kakaoUserInfo); // DB에 회원이 존재하지 않으면 회원정보를 저장(회원가입)
         Authentication authentication = forceLogin(kakaoUser); // 강제 로그인
         UserDetailsImpl userDetails = kakaoUsersAuthorizationInput(authentication, response); // 로그인 인증정보로 jwt 토큰 생성, header에 Jwt 토큰 추가.
         MemberResponseDto memberInfo = memberInfo(userDetails); // 회원정보 가져오기
@@ -59,6 +61,7 @@ public class KakaoUserService {
 
     }
 
+    // 인가 코드로 전체 response 요청해서 access token를 받아옴
     private String getAccessToken(String code) throws JsonProcessingException {
         // HTTP Header 생성
         HttpHeaders headers = new HttpHeaders();
@@ -94,6 +97,7 @@ public class KakaoUserService {
         return jsonNode.get("access_token").asText();
     }
 
+    // access token 으로 api 요청해서 회원정보를 받아옴
     private MemberInfo getkakaoUserInfo(String accessToken) throws JsonProcessingException {
         // HTTP Header 생성
         HttpHeaders headers = new HttpHeaders();
@@ -120,6 +124,7 @@ public class KakaoUserService {
         return new MemberInfo(id, nickname);
     }
 
+    // DB에 회원이 존재하지 않으면 회원정보를 저장(회원가입)
     private Member registerKakaoUserIfNeeded(MemberInfo kakaoUserInfo) {
 
         String kakaoId = kakaoUserInfo.getMemberId();                   // DB 에 중복된 Kakao Id 가 있는지 확인
@@ -143,6 +148,7 @@ public class KakaoUserService {
         return kakaoUser;
     }
 
+    // 로그인 상태로 처리
     private Authentication forceLogin(Member kakaoUser) {
         UserDetails userDetails = new UserDetailsImpl(kakaoUser);
         Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
@@ -150,6 +156,7 @@ public class KakaoUserService {
         return authentication;
     }
 
+    // 로그인 인증정보로 jwt 토큰 생성, response header에 Jwt 추가.
     private UserDetailsImpl kakaoUsersAuthorizationInput(Authentication authentication, HttpServletResponse response) {
         // response header에 token 추가
 
@@ -162,6 +169,7 @@ public class KakaoUserService {
         return userDetails;
     }
 
+    // 회원정보 가져오기
     private MemberResponseDto memberInfo(UserDetailsImpl userDetails){
         List<String> tag = new ArrayList<>();
         Member member = userDetails.getMember();
