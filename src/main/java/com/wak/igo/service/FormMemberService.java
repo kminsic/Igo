@@ -94,7 +94,6 @@ public class FormMemberService {
             LocalDateTime date1 = startDate.atStartOfDay();
             LocalDateTime date2 = now.atStartOfDay();
             int betweenDays = (int) Duration.between(date2, date1).toDays();
-            System.out.println(betweenDays);
             if (betweenDays <= 3) {
                 notificationService.sendMypost(member, myPost, "작성한 일정이 얼마남지 않았습니다!");
             }

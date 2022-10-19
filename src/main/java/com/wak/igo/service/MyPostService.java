@@ -248,9 +248,4 @@ public class MyPostService {
             return false;
         }
     }
-
-    public Optional<MyPost> findMypost(Long member){
-        Optional<MyPost> myPost = myPostRepository.findById(member);
-        return myPost;
-    }
 }
