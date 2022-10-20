@@ -92,7 +92,6 @@ public class FormMemberService {
         response.addHeader("Authorization", "BEARER" + " " + tokenDto.getAccessToken());
         response.addHeader("RefreshToken", tokenDto.getRefreshToken());
         response.addHeader("Access-Token-Expire-Time", tokenDto.getAccessTokenExpiresIn().toString());
-
         List<MyPost> myPost = myPostRepository.findAllByMemberId(member.getId());
         for (MyPost myPost1: myPost) {
             //날짜 계산을 위해 시간변환
