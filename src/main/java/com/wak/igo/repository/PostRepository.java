@@ -21,5 +21,6 @@ public interface PostRepository  extends JpaRepository<Post,Long> {
     @Query(value = "select p from Post p where p.title LIKE %:content% OR p.content LIKE %:content%")
     List<Post> findByContent(String content);//입력받은 String으로 db에서 title,contnet,tags 기준으로 검색
     void deleteAllByMember(Member member);
-   Post findByMemberId(Long id);
+
+
 }

@@ -3,7 +3,6 @@ package com.wak.igo.sse;
 
 import com.wak.igo.domain.UserDetailsImpl;
 import com.wak.igo.dto.response.ResponseDto;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
