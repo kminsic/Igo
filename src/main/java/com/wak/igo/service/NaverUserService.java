@@ -40,9 +40,9 @@ public class NaverUserService {
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
     public ResponseDto<?> naverlogin(String code, String state, HttpServletResponse response) throws JsonProcessingException {
-        String accesstoken = getAccessToken(code, state); // 인가 코드로 전체 response 요청해서 access token를 받아온다.
-        MemberInfo MemberInfo = getMemberInfo(accesstoken); // access token 으로 api 요청해서 회원정보를 받아온다.
-        Member naverUser = registerNaverUserIfNeeded(MemberInfo); // DB에 회원이 존재하지 않으면 회원정보를 저장한다(회원가입)
+        String accesstoken = getAccessToken(code, state); // 인가 코드로 전체 response 요청해서 access token를 받아옴
+        MemberInfo MemberInfo = getMemberInfo(accesstoken); // access token 으로 api 요청해서 회원정보를 받아옴
+        Member naverUser = registerNaverUserIfNeeded(MemberInfo); // DB에 회원이 존재하지 않으면 회원정보를 저장(회원가입)
         Authentication authentication = forceLogin(naverUser); // 강제 로그인
         UserDetailsImpl userDetails = naverUsersAuthorizationInput(authentication, response); // 로그인 인증정보로 jwt 토큰 생성, header에 Jwt 토큰 추가.
         MemberResponseDto memberInfo = memberInfo(userDetails); // 회원정보 가져오기
@@ -50,6 +50,7 @@ public class NaverUserService {
         return ResponseDto.success(memberInfo);
     }
 
+    // 인가 코드로 전체 response 요청해서 access token를 받아옴
     private String getAccessToken(String code, String state) throws JsonProcessingException {
         // HTTP Header 생성
         HttpHeaders headers = new HttpHeaders();
@@ -83,6 +84,7 @@ public class NaverUserService {
         return jsonNode.get("access_token").asText();
     }
 
+    // access token 으로 api 요청해서 회원정보를 받아옴
     private MemberInfo getMemberInfo(String accessToken) throws JsonProcessingException {
         // HTTP Header 생성
         HttpHeaders headers = new HttpHeaders();
@@ -109,6 +111,7 @@ public class NaverUserService {
         return new MemberInfo(memberId, nickname);
     }
 
+    // DB에 회원이 존재하지 않으면 회원정보를 저장(회원가입)
     private Member registerNaverUserIfNeeded(MemberInfo MemberInfo) {
         String naverId = MemberInfo.getMemberId();                      // DB 에 중복된 Kakao Id 가 있는지 확인
         Member naverUser = memberRepository.findByMemberId(naverId)
@@ -132,6 +135,7 @@ public class NaverUserService {
         return naverUser;
     }
 
+    // 로그인 상태로 처리
     private Authentication forceLogin(Member naverUser) {
         UserDetails userDetails = new UserDetailsImpl(naverUser);
         Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
@@ -139,6 +143,7 @@ public class NaverUserService {
         return authentication;
     }
 
+    // 로그인 인증정보로 jwt 토큰 생성, header에 Jwt 토큰 추가.
     private UserDetailsImpl naverUsersAuthorizationInput(Authentication authentication, HttpServletResponse response) {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         TokenDto token = tokenProvider.generateTokenDto(userDetails);
@@ -148,6 +153,7 @@ public class NaverUserService {
         return userDetails;
     }
 
+    // 회원 정보 가져오기
     private MemberResponseDto memberInfo(UserDetailsImpl userDetails){
         List<String> tag = new ArrayList<>();
         Member member = userDetails.getMember();

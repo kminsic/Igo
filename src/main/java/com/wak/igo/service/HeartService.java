@@ -35,16 +35,16 @@ public class HeartService {
         if (post.isEmpty()) {
             return ResponseDto.fail("BAD_REQUEST", "해당 게시글이 존재하지 않습니다.)");
         }
-        Post postNotification = postRepository.findByMemberId(userDetails.getId());
+        Post postNotification = post.get();
         Member postMember = post.get().getMember();
         Optional<Heart> heart = heartRepository.findByMemberIdAndPostId(userDetails.getId(), post.get().getId());
+        notificationService.send(postMember,postNotification,"새로운 좋아요가 왔어요 따듯하네요!");
         if (heart.isEmpty()) {
             heartRepository.save(Heart.builder()
                     .post(post.get())
                     .member(userDetails.getMember())
                     .build());
             post.get().addHeart();
-            notificationService.send(postMember,postNotification,"새로운 좋아요가 왔어요 따듯하네요!");
             return ResponseDto.success(
                     HeartResponseDto.builder()
                             .heartNum(post.get().getHeartNum())
