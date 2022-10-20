@@ -123,7 +123,7 @@ public class NotificationService {
         return Notification.builder()
                 .receiver(receiver)
                 .content(content)
-                .url("/myplan")
+                .url("/myinfo" )
                 .isRead(false)
                 .build();
     }
@@ -158,7 +158,6 @@ public class NotificationService {
     public void deleteNotification(Long id) {
         notificationRepository.deleteById(id);
     }
-
     @Scheduled(cron = "1 30 * * * *")
     public void scheduleNotification(){
         findNotification();
