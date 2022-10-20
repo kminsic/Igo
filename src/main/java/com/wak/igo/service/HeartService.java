@@ -38,7 +38,7 @@ public class HeartService {
         Post postNotification = post.get();
         Member postMember = post.get().getMember();
         Optional<Heart> heart = heartRepository.findByMemberIdAndPostId(userDetails.getId(), post.get().getId());
-        notificationService.send(postMember,postNotification,"새로운 좋아요가 왔어요 따듯하네요!");
+        notificationService.send(postMember,postNotification,"새로운 좋아요가 왔어요!");
         if (heart.isEmpty()) {
             heartRepository.save(Heart.builder()
                     .post(post.get())

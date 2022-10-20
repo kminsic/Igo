@@ -159,7 +159,7 @@ public class NotificationService {
         notificationRepository.deleteById(id);
     }
 
-    @Scheduled(cron = "* 30 * * * *")
+    @Scheduled(cron = "1 30 * * * *")
     public void scheduleNotification(){
         findNotification();
     }
