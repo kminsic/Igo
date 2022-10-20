@@ -10,7 +10,7 @@ on:
     branches: [ "develop" ]
     
 env:
-  S3_BUCKET_NAME: igobuc
+  S3_BUCKET_NAME: igobucbuc
   PROJECT_NAME: playground-logging
   # CODE_DEPLOY_APPLICATION_NAME: deploy
   # CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: deploy-group-two
