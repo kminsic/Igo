@@ -52,7 +52,7 @@ public class PostController {
     }
 
     //관심사태그 조회
-    @GetMapping("/api/post/interest")
+    @GetMapping("/api/posts/interest")
     public ResponseDto<?> getAllInterestTags(@RequestParam String type) {
         List<Post> InterestTagPosts = postService.getAllInterestTags(type);
         return ResponseDto.success(InterestTagPosts);
