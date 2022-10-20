@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface HeartRepository extends JpaRepository<Heart, Long> {
     List<Heart> findByMember(Member member);
     Optional<Heart> findByMemberIdAndPostId(Long memberId, Long postId);
-
+    void deleteAllByMember(Member member);
     void deleteAllByPost(Post post);
 
 }

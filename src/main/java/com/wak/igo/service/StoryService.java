@@ -98,12 +98,11 @@ public class StoryService {
         if (null == story) {
             return ResponseDto.fail("NOT_FOUND", "스토리가 존재하지 않습니다.");}
         if (!userDetails.getId().equals(story.getMember().getId()))
-            return ResponseDto.fail("작성자가 아닙니다.", "작성자가 아닙니다.");
+            return ResponseDto.fail("BAD_REQUEST", "작성자가 아닙니다.");
 
         storyRepository.delete(story);
         return ResponseDto.success("삭제 완료");
     }
-
 
     //아침 6시마다, 생성 하루 지난 스토리 삭제
     @Scheduled(cron = "0 0 6 * * *")
@@ -142,7 +141,6 @@ public class StoryService {
 
             // 입력 받은 파일을 “파일종류/파일포맷” 으로 구분 짓는다
             String mimeType = tika.detect(multipartFile.getInputStream());
-
             // mimeType이 validTypeList 중 하나라도 만족하면 true 아니면 false
             boolean isValid = ValidTypeList.stream().anyMatch(ValidType -> ValidType.equalsIgnoreCase(mimeType));
             return isValid;

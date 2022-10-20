@@ -1,5 +1,6 @@
 package com.wak.igo.repository;
 
+import com.wak.igo.domain.Member;
 import com.wak.igo.domain.Post;
 import com.wak.igo.domain.Report;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,5 +14,6 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
     List<Report> findAllByPostId(Long postId);
 
     void deleteAllByPost(Post post);
+    void deleteAllByMember(Member member);
 }
 

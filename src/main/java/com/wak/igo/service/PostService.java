@@ -9,6 +9,8 @@ import com.wak.igo.dto.response.ResponseDto;
 import com.wak.igo.repository.*;
 import io.jsonwebtoken.io.IOException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,15 +39,21 @@ public class PostService {
 
     //게시글 조회 (조회수, 좋아요 , 최신순)
     @Transactional
-    public ResponseDto<?> getAllGroupPosts(String type) {
+    public ResponseDto<?> getAllGroupPosts(String type, int page) {
         if (type.equals("create")) {
-            return ResponseDto.success(postRepository.findAllByOrderByCreatedAtDesc());
+            PageRequest pageRequest = PageRequest.of(page, 8);
+            Page<Post> pageOfDesc = postRepository.findAllByOrderByCreatedAtDesc(pageRequest);
+            return ResponseDto.success(pageOfDesc.getContent());
         } else if (type.equals("view")) {
-            return ResponseDto.success(postRepository.findAllByOrderByViewCountDesc());
+            PageRequest pageRequest = PageRequest.of(page, 8);
+            Page<Post> pageOfView = postRepository.findAllByOrderByViewCountDesc(pageRequest);
+            return ResponseDto.success(pageOfView.getContent());
         } else if (type.equals("heart")) {
-            return ResponseDto.success(postRepository.findAllByOrderByHeartNumDesc());
+            PageRequest pageRequest = PageRequest.of(page, 8);
+            Page<Post> pageOfHeart = postRepository.findAllByOrderByHeartNumDesc(pageRequest);
+            return ResponseDto.success(pageOfHeart.getContent());
         } else
-            return ResponseDto.fail("잘못된 URL 입니다.", "잘못된 접근입니다");
+            return ResponseDto.fail("BAD_REQUEST", "잘못된 접근입니다");
     }
 
     //상세 페이지 조회
@@ -210,7 +218,7 @@ public class PostService {
         if (null == post) {
             return ResponseDto.fail("NOT_FOUND", "게시글이 존재하지 않습니다.");}
         if (!userDetails.getId().equals(post.getMember().getId()))
-            return ResponseDto.fail("작성자가 아닙니다.", "작성자가 아닙니다.");
+            return ResponseDto.fail("BAD_REQUEST", "작성자가 아닙니다.");
         // 썸네일 추출
         String content = requestDto.getContent();
         if (content == null) {

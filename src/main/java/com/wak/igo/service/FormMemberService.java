@@ -7,11 +7,7 @@ import com.wak.igo.dto.request.TokenDto;
 import com.wak.igo.dto.response.MemberResponseDto;
 import com.wak.igo.dto.response.ResponseDto;
 import com.wak.igo.jwt.TokenProvider;
-import com.wak.igo.repository.MemberRepository;
-import com.wak.igo.repository.PostRepository;
-import com.wak.igo.repository.RefreshTokenRepository;
-import com.wak.igo.repository.StoryRepository;
-import com.wak.igo.repository.MyPostRepository;
+import com.wak.igo.repository.*;
 import com.wak.igo.sse.NotificationService;
 import io.jsonwebtoken.io.IOException;
 import lombok.RequiredArgsConstructor;
@@ -39,12 +35,16 @@ import java.util.Optional;
 public class FormMemberService {
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
+    private final ReportRepository reportRepository;
+    private final HeartRepository heartRepository;
+    private final CommentRepository commentRepository;
+    private final MyPostRepository myPostRepository;
+
     private final StoryRepository storyRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
     private final NotificationService notificationService;
-    private final MyPostRepository myPostRepository;
 
     //일반 회원가입
     @Transactional
@@ -125,8 +125,12 @@ public class FormMemberService {
         Member member = memberRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException(" 가입되지 않은 회원입니다."));
         if (!userDetails.getId().equals(member.getId()))
-            return ResponseDto.fail("작성자가 아닙니다.", "작성자가 아닙니다.");;
+            return ResponseDto.fail("본인이 아닙니다.", "본인이 아닙니다.");;
 
+        myPostRepository.deleteAllByMember(member);
+        reportRepository.deleteAllByMember(member);
+        heartRepository.deleteAllByMember(member);
+        refreshTokenRepository.deleteAllByMember(member);
         postRepository.deleteAllByMember(member);
         storyRepository.deleteAllByMember(member);
         refreshTokenRepository.deleteAllByMember(member);
