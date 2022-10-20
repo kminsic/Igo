@@ -18,7 +18,7 @@ public class MyPostController {
     private final MyPostService myPostService;
 
     // 개인 일정 작성
-    @PostMapping("/api/mypost")
+    @RequestMapping(value = "/api/mypost", method = RequestMethod.POST, consumes = {"multipart/form-data"})
     public ResponseDto<?> scheduleCreate(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                          @RequestPart(value = "images", required = false) MultipartFile multipartFile,
                                          @RequestPart(value = "content", required = false) MyPostRequestDto requestDto)

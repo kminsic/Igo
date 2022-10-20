@@ -1,16 +1,12 @@
 package com.wak.igo.domain;
 
 import com.wak.igo.dto.request.MyPostRequestDto;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Builder
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
 @Entity
 public class MyPost extends Timestamped{
@@ -34,6 +30,10 @@ public class MyPost extends Timestamped{
 
     @Column(nullable = false)
     private String title;
+
+    public MyPost(){
+
+    }
 
     public void update(MyPostRequestDto requestDto, String imgUrl){
         this.imgUrl = imgUrl;

@@ -39,7 +39,7 @@ public class KakaoUserService {
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
     private final TokenProvider tokenProvider;
-
+    private final MyPostService myPostService;
     // 로그아웃
     public ResponseDto<?> logout(UserDetailsImpl userDetails){
         if (null == userDetails.getAuthorities()) {
@@ -57,6 +57,7 @@ public class KakaoUserService {
         Authentication authentication = forceLogin(kakaoUser); // 강제 로그인
         UserDetailsImpl userDetails = kakaoUsersAuthorizationInput(authentication, response); // 로그인 인증정보로 jwt 토큰 생성, header에 Jwt 토큰 추가.
         MemberResponseDto memberInfo = memberInfo(userDetails); // 회원정보 가져오기
+        myPostService.loginNotification(userDetails);
         return ResponseDto.success(memberInfo);
 
     }

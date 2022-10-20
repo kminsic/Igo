@@ -11,6 +11,7 @@ import com.wak.igo.dto.response.MyPostResponseDto;
 import com.wak.igo.dto.response.ResponseDto;
 import com.wak.igo.repository.MyPostRepository;
 import com.wak.igo.repository.StateRepository;
+import com.wak.igo.sse.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,6 +19,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @RequiredArgsConstructor
@@ -29,6 +34,7 @@ public class MyPostService {
     private final AmazonS3 amazonS3;
     private final MyPostRepository myPostRepository;
     private final StateRepository myPostStateRepository;
+    private final NotificationService notificationService;
     private static final Tika tika = new Tika();
 
     // 개인 일정 작성
@@ -41,7 +47,7 @@ public class MyPostService {
 
         // s3 이미지 저장
         if (multipartFile.isEmpty()) {
-              imgUrl = null;
+            imgUrl = null;
         } else {
             // 이미지 형식 유효성 검사
             if (!validImgFile(multipartFile)) {
@@ -251,4 +257,22 @@ public class MyPostService {
             return false;
         }
     }
+    public void loginNotification(UserDetailsImpl userDetails) {
+        List<MyPost> myPost = myPostRepository.findAllByMemberId(userDetails.getId());
+        for (MyPost myPost1 : myPost) {
+            //날짜 계산을 위해 시간변환
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate startDate = LocalDate.parse(myPost1.getTime(), dateTimeFormatter);
+            LocalDate now = LocalDate.now();
+            LocalDateTime date1 = startDate.atStartOfDay();
+            LocalDateTime date2 = now.atStartOfDay();
+            int betweenDays = (int) Duration.between(date2, date1).toDays();
+            if (betweenDays <= 3) {
+                notificationService.sendMypost(userDetails, myPost, "작성한 일정이 얼마남지 않았습니다!");
+            }
+
+        }
+    }
 }
+
+

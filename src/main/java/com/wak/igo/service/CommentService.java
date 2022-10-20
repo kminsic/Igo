@@ -61,25 +61,7 @@ public class CommentService {
         );
     }
 
-
-    // 댓글 수정
-    @Transactional
-    public ResponseDto<?> updateComment(Long id, CommentRequestDto requestDto, UserDetailsImpl userDetails) {
-        Comment comment = findByIdComment(id);
-        if (userDetailsService.findByIdMember(userDetails.getId()).equals(comment.getMember().getId())) {
-            return ResponseDto.fail("BAD_REQUEST", "올바른 사용자가 아닙니다");
-        }
-        comment.update(requestDto);
-        return ResponseDto.success(
-                CommentResponseDto.builder()
-                        .id(comment.getId())
-                        .nickname(comment.getMember().getNickname())
-                        .content(comment.getContent())
-                        .createdAt(comment.getCreatedAt())
-                        .modifiedAt(comment.getModifiedAt())
-                        .build()
-        );
-    }
+    
 
     // 댓글 삭제
     @Transactional
