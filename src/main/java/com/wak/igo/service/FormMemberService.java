@@ -114,6 +114,7 @@ public class FormMemberService {
         if (!userDetails.getId().equals(member.getId()))
             return ResponseDto.fail("본인이 아닙니다.", "본인이 아닙니다.");;
 
+        commentRepository.deleteAllByMember(member);
         myPostRepository.deleteAllByMember(member);
         reportRepository.deleteAllByMember(member);
         heartRepository.deleteAllByMember(member);
