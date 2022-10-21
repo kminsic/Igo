@@ -266,11 +266,11 @@ public class MyPostService {
             LocalDate now = LocalDate.now();
             LocalDateTime date1 = startDate.atStartOfDay();
             LocalDateTime date2 = now.atStartOfDay();
-            int betweenDays = (int) Duration.between(date2, date1).toDays();
-            if (betweenDays <= 3) {
+            long betweenDays = Duration.between(date2, date1).toDays();
+            if ( betweenDays > 0 && betweenDays <= 3) {
                 notificationService.sendMypost(userDetails, myPost, "작성한 일정이 얼마남지 않았습니다!");
             }
-
+            System.out.println(betweenDays);
         }
     }
 }
