@@ -39,6 +39,7 @@ public class NaverUserService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
+    private final MyPostService myPostService;
     public ResponseDto<?> naverlogin(String code, String state, HttpServletResponse response) throws JsonProcessingException {
         String accesstoken = getAccessToken(code, state); // 인가 코드로 전체 response 요청해서 access token를 받아옴
         MemberInfo MemberInfo = getMemberInfo(accesstoken); // access token 으로 api 요청해서 회원정보를 받아옴
@@ -46,7 +47,7 @@ public class NaverUserService {
         Authentication authentication = forceLogin(naverUser); // 강제 로그인
         UserDetailsImpl userDetails = naverUsersAuthorizationInput(authentication, response); // 로그인 인증정보로 jwt 토큰 생성, header에 Jwt 토큰 추가.
         MemberResponseDto memberInfo = memberInfo(userDetails); // 회원정보 가져오기
-
+        myPostService.loginNotification(userDetails);
         return ResponseDto.success(memberInfo);
     }
 

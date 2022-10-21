@@ -3,6 +3,7 @@ package com.wak.igo.sse;
 import com.wak.igo.domain.Member;
 import com.wak.igo.domain.MyPost;
 import com.wak.igo.domain.Post;
+import com.wak.igo.domain.UserDetailsImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -95,7 +96,7 @@ public class NotificationService {
 
     //마이포스트 알림
     @Transactional
-    public void sendMypost(Member receiver, List<MyPost> myPost, String content) {
+    public void sendMypost(UserDetailsImpl receiver, List<MyPost> myPost, String content) {
         Notification notification = createNotificationM(receiver, myPost, content);
         String id = String.valueOf(receiver.getId());
         notificationRepository.save(notification);
@@ -119,11 +120,11 @@ public class NotificationService {
 
 
     //마이포스트
-    private Notification createNotificationM(Member receiver, List<MyPost> myPost, String content) {
+    private Notification createNotificationM(UserDetailsImpl receiver, List<MyPost> myPost, String content) {
         return Notification.builder()
-                .receiver(receiver)
+                .receiver(receiver.getMember())
                 .content(content)
-                .url("/myplan")
+                .url("/myinfo" )
                 .isRead(false)
                 .build();
     }
@@ -158,8 +159,7 @@ public class NotificationService {
     public void deleteNotification(Long id) {
         notificationRepository.deleteById(id);
     }
-
-    @Scheduled(cron = "* 30 * * * *")
+    @Scheduled(cron = "1 30 * * * *")
     public void scheduleNotification(){
         findNotification();
     }

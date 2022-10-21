@@ -29,12 +29,6 @@ public class CommentController {
         return commentService.createComment(requestDto, userDetails);
     }
 
-    // 댓글 수정
-    @RequestMapping(value = "/api/comment/{id}", method = RequestMethod.PUT)
-    public ResponseDto<?> updateComment(@PathVariable Long id, @RequestBody CommentRequestDto requestDto,
-                                        @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return commentService.updateComment(id, requestDto, userDetails);
-    }
 
     // 댓글 삭제
     @RequestMapping(value = "/api/comment/{id}", method = RequestMethod.DELETE)
