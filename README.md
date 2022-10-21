@@ -2,6 +2,8 @@
 ![KakaoTalk_Photo_2022-10-21-14-36-15](https://user-images.githubusercontent.com/44489399/197121692-0bffac8f-eb68-4f17-8dda-cd8ff5e02e8b.jpeg)
 > 내 돈으로 내가 다녀온 여행코스를 공유하는 플랫폼입니다. 광고에 지친 여러분, 날것의 여행 후기를 참고해보세요!
 
+----------
+
 ### 🔎 개발환경
    - Springboot 2.7.2
    - gradle 7.5
