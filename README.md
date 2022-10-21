@@ -1,68 +1,75 @@
-# Igo
-<h1>
-🎉제목: 내돈내여
-</h1>
-<br>
-<h2>
-개요:
-</h2>
-<h3>
-😁광고가 판치는 요즘 블로그,인스타그램 피드들..답답하지 않으셨나요?<br>
-광고없는! 알맹이로 가득찬 정보를 찾고 싶으시다면<br>
-유저들이 내 돈으로 여행하고 인증하는 내돈내여를 써보세요! 
-</h3>
-<h2>
-😉erd
-</h2>
+# 📁내돈내여 Project
+![KakaoTalk_Photo_2022-10-21-14-36-15](https://user-images.githubusercontent.com/44489399/197121692-0bffac8f-eb68-4f17-8dda-cd8ff5e02e8b.jpeg)
+> 내 돈으로 내가 다녀온 여행코스를 공유하는 플랫폼입니다. 광고에 지친 여러분, 날것의 여행 후기를 참고해보세요!
 
+## 🔎개발환경
+   - Springboot 2.7.2
+   - gradle 7.5
+   - Security / JWT
+   - AWS MySQL
+   - AWS S3
+   - Tika
+
+## 🔎주요기능
+#### 회원관리
+ 1. 소셜 로그인(네이버, 카카오) / 회원가입 / 로그인 / 로그아웃 / 회원탈퇴
+
+#### 조회 기능
+ 1. 여행 관심사 선택 및 관심사 기반의 게시글로 추천페이지 구성
+ 2. 지역, 관심사, 비용별 게시글 조회  
+ 3. 조회순/최신순/추천순 정렬 게시글 조회(+ 무한 스크롤)
+ 4. 제목, 내용 기반의 게시글 검색 기능
+
+### 상세조회 기능
+ 1. 게시글 신고 및 좋아요 기능
+ 2. 게시글 댓글 작성, 수정, 삭제
+
+#### 작성 기능
+ 1. 여행 후기 작성, 수정, 삭제       
+ 2. 여행 영상 스토리 기능 (모든 회원의 스토리 조회 가능, 12시간 후 삭제됨)
+
+#### 마이페이지
+ 1. 프로필, 닉네임 / 관심 여행 키워드 수정
+ 2. 작성 게시글 / 좋아요 한 게시글 모아보기
+ 3. 개인 일정 작성, 수정, 삭제(일정완료 <-> 일정취소 기능)
+ 4. 작성한 게시글에 대한 댓글/좋아요 알림 기능
+
+## 🔎ERD
 ![erd](https://user-images.githubusercontent.com/110470208/194561801-fb80b80b-f01b-432e-82a7-3eab8367fb0f.JPG)
-<h2>
-Server Architecture<br>
-</h2>
 
-![아키텍처](https://user-images.githubusercontent.com/110470208/194569555-5b80ceab-2bbf-4f23-8d10-2a7487e18e5c.JPG)
-<h2>
-😊주요기능
-</h2>
-<h4>
-1. 소셜 로그인/회원가입 : 개인정보 수집하기<br>
-2. 여행 취향 분류<br>         
-&nbsp;&nbsp;&nbsp;&nbsp;-여행지 추천 (혼자여행, 친구, 가족, 연인, 여행 예산 별 추천)<br>   
-3. 내 여행 보관함 / 관심 목록 보관<br>    
-4. 게시글 검색 기능<br>    
-5. 신고 기능<br>
-6. 게시글 기능 (사진, 텍스트, 총 지출 금액 올리기) +수정, 삭제<br>     
-7. 게시글 추천수, 좋아요, 최신 순 정렬<br>     
-8. 댓글 기능<br>
-9. 알림 기능<br>
-10. 무한 스크롤(Infinite Scrolling & Pagination)<br>
-</h4>
-<h2>
-api<br>
-</h2>
+## 🔎서비스 아키텍처
+![스크린샷 2022-10-21 오후 3 00 30](https://user-images.githubusercontent.com/44489399/197123391-901fdfba-161c-452c-8503-3705235eca9d.png)
 
+## 💡API 설계
 |기능|메서드|Url|
 |-----------------|------|------------------|
-|카카오 oauth2 로그인|	GET	|/kakao/callback|
-|네이버 oauth2 로그인 |GET	|/naver/callback<br>|
-|로그아웃	|POST	|/api/member/logout|<br>
-|로그인 후 태그 설정|	PUT	|/api/member/tag|<br>
-|로그인 후 추천페이지|	GET	|/api/member/posts|<br>
-|전체 게시글 조회|	GET	|/api/post|<br>
-|그룹별 게시글 조회|	GET	|/api/post/group?type={type}|<br>
-|관심사별 게시글 조회|	GET	|/api/post/interest?type=interest|<br>
-|지역별 게시글 조회|	GET	|/api/post/region?type=region|<br>
-|비용별 게시글 조회|	GET	|/api/post/cost?type=cost|<br>
-|게시글 상세조회|	GET	|/api/detail/{postId}|<br>
+|카카오 oauth2 로그인 |GET|/kakao/callback|
+|네이버 oauth2 로그인 |GET|/naver/callback<br>|
+|JWT 재발급 |GET| /refresh |
+|회원가입 |POST| /api/member/signup |
+|로그인 |POST| /api/member/login |
+|회원가입 |POST| /api/member/signup |
+|로그아웃	|POST|/api/member/logout|<br>
+|회원탈퇴 |DELETE| /api/member/withdrawal/{id} |
+|회원가입 |POST| /api/member/signup |
+|로그인 후 태그 설정 |PUT|/api/member/tag|<br>
+|로그인 후 추천페이지 |GET|/api/member/posts|<br>
+|전체 게시글 조회|GET|/api/posts|<br>
+|그룹별 게시글 조회(무한스크롤) |GET|/api/posts/group?type={type}&page=0|<br>
+|관심사별 게시글 조회 |GET|/api/posts/interest?type=interest|<br>
+|지역별 게시글 조회 |GET|/api/posts/region?type=region|<br>
+|비용별 게시글 조회 |GET|/api/posts/cost?type=cost|<br>
+|게시글 상세조회 |GET|/api/detail/{postId}|<br>
 |게시글 작성	|POST|	/api/post|<br>
-|게시글 수정	|PUT	|/api/post/{id}|<br>
+|게시글 수정	|PUT|/api/post/{id}|<br>
 |게시글 삭제	|DELETE|	/api/post/{id}|<br>
 |좋아요 기능	|POST|	/api/heart/{id}|<br>
 |신고 기능	|POST|	/api/report|/{id}<br>
-|스토리 조회	|GET|	/api/story|<br>
+|스토리 조회	|GET|	/api/storys|<br>
 |스토리 작성	|POST|	/api/story|<br>
+|스토리 삭제 |DELETE| /api/story/{id} |
 |댓글 작성	|POST|	/api/comment|<br>
-|댓글 조회	|GET|	/api/comment/{id}|<br>
+|댓글 조회	|GET|	/api/comments/{id}|<br>
 |댓글 수정	|PUT|	/api/comment/{id}|<br>
 |댓글 삭제	|DELETE|	/api/comment/{id}|<br>
 |나의 페이지 조회(태그, 닉네임, 이미지)	|GET|	/api/mypage|<br>
@@ -78,11 +85,13 @@ api<br>
 |나의 일정 완료	|POST|	/api/mypost/done/{id}|<br>
 |나의 일정 완료취소	|POST|	/api/mypost/cancel/{id}|<br>
 |게시글 검색	|GET|	/api/search/{keyword}|<br><br>
+|알림 구독 |GET| /api/member/subscribe |
+|전체 알림 조회 |GET| /api/member/notifications|
+|알림 읽음 설정 |PATCH| /api/member/notifications/{id}|
+|알림 삭제 |DELETE| /api/member/notifications/{id}|
 
-<h2>
-Trouble Shooting 
-</h2>
 
+## 💡트러블슈팅
 
 1.**문제**<br>
 글과 이미지url를 컬럼 하나에 묶어 보낼 때 컬럼의 글자수 제한<br>
