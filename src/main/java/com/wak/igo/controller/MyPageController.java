@@ -6,10 +6,7 @@ import com.wak.igo.dto.response.ResponseDto;
 import com.wak.igo.service.MyPageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
@@ -37,7 +34,7 @@ public class MyPageController {
     }
 
     //회원정보 수정하기
-    @PutMapping (value = "/api/mypage/profile")
+    @PatchMapping (value = "/api/mypage/profile")
     public ResponseDto<?> updateMember(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                        @RequestPart("profileImage") MultipartFile file,
                                        @RequestPart("nickname") MemberResponseDto memberResponseDto
