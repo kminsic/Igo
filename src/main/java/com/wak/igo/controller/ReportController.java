@@ -8,7 +8,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
 
 
 @RestController
@@ -19,7 +22,7 @@ public class ReportController {
 
     //신고하기
     @PostMapping("/api/report/{id}")
-    public ResponseDto<?> insertReport(@PathVariable Long id, ReportRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseDto<?> insertReport(@PathVariable Long id,@RequestBody ReportRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return reportService.insertReport(id,requestDto, userDetails);
     }
 }
