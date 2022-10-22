@@ -48,6 +48,7 @@ public class ReportService {
             reportRepository.flush();
                 return ResponseDto.success("삭제된 게시글 입니다.");}
             else {
+                //신고 내용 포함하여 신고
                 Report report = Report.builder()
                         .member(userDetails.getMember())
                         .post(post.get())
