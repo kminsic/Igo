@@ -39,13 +39,12 @@ public class FormMemberService {
     private final HeartRepository heartRepository;
     private final CommentRepository commentRepository;
     private final MyPostRepository myPostRepository;
-
     private final StoryRepository storyRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
-    private final NotificationService notificationService;
     private final MyPostService myPostService;
+    private final LoadingImgRepository loadingImgRepository;
 
     //일반 회원가입
     @Transactional
@@ -125,7 +124,13 @@ public class FormMemberService {
         memberRepository.delete(member);
 
         return ResponseDto.success("탈퇴 완료");
-}
+    }
+
+    // 로딩 이미지 불러오기
+    public String loadingImage() {
+        Optional<LoadingImage> image = loadingImgRepository.findById(1);
+        return image.get().getImage();
+    }
 
     @Transactional(readOnly = true)
     public Member isPresentMember(String membername) {
