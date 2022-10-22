@@ -1,6 +1,5 @@
 package com.wak.igo.service;
 
-import com.wak.igo.domain.Comment;
 import com.wak.igo.domain.Member;
 import com.wak.igo.domain.UserDetailsImpl;
 import com.wak.igo.repository.MemberRepository;

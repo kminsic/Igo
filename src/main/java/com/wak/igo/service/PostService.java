@@ -243,7 +243,7 @@ public class PostService {
                 .orElseThrow(() -> new IllegalArgumentException("삭제할 게시글이 없습니다."));
 
         if (!userDetails.getId().equals(post.getMember().getId()))
-            return ResponseDto.fail("작성자가 아닙니다.", "작성자가 아닙니다.");;
+            return ResponseDto.fail("BAD_REQUEST", "작성자가 아닙니다.");;
 
         commentRepository.deleteAllByPost(post);
         heartRepository.deleteAllByPost(post);

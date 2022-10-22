@@ -58,11 +58,9 @@ public class Post extends Timestamped {
     @Column(columnDefinition = "json")
     private Map<String, Object> mapData;
 
-
     @Column(nullable = false)
     @Convert(converter = StringListConverter.class)
     private List<String> tags = new ArrayList<>();
-
 
     public void add_viewCount() {
         this.viewCount++;}
@@ -84,10 +82,6 @@ public class Post extends Timestamped {
         this.thumnail = thumnail;
         this.tags = postRequestDto.getTags();
         this.mapData = postRequestDto.getMapData();
-    }
-
-    public boolean validateMember(Member member) {
-        return !this.member.equals(member);
     }
 }
 

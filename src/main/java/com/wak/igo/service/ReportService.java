@@ -3,6 +3,8 @@ package com.wak.igo.service;
 import com.wak.igo.domain.Post;
 import com.wak.igo.domain.Report;
 import com.wak.igo.domain.UserDetailsImpl;
+import com.wak.igo.dto.request.ReportRequestDto;
+import com.wak.igo.dto.response.ReportResponseDto;
 import com.wak.igo.dto.response.ResponseDto;
 import com.wak.igo.repository.PostRepository;
 import com.wak.igo.repository.ReportRepository;
@@ -23,7 +25,7 @@ public class ReportService {
 
     //신고하기
     @Transactional
-    public ResponseDto<?> insertReport(Long id, UserDetailsImpl userDetails  ) throws IOException {
+    public ResponseDto<?> insertReport(Long id, ReportRequestDto requestDto, UserDetailsImpl userDetails  ) throws IOException {
         if (null == userDetails.getAuthorities()) {
             ResponseDto.fail("MEMBER_NOT_FOUND",
                     "사용자를 찾을 수 없습니다.");
@@ -45,15 +47,20 @@ public class ReportService {
             //삭제 후 flush로 신고 게시글 업데이트
             reportRepository.flush();
                 return ResponseDto.success("삭제된 게시글 입니다.");}
-            else
-            { Report report = Report.builder()
+            else {
+                Report report = Report.builder()
                         .member(userDetails.getMember())
                         .post(post.get())
+                        .content(requestDto.getContent())
                         .build();
 
                 reportRepository.save(report);
                 post.get().addReport();
-                return ResponseDto.success("신고 완료");
+                return ResponseDto.success(ReportResponseDto.builder()
+                        .id(report.getId())
+                        .nickname(userDetails.getUsername())
+                        .content(report.getContent())
+                        .build());
             }
     }
 }
