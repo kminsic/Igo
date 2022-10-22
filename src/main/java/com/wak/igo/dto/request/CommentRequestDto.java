@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CommentRequestDto {
-    @NotNull
+    @NotNull 
     private Long postId;
     private String content;
 }
