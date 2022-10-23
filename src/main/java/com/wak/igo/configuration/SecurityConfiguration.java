@@ -80,6 +80,7 @@ public class SecurityConfiguration {
                 .antMatchers("/api/storys/**").permitAll()
                 .antMatchers("/api/comments/**").permitAll()
                 .antMatchers("/api/search/**").permitAll()
+                .antMatchers("/loading-image").permitAll()
                 .anyRequest().authenticated()
 //                .anyRequest().permitAll()
 

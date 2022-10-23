@@ -1,0 +1,1 @@
+insert into loading_image (image) values ('https://igobucbuc.s3.ap-northeast-2.amazonaws.com/KakaoTalk_20221022_163144889.png');
