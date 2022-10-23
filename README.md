@@ -37,7 +37,7 @@
  4. 작성한 게시글에 대한 댓글/좋아요 알림 기능
 
 ### 🔎ERD
-![erd](https://user-images.githubusercontent.com/110470208/194561801-fb80b80b-f01b-432e-82a7-3eab8367fb0f.JPG)
+![igo1](https://user-images.githubusercontent.com/44489399/197399324-f39dbc87-a6b9-476d-b44b-ac4876cbd2a4.png)
 
 ### 🔎서비스 아키텍처
 ![스크린샷 2022-10-21 오후 3 00 30](https://user-images.githubusercontent.com/44489399/197123391-901fdfba-161c-452c-8503-3705235eca9d.png)
@@ -95,13 +95,13 @@
 
 ### 💡트러블슈팅
 
-1.**문제**<br>
-글과 이미지url를 컬럼 하나에 묶어 보낼 때 컬럼의 글자수 제한<br>
+      1.**문제**
+      글과 이미지url를 컬럼 하나에 묶어 보낼 때 컬럼의 글자수 제한<br>
 
-**원인**<br>
-프론트에서 한 개의 Column에 text와 imgurl을 함께 담아 JSON형식으로 변환해 백엔드에 보내는 방법을 사용하기로 결정했다.<br>
-사진 1개와 글은 문제없이 들어왔으나, 사진2개 이상과 글을 담아 보내는 과정에서 에러가 발생했다.<br>
-에러 내용은 컬럼안에 내용들을 다 담지 못한다는 오류다.<br><br>
+      **원인**
+      프론트에서 한 개의 Column에 text와 imgurl을 함께 담아 JSON형식으로 변환해 백엔드에 보내는 방법을 사용하기로 결정했다.<br>
+      사진 1개와 글은 문제없이 들어왔으나, 사진2개 이상과 글을 담아 보내는 과정에서 에러가 발생했다.<br>
+      에러 내용은 컬럼안에 내용들을 다 담지 못한다는 오류다.<br><br>
 
 **해결**<br>
 Column 에 추가적으로 @Column(columnDefinition = "TEXT") 입력<br>
