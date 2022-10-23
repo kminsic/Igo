@@ -13,4 +13,5 @@ public class CommentRequestDto {
     @NotNull 
     private Long postId;
     private String content;
+
 }
