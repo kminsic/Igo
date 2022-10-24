@@ -89,7 +89,7 @@ public class CommentService {
     }
 
     public List<CommentResponseDto> findComment(Post post) {
-        List<Comment> commentList = commentRepository.findAllByPost(post);
+        List<Comment> commentList = commentRepository.findAllByPostOrderByCreatedAtDesc(post);
         List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
         for (Comment comment : commentList) {
             commentResponseDtoList.add(
