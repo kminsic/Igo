@@ -17,7 +17,7 @@ else
 fi
 
 
-echo "> Start health check of WAS at 'http://:${TARGET_PORT}' ..."
+echo "> Start health check of WAS at 'http://13.124.48.142:${TARGET_PORT}' ..."
 
 for RETRY_COUNT in 1 2
 do
