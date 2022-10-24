@@ -46,18 +46,20 @@ public class CommentService {
                 .post(post)
                 .content(requestDto.getContent())
                 .build();
+
         commentRepository.save(comment);
         //댓글을 작성했을때 포스트 작성 멤버에게 전송
-        notificationService.send(postMember, post, "새로운 댓글이 달렸습니다!");
+        if(!post.getMember().getId().equals(member.getId()))
+            notificationService.send(postMember, post, "새로운 댓글이 달렸습니다!");
         return ResponseDto.success(
                 CommentResponseDto.builder()
                         .id(comment.getId())
+                        .profile(comment.getMember().getProfileImage())
                         .nickname(comment.getMember().getNickname())
                         .content(comment.getContent())
                         .createdAt(comment.getCreatedAt())
                         .modifiedAt(comment.getModifiedAt())
                         .build()
-
         );
     }
 
