@@ -4,6 +4,8 @@ import lombok.*;
 import net.minidev.json.annotate.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "report")
@@ -28,6 +30,7 @@ public class Report extends Timestamped {
     private Member member;
 
     @Column(nullable = false)
-    private String content;
+    @Convert(converter = StringListConverter.class)
+    private List<String> content = new ArrayList<>();
 
 }
