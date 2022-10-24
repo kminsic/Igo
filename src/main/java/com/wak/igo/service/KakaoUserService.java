@@ -76,7 +76,7 @@ public class KakaoUserService {
         body.add("client_secret", "FuvfQecT3uPmfM3wlzF5VxRJU7Iz654F");
 //        body.add("redirect_url", "http://localhost:8080/kakao/callback"); // localhost redirect_url
 //        body.add("redirect_url", "http://localhost:3000/kakao/callback");// 프론트 엔드  redirect_url
-        body.add("redirect_uri", "http://naedonnaeyo.com/kakaoloading");     // 프론트엔드 도메인 배포 client_id
+        body.add("redirect_uri", "https://naedonnaeyo.com/kakaoloading");     // 프론트엔드 도메인 배포 client_id
 //        body.add("redirect_uri", "http://3.88.14.18/kakaoloading");     // 프론트엔드 배포 client_id
         body.add("code", code);
 
