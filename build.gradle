@@ -58,7 +58,7 @@ dependencies {
     // Tika (이미지 파일만 업로드 할 수 있게 확장자 구별)
     implementation group: 'org.apache.tika', name: 'tika-core', version: '1.24.1'
 
-    //카카오
+    // 카카오
     implementation group: 'org.springframework.security', name: 'spring-security-oauth2-client', version: '5.6.3'
 
 

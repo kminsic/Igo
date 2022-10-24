@@ -77,4 +77,10 @@ public class LoginController {
         return formMemberService.withdrawal(id, userDetails);
     }
 
+    // 로딩 이미지
+    @GetMapping("/loading-image")
+    public ResponseDto<String> loadingImage(){
+        return ResponseDto.success(formMemberService.loadingImage());
+    }
+
 }

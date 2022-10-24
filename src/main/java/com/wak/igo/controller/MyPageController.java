@@ -34,7 +34,7 @@ public class MyPageController {
     }
 
     //회원정보 수정하기
-    @PatchMapping (value = "/api/mypage/profile")
+    @PutMapping (value = "/api/mypage/profile")
     public ResponseDto<?> updateMember(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                        @RequestPart("profileImage") MultipartFile file,
                                        @RequestPart("nickname") MemberResponseDto memberResponseDto

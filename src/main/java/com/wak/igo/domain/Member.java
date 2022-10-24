@@ -30,7 +30,7 @@ public class Member {
     @JsonIgnore
     private String password;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String nickname;
 
     @Column
