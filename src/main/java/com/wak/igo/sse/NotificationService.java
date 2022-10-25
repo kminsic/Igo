@@ -140,7 +140,7 @@ public class NotificationService {
     @Transactional
 //    public NotificationsResponse findAllById(UserDetailsImpl loginMember) {
     public NotificationsResponse findAllById(Long loginMember) {
-        List<NotificationResponse> responses = notificationRepository.findAllByReceiverId(loginMember).stream()
+        List<NotificationResponse> responses = notificationRepository.findAllByReceiverIdOrderByCreatedAtDesc(loginMember).stream()
                 .map(NotificationResponse::from)
                 .collect(Collectors.toList());
         long unreadCount = responses.stream()
