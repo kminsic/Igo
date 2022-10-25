@@ -100,8 +100,10 @@ public class StoryService {
             return ResponseDto.fail("BAD_REQUEST", "작성자가 아닙니다.");
 
         storyRepository.delete(story);
-        return ResponseDto.success(StoryResponseDto.builder()
-                .id(story.getId()));
+        return ResponseDto.success(
+                StoryResponseDto.builder()
+                .id(story.getId())
+                        .build());
     }
 
     //아침 6시마다, 생성 하루 지난 스토리 삭제
