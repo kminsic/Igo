@@ -295,6 +295,7 @@ public class PostService {
                 .profile(post.getMember().getProfileImage())
                 .nickname(post.getMember().getNickname())
                 .commentResponseDtoList(commentResponseDtoList)
+                .heartNum(post.getHeartNum())
                 .mapData(post.getMapData())
                 .tags(post.getTags())
                 .thumnail(post.getThumnail())
