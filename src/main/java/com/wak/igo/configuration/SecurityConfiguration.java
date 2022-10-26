@@ -81,7 +81,7 @@ public class SecurityConfiguration {
                 .antMatchers("/api/comments/**").permitAll()
                 .antMatchers("/api/search/**").permitAll()
                 .antMatchers("/loading-image").permitAll()
-                .antMatchers("api/sotry/**").permitAll()
+                .antMatchers("/api/sotry/**").permitAll()
                 .anyRequest().authenticated()
 //                .anyRequest().permitAll()
 
