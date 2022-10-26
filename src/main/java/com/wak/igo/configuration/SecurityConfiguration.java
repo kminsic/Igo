@@ -71,7 +71,6 @@ public class SecurityConfiguration {
                 .antMatchers("/naver/callback").permitAll()
                 .antMatchers("/notification/*").permitAll()
                 .antMatchers("/notifications/*").permitAll()
-                .antMatchers("/subscribe/*").permitAll()
                 .antMatchers("/api/member/subscribe/**").permitAll()
                 .antMatchers("/api/member/notifications/**").permitAll()
                 .antMatchers("/refresh").permitAll()
@@ -83,9 +82,6 @@ public class SecurityConfiguration {
                 .antMatchers("/api/comments/**").permitAll()
                 .antMatchers("/api/search/**").permitAll()
                 .antMatchers("/loading-image").permitAll()
-                .antMatchers("/api/sotry/**").permitAll()
-                .antMatchers("/api/heart/**").permitAll()
-                .antMatchers("/api/report/**").permitAll()
                 .anyRequest().authenticated()
 //                .anyRequest().permitAll()
 
