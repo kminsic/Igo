@@ -1,5 +1,6 @@
-package com.wak.igo.sse;
+package com.wak.igo.repository;
 
+import com.wak.igo.domain.Notification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

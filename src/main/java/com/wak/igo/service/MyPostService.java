@@ -11,7 +11,6 @@ import com.wak.igo.dto.response.MyPostResponseDto;
 import com.wak.igo.dto.response.ResponseDto;
 import com.wak.igo.repository.MyPostRepository;
 import com.wak.igo.repository.StateRepository;
-import com.wak.igo.sse.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Value;

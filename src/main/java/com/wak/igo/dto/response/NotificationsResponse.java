@@ -1,4 +1,4 @@
-package com.wak.igo.sse;
+package com.wak.igo.dto.response;
 
 import lombok.Builder;
 import lombok.Getter;

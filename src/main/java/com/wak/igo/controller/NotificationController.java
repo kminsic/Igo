@@ -1,9 +1,10 @@
-package com.wak.igo.sse;
+package com.wak.igo.controller;
 
 
 import com.wak.igo.domain.UserDetailsImpl;
+import com.wak.igo.dto.response.NotificationsResponse;
 import com.wak.igo.dto.response.ResponseDto;
-import org.springframework.http.HttpStatus;
+import com.wak.igo.service.NotificationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
