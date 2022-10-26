@@ -73,7 +73,7 @@ public class SecurityConfiguration {
                 .antMatchers("/notifications/*").permitAll()
                 .antMatchers("/subscribe/*").permitAll()
                 .antMatchers("/api/member/subscribe/**").permitAll()
-                .antMatchers("/api/member/notifications/**").permitAll()
+//                .antMatchers("/api/member/notifications/**").permitAll()
                 .antMatchers("/refresh").permitAll()
                 .antMatchers("/api/member/signup").permitAll()
                 .antMatchers("/api/member/login").permitAll()
