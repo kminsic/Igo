@@ -123,7 +123,7 @@ public class StoryService {
         }
     }
 
-
+    //s3에 이미지 업로드
     public String videoUrl(MultipartFile multipartFile) throws IOException {
         String s3FileName = UUID.randomUUID() + "-" + multipartFile.getOriginalFilename(); // 파일 이름 중복되지 않게 랜덤한 값으로 업로드
 
@@ -139,7 +139,7 @@ public class StoryService {
         try {
             // 업로드를 허용하는 파일 타입
             List<String> ValidTypeList = Arrays.asList("video/quicktime", "video/mp4", "video/ogg", "video/mpeg4-generic", "video/webm", "mp4", "avi", "mpeg", "ogv", "webm", "3gp", "3g2");
-            //,"avi" ,"mpeg","ogv","webm","3gp","3g2","image/jpeg", "image/pjpeg", "image/png", "image/gif", "image/jpg",
+            //"avi" ,"mpeg","ogv","webm","3gp","3g2","video/quicktime", "video/mp4", "video/ogg", "video/mpeg4-generic", "video/webm"
 
             // 입력 받은 파일을 “파일종류/파일포맷” 으로 구분 짓는다
             String mimeType = tika.detect(multipartFile.getInputStream());
