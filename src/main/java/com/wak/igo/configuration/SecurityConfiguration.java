@@ -79,7 +79,6 @@ public class SecurityConfiguration {
                 .antMatchers("/api/member/login").permitAll()
                 .antMatchers("/api/posts/**").permitAll()
                 .antMatchers("/api/detail/**").permitAll()
-                .antMatchers("/api/detail/**").permitAll()
                 .antMatchers("/api/storys/**").permitAll()
                 .antMatchers("/api/comments/**").permitAll()
                 .antMatchers("/api/search/**").permitAll()
@@ -102,8 +101,8 @@ public class SecurityConfiguration {
 //배포용       configuration.addAllowedOriginPattern("http://eunjiroh.shop.s3-website.ap-northeast-2.amazonaws.com");
 //        configuration.addAllowedOriginPattern("http://eunjiroh.shop");
 //        configuration.addAllowedOriginPattern("http://3.88.14.18");
-        configuration.addAllowedOriginPattern("http://naedonnaeyo.com");
-        configuration.addAllowedOriginPattern("http://localhost:8080");
+        configuration.addAllowedOriginPattern("https://naedonnaeyo.com");
+        configuration.addAllowedOriginPattern("https://localhost:8080");
         configuration.addAllowedOriginPattern("/");
         configuration.addAllowedOriginPattern("*");
         configuration.addAllowedHeader("*");
