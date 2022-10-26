@@ -98,8 +98,7 @@ public class SecurityConfiguration {
 //        configuration.addAllowedOriginPattern("http://eunjiroh.shop");
 //        configuration.addAllowedOriginPattern("http://3.88.14.18");
         configuration.addAllowedOriginPattern("https://naedonnaeyo.com");
-        configuration.addAllowedOriginPattern("http://naedonnaeyo.com");
-        configuration.addAllowedOriginPattern("http://localhost:8080");
+        configuration.addAllowedOriginPattern("https://localhost:8080");
         configuration.addAllowedOriginPattern("/");
         configuration.addAllowedOriginPattern("*");
         configuration.addAllowedHeader("*");
