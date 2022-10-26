@@ -1,4 +1,4 @@
-package com.wak.igo.sse;
+package com.wak.igo.repository;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;

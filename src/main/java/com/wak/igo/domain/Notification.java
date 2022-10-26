@@ -1,6 +1,5 @@
-package com.wak.igo.sse;
+package com.wak.igo.domain;
 
-import com.wak.igo.domain.Member;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

@@ -10,7 +10,6 @@ import com.wak.igo.dto.response.CommentResponseDto;
 import com.wak.igo.dto.response.ResponseDto;
 import com.wak.igo.repository.CommentRepository;
 import com.wak.igo.repository.PostRepository;
-import com.wak.igo.sse.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

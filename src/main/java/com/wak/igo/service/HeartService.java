@@ -9,7 +9,6 @@ import com.wak.igo.dto.response.HeartResponseDto;
 import com.wak.igo.dto.response.ResponseDto;
 import com.wak.igo.repository.HeartRepository;
 import com.wak.igo.repository.PostRepository;
-import com.wak.igo.sse.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

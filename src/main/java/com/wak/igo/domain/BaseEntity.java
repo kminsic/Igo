@@ -1,4 +1,4 @@
-package com.wak.igo.sse;
+package com.wak.igo.domain;
 
 import lombok.AccessLevel;
 import lombok.Getter;

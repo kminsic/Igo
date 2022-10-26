@@ -1,5 +1,7 @@
-package com.wak.igo.sse;
+package com.wak.igo.dto.response;
 
+
+import com.wak.igo.domain.Notification;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

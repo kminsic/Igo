@@ -1,9 +1,10 @@
-package com.wak.igo.sse;
+package com.wak.igo.service;
 
-import com.wak.igo.domain.Member;
-import com.wak.igo.domain.MyPost;
-import com.wak.igo.domain.Post;
-import com.wak.igo.domain.UserDetailsImpl;
+import com.wak.igo.domain.*;
+import com.wak.igo.dto.response.NotificationResponse;
+import com.wak.igo.dto.response.NotificationsResponse;
+import com.wak.igo.repository.EmitterRepository;
+import com.wak.igo.repository.NotificationRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
