@@ -28,6 +28,7 @@ public class PostService {
     private final CommentRepository commentRepository;
     private final ReportRepository reportRepository;
     private final HeartRepository heartRepository;
+    private final NotificationRepository notificationRepository;
     private final CommentService commentService;
 
 
