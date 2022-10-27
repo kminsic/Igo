@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface MyPostRepository extends JpaRepository<MyPost, Long> {
-    List<MyPost> findByMember(Member member);
+    List<MyPost> findByMemberOrderByCreatedAtDesc(Member member);
     List<MyPost> findAllByMemberId (Long member_id);
     void deleteAllByMember(Member member);
 }
