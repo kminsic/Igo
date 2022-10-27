@@ -19,7 +19,11 @@ public class Heart  extends Timestamped{
     private Long id;
 
     @JsonIgnore
-    @JoinColumn(name = "post_id", nullable = false)
+    @JoinColumn(name = "post_id",
+                nullable = false,
+                foreignKey = @ForeignKey(
+                    name = "post_id",
+                    foreignKeyDefinition = "FOREIGN KEY (post_id) REFERENCES post(id) ON DELETE CASCADE" ))
     @ManyToOne(fetch = FetchType.LAZY)
     private Post  post;
 
