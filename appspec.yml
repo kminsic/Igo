@@ -25,4 +25,3 @@ hooks:
     - location: script/switch.sh
       timeout: 180
       runas: ubuntu
-
