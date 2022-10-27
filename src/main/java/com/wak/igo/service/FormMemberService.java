@@ -115,7 +115,7 @@ public class FormMemberService {
         refreshTokenRepository.deleteAllByMember(member);
         postRepository.deleteAllByMember(member);
         storyRepository.deleteAllByMember(member);
-        notificationRepository.deleteAllById(id);
+        notificationRepository.deleteAllByReceiver(member);
         memberRepository.delete(member);
 
         return ResponseDto.success("탈퇴 완료");
