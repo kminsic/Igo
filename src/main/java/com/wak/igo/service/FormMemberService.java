@@ -34,6 +34,7 @@ public class FormMemberService {
     private final CommentRepository commentRepository;
     private final MyPostRepository myPostRepository;
     private final StoryRepository storyRepository;
+    private final NotificationRepository notificationRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
@@ -114,7 +115,7 @@ public class FormMemberService {
         refreshTokenRepository.deleteAllByMember(member);
         postRepository.deleteAllByMember(member);
         storyRepository.deleteAllByMember(member);
-        refreshTokenRepository.deleteAllByMember(member);
+        notificationRepository.deleteAllById(id);
         memberRepository.delete(member);
 
         return ResponseDto.success("탈퇴 완료");
