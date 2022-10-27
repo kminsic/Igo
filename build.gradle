@@ -22,21 +22,44 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-quartz'
+    implementation 'org.springframework.boot:spring-boot-starter-batch'
+    //삭제 가능
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws'
+
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'mysql:mysql-connector-java'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
 
+    //validation
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
     //mysql
     runtimeOnly 'mysql:mysql-connector-java'
 
+    // flyway (data migration)
+    compileOnly 'org.flywaydb:flyway-mysql'
+
     //h2
     implementation 'com.h2database:h2'
-    //s3
-//    implementation platform('com.amazonaws:aws-java-sdk-bom:1.12.290')
-//    implementation 'com.amazonaws:aws-java-sdk-s3'
 
+    // json
+    implementation group: 'com.vladmihalcea', name: 'hibernate-types-55', version: '2.19.2'
+
+    //s3
+    implementation platform('com.amazonaws:aws-java-sdk-bom:1.12.290')
+    implementation 'com.amazonaws:aws-java-sdk-s3'
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-aws', version: '2.2.6.RELEASE'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // Tika (이미지 파일만 업로드 할 수 있게 확장자 구별)
+    implementation group: 'org.apache.tika', name: 'tika-core', version: '1.24.1'
+
+    // 카카오
+    implementation group: 'org.springframework.security', name: 'spring-security-oauth2-client', version: '5.6.3'
 
 
     //     JWT
@@ -44,10 +67,8 @@ dependencies {
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2'
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
 
-
-    //     validation 머지할때 삭제하기
+    //     validation
     implementation 'org.springframework.boot:spring-boot-starter-validation'
-    implementation 'com.h2database:h2'
 
 }
 

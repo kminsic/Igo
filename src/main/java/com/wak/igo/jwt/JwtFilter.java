@@ -12,7 +12,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.wak.igo.response.ResponseDto;
+import com.wak.igo.dto.response.ResponseDto;
 import com.wak.igo.service.UserDetailsServiceImpl;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -33,12 +33,10 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class JwtFilter extends OncePerRequestFilter {
 
     public static String AUTHORIZATION_HEADER = "Authorization";
-    public static String BEARER_PREFIX = "Bearer ";
+    public static String BEARER_PREFIX = "BEARER";
 
     public static String AUTHORITIES_KEY = "auth";
-
     private final String SECRET_KEY;
-
     private final TokenProvider tokenProvider;
     private final UserDetailsServiceImpl userDetailsService;
 
@@ -48,7 +46,8 @@ public class JwtFilter extends OncePerRequestFilter {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         Key key = Keys.hmacShaKeyFor(keyBytes);
 
-        String jwt = resolveToken(request);
+        String jwt = resolveToken(request);     // request의 jwt 토큰 받기
+
 
         if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
             Claims claims;
@@ -68,13 +67,13 @@ public class JwtFilter extends OncePerRequestFilter {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             }
 
-            String subject = claims.getSubject();
+            String subject = claims.getSubject();       // jwt 토큰에서 sub(사용자) 추출
             Collection<? extends GrantedAuthority> authorities =
                     Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
                             .map(SimpleGrantedAuthority::new)
                             .collect(Collectors.toList());
 
-            UserDetails principal = userDetailsService.loadUserByUsername(subject);
+            UserDetails principal = userDetailsService.loadUserByUsername(subject);    // 받아온 sub(사용자)로 사용자 정보 반환
 
             Authentication authentication = new UsernamePasswordAuthenticationToken(principal, jwt, authorities);
             SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -84,7 +83,7 @@ public class JwtFilter extends OncePerRequestFilter {
     }
     private String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {    // bearerToken이 유효하고 bearerToken이 BEARER_PREFIX(= "BEARER") 로 시작하면 토큰의 7번째 자리까지 리턴
             return bearerToken.substring(7);
         }
         return null;

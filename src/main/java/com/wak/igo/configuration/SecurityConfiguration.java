@@ -50,9 +50,12 @@ public class SecurityConfiguration {
     @Bean
     @Order(SecurityProperties.BASIC_AUTH_ORDER)
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.cors();
+        http.cors().configurationSource(corsConfigurationSource());
+
+        http.headers().frameOptions().sameOrigin();
 
         http.csrf().disable()
+
 
                 .exceptionHandling()
                 .authenticationEntryPoint(authenticationEntryPointException) // 인증되지 않은 사용자가 요청했을 때 동작
@@ -64,9 +67,23 @@ public class SecurityConfiguration {
 
                 .and()
                 .authorizeRequests()
-                .antMatchers("/kakao/**").permitAll()
-                .antMatchers("/naver/**").permitAll()
+                .antMatchers("/kakao/callback").permitAll()
+                .antMatchers("/naver/callback").permitAll()
+                .antMatchers("/notification/*").permitAll()
+                .antMatchers("/notifications/*").permitAll()
+                .antMatchers("/api/member/subscribe/**").permitAll()
+                .antMatchers("/api/member/notifications/**").permitAll()
+                .antMatchers("/refresh").permitAll()
+                .antMatchers("/api/member/signup").permitAll()
+                .antMatchers("/api/member/login").permitAll()
+                .antMatchers("/api/posts/**").permitAll()
+                .antMatchers("/api/detail/**").permitAll()
+                .antMatchers("/api/storys/**").permitAll()
+                .antMatchers("/api/comments/**").permitAll()
+                .antMatchers("/api/search/**").permitAll()
+                .antMatchers("/loading-image").permitAll()
                 .anyRequest().authenticated()
+//                .anyRequest().permitAll()
 
                 .and()
                 .apply(new JwtSecurityConfiguration(SECRET_KEY, tokenProvider, userDetailsService)); // 회원가입 된 사용자임을 확인하고 토큰 부여
@@ -77,7 +94,11 @@ public class SecurityConfiguration {
     @Bean
     public UrlBasedCorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-
+//배포용       configuration.addAllowedOriginPattern("http://eunjiroh.shop.s3-website.ap-northeast-2.amazonaws.com");
+//        configuration.addAllowedOriginPattern("http://eunjiroh.shop");
+//        configuration.addAllowedOriginPattern("http://3.88.14.18");
+        configuration.addAllowedOriginPattern("https://naedonnaeyo.com");
+        configuration.addAllowedOriginPattern("/");
         configuration.addAllowedOriginPattern("*");
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
@@ -85,6 +106,7 @@ public class SecurityConfiguration {
         configuration.addExposedHeader("RefreshToken");
         configuration.addExposedHeader("Content-type");
         configuration.setAllowCredentials(true);
+
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

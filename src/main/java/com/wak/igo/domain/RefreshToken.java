@@ -17,14 +17,12 @@ public class RefreshToken extends Timestamped {
     @Column(nullable = false)
     private Long id;
 
-    @JoinColumn(name = "id_member", nullable = false)
+    @JoinColumn(name = "member_id", nullable = false)
     @OneToOne(fetch = FetchType.LAZY)
     private Member member;
 
     @Column(nullable = false)
     private String keyValue;
 
-    public void updateValue(String token) {
-        this.keyValue = token;
-    }
+
 }

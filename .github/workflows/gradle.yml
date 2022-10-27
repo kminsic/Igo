@@ -1,4 +1,19 @@
+ 
+# logging-deploy.yml 
+ 
+name: logging-system
 
+<<<<<<< HEAD
+on:
+  push:
+    branches: [ "develop" ]
+  pull_request:
+    branches: [ "develop" ]
+    
+env:
+  S3_BUCKET_NAME: igobucbuc
+  PROJECT_NAME: playground-logging
+=======
 name: myaction-system
 
 on:
@@ -10,6 +25,7 @@ on:
 env:
   S3_BUCKET_NAME: mygitaction
   PROJECT_NAME: playjar
+>>>>>>> master
   # CODE_DEPLOY_APPLICATION_NAME: deploy
   # CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: deploy-group-two
 
@@ -27,6 +43,14 @@ jobs:
         with:
           java-version: 11
           distribution: 'temurin'
+<<<<<<< HEAD
+          
+      - name: make application.properties
+        run: |
+          cd ./src/main/resources
+          touch ./application.properties
+          echo "${{ secrets.PROPERTIES }}" > ./application.properties
+        shell: bash
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -52,8 +76,39 @@ jobs:
         
       - name: Deploy to AWS EC2 from S3
           
+=======
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+        shell: bash
+
+      - name: Build with Gradle
+        run: ./gradlew clean build -x test
+        shell: bash
+
+      - name: Make zip file
+        run: zip -r ./IGO.zip .
+        shell: bash
+        
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Upload to S3
+        run: aws s3 cp --region ap-northeast-2 ./IGO.zip s3://$S3_BUCKET_NAME/IGO.zip
+        
+      - name: Deploy to AWS EC2 from S3
+          
+>>>>>>> master
         run: aws deploy create-deployment
           --deployment-config-name CodeDeployDefault.AllAtOnce
           --deployment-group-name develop
           --s3-location bucket=$S3_BUCKET_NAME,key=IGO.zip,bundleType=zip
+<<<<<<< HEAD
+          --application-name logging-system-deploy
+=======
           --application-name logging-systme-deploy
+>>>>>>> master
