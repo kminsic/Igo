@@ -156,7 +156,7 @@ public class MyPostService {
 
     // 회원별 일정 목록 가져오기
     public List<?> getSchedule(UserDetailsImpl userDetails){
-        List<MyPost> schedules = myPostRepository.findByMember(userDetails.getMember());
+        List<MyPost> schedules = myPostRepository.findByMemberOrderByCreatedAtDesc(userDetails.getMember());
         List<MyPostResponseDto> scheduleList = new ArrayList<>();
         for (MyPost schedule : schedules) {
             State state = myPostStateRepository.findMyPostStateByMyPost_Id(schedule.getId()); // 일정 등록 상태 가져오기
