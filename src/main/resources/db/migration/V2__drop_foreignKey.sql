@@ -1,0 +1,1 @@
+ALTER TABLE heart DROP CONSTRAINT heart_ibfk_1;

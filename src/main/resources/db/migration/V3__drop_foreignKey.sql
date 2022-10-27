@@ -1,0 +1,1 @@
+ALTER TABLE comment DROP CONSTRAINT FKs1slvnkuemjsq2kj4h3vhx7i1;
