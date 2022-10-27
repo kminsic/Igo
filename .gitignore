@@ -26,9 +26,6 @@ out/
 !**/src/main/**/out/
 !**/src/test/**/out/
 application-key.properties
-=======
-application.-aws.properties
->>>>>>> 589fa1307c599e73903028c2ebb8043aa568c1eb
 
 ### NetBeans ###
 /nbproject/private/
