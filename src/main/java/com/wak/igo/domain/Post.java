@@ -53,6 +53,7 @@ public class Post extends Timestamped {
     @Column
     private String searchPlace;
 
+
     // column json 설정
     @Type(type = "json")
     @Column(columnDefinition = "json")
