@@ -111,7 +111,6 @@ public class FormMemberService {
         commentRepository.deleteAllByMember(member);
         myPostRepository.deleteAllByMember(member);
         reportRepository.deleteAllByMember(member);
-        heartRepository.deleteAllByMember(member);
         refreshTokenRepository.deleteAllByMember(member);
         postRepository.deleteAllByMember(member);
         storyRepository.deleteAllByMember(member);
